@@ -1,0 +1,79 @@
+package com.gitHub.xMIFx.domain;
+
+import java.io.Serializable;
+
+/**
+ * Created by Vlad on 23.06.2015.
+ */
+public class Worker implements Serializable{
+    private String name;
+    private String password;
+    private String login;
+    private Long id;
+
+    public Worker() {
+
+    }
+
+    public Worker(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+
+        return String.format("%d-%s: [%s]", id,name,login);
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Worker worker = (Worker) o;
+
+        if (name != null ? !name.equals(worker.name) : worker.name != null) return false;
+        return !(id != null ? !id.equals(worker.id) : worker.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
+    }
+}
