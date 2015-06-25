@@ -19,6 +19,8 @@ import java.io.InputStreamReader;
 
 public class App {
     private static final Logger logger = LoggerFactory.getLogger(App.class.getName());
+    private static DepartmentDAO departmentDAO = new DepartmentCollectionDAOImpl();
+    private static WorkerDAO workerDAO = new WorkerCollectionDAOImpl();
     private static String info = "some keyWords: \n" +
             "exit - for end writing.\n" +
             "dep - for creation or change department. Example: dep DepName.\n" +
@@ -30,13 +32,12 @@ public class App {
 
     public static void main(String[] args) {
         logger.info(info);
-        Department nullDepartment = new Department("with out department");
+        Department nullDepartment = departmentDAO.getDepartmentByName("with out department");
+        if (nullDepartment == null) {
+            nullDepartment = new Department("with out department");
+            departmentDAO.saveDepartment(nullDepartment);
+        }
         Department currentDepartment = null;
-        //for saving
-        DepartmentDAO departmentDAO = new DepartmentCollectionDAOImpl();
-        departmentDAO.saveDepartment(nullDepartment);
-
-        WorkerDAO workerDAO = new WorkerCollectionDAOImpl();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             while (true) {
@@ -45,54 +46,28 @@ public class App {
                     break;
                 } else if (line.startsWith("dep")) {
                     String departmentName = line.substring(4, line.length());
-                    if (departmentName == null || departmentName.equals("")) {
-                        repeatInfoMessage();
-                    } else {
-                        currentDepartment = getDep(departmentDAO, departmentName);
+                    if (isNameOk(departmentName)) {
+                        currentDepartment = getDepOrCreate(departmentName);
                     }
                 } else if (line.startsWith("work")) {
                     String workerName = line.substring(5, line.length());
-                    if (workerName == null || workerName.equals("")) {
-                        repeatInfoMessage();
-                    } else {
-                        Worker newWorker = getWork(departmentDAO, currentDepartment, nullDepartment, workerDAO, workerName);
+                    if (isNameOk(workerName)) {
+                        Worker newWorker = getWorkOrCreate(currentDepartment, nullDepartment, workerName);
                     }
                 } else if (line.startsWith("del_dep")) {
                     String departmentName = line.substring(8, line.length());
-                    if (departmentName == null || departmentName.equals("")) {
-                        repeatInfoMessage();
-                    } else {
-                        Department depForDel = departmentDAO.getDepartmentByName(departmentName);
-                        if (depForDel != null) {
-                            nullDepartment.getWorkers().addAll(depForDel.getWorkers());
-                            departmentDAO.removeDepartment(depForDel);
-                        }
+                    if (isNameOk(departmentName)) {
+                        deleteDepartmentAndRelocateWorkersToNullDep(departmentName, nullDepartment);
                     }
                 } else if (line.startsWith("del_work_dep")) {
                     String workerName = line.substring(13, line.length());
-                    if (workerName == null || workerName.equals("")) {
-                        repeatInfoMessage();
-                    } else {
-                        Worker workerForDel = workerDAO.getWorkerByName(workerName);
-                        Department depForUpdate = departmentDAO.getDepartmentByWorker(workerForDel);
-                        if (depForUpdate != null) {
-                            depForUpdate.removeWorker(workerForDel);
-                            nullDepartment.addWorker(workerForDel);
-                        }
-                        departmentDAO.updateDepartment(depForUpdate);
+                    if (isNameOk(workerName)) {
+                        deleteWorkerFromHisDepartmnetAndRelocateHimToNullDep(workerName, nullDepartment);
                     }
                 } else if (line.startsWith("del_work")) {
                     String workerName = line.substring(9, line.length());
-                    if (workerName == null || workerName.equals("")) {
-                        repeatInfoMessage();
-                    } else {
-                        Worker workerForDel = workerDAO.getWorkerByName(workerName);
-                        Department depForUpdate = departmentDAO.getDepartmentByWorker(workerForDel);
-                        if (depForUpdate != null) {
-                            depForUpdate.removeWorker(workerForDel);
-                        }
-                        departmentDAO.updateDepartment(depForUpdate);
-                        workerDAO.removeWorker(workerForDel);
+                    if (isNameOk(workerName)) {
+                        deleteWorkerFromAveryWhere(workerName);
                     }
 
                 } else {
@@ -109,15 +84,54 @@ public class App {
 
     }
 
-    private static Worker getWork(DepartmentDAO departmentDAO, Department currentDepartment, Department nullDepartment, WorkerDAO workerDAO, String workerName) {
+    private static boolean isNameOk(String str) {
+        boolean isOk = true;
+        if (str == null || str.equals("")) {
+            isOk = false;
+            repeatInfoMessage();
+        }
+        return isOk;
+    }
+
+    private static void deleteWorkerFromAveryWhere(String workerName) {
+        Worker workerForDel = workerDAO.getWorkerByName(workerName);
+        Department depForUpdate = departmentDAO.getDepartmentByWorker(workerForDel);
+        if (depForUpdate != null) {
+            depForUpdate.removeWorker(workerForDel);
+        }
+        departmentDAO.updateDepartment(depForUpdate);
+        workerDAO.removeWorker(workerForDel);
+    }
+
+    private static void deleteWorkerFromHisDepartmnetAndRelocateHimToNullDep(String workerName, Department nullDepartment) {
+        Worker workerForDel = workerDAO.getWorkerByName(workerName);
+        Department depForUpdate = departmentDAO.getDepartmentByWorker(workerForDel);
+        if (depForUpdate != null) {
+            depForUpdate.removeWorker(workerForDel);
+            nullDepartment.addWorker(workerForDel);
+        }
+        departmentDAO.updateDepartment(depForUpdate);
+    }
+
+    private static void deleteDepartmentAndRelocateWorkersToNullDep(String departmentName, Department nullDepartment) {
+        Department depForDel = departmentDAO.getDepartmentByName(departmentName);
+        if (depForDel != null) {
+            nullDepartment.getWorkers().addAll(depForDel.getWorkers());
+            departmentDAO.removeDepartment(depForDel);
+        }
+
+    }
+
+    private static Worker getWorkOrCreate(Department currentDepartment, Department nullDepartment, String workerName) {
         Worker w = workerDAO.getWorkerByName(workerName);
         if (w == null) {
             w = new Worker(workerName);
             workerDAO.saveWorker(w);
-        }
-        Department workerDep = departmentDAO.getDepartmentByWorker(w);
-        if (workerDep != null) {
-            workerDep.removeWorker(w);
+        } else {
+            Department oldWorkerDep = departmentDAO.getDepartmentByWorker(w);
+            if (oldWorkerDep != null) {
+                oldWorkerDep.removeWorker(w);
+            }
         }
 
         if (currentDepartment != null) {
@@ -128,7 +142,7 @@ public class App {
         return w;
     }
 
-    public static Department getDep(DepartmentDAO departmentDAO, String departmentName) {
+    public static Department getDepOrCreate(String departmentName) {
         Department dp = departmentDAO.getDepartmentByName(departmentName);
         if (dp == null) {
             dp = new Department(departmentName);
