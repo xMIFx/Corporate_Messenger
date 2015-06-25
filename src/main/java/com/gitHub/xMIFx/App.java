@@ -21,13 +21,12 @@ public class App {
     private static final Logger logger = LoggerFactory.getLogger(App.class.getName());
     private static String info = "some keyWords: \n" +
             "exit - for end writing.\n" +
-            "dep - for creation or change department. Example: dep name.\n" +
-            "work - for creation worker in selected department. Example: work name.\n" +
-            "del_dep - for deleting department by name. Example: del_dep name.\n" +
-            "del_work - for deleting worker by name(from department too). Example: del_work name.\n" +
-            "del_work_dep - for deleting woker by name only from department. Example: del_work_dep name.\n" +
+            "dep - for creation or change department. Example: dep DepName.\n" +
+            "work - for creation worker in selected department. Example: work WorkerName.\n" +
+            "del_dep - for deleting department by name. Example: del_dep DepName.\n" +
+            "del_work - for deleting worker by name(from department too). Example: del_work WorkerName.\n" +
+            "del_work_dep - for deleting worker by name only from department. Example: del_work_dep WorkerName.\n" +
             "name can't be empty!";
-    private static Department dep;
 
     public static void main(String[] args) {
         logger.info(info);
@@ -65,6 +64,7 @@ public class App {
                     } else {
                         Department depForDel = departmentDAO.getDepartmentByName(departmentName);
                         if (depForDel != null) {
+                            nullDepartment.getWorkers().addAll(depForDel.getWorkers());
                             departmentDAO.removeDepartment(depForDel);
                         }
                     }
@@ -77,6 +77,7 @@ public class App {
                         Department depForUpdate = departmentDAO.getDepartmentByWorker(workerForDel);
                         if (depForUpdate != null) {
                             depForUpdate.removeWorker(workerForDel);
+                            nullDepartment.addWorker(workerForDel);
                         }
                         departmentDAO.updateDepartment(depForUpdate);
                     }
