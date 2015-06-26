@@ -62,9 +62,9 @@ public class Department {
 
     @Override
     public String toString() {
-        return  "'" + name + '\'' +
-                ", " + id +
-                ", workers=" + workers+"\n";
+        return  id +
+                " - '" + name + '\'' +
+                ": workers=" + workers+"\n";
     }
 
     @Override

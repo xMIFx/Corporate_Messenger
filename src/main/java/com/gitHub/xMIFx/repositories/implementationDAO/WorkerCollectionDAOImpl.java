@@ -1,8 +1,8 @@
-package com.gitHub.xMIFx.packDAO.implementationDAO;
+package com.gitHub.xMIFx.repositories.implementationDAO;
 
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
-import com.gitHub.xMIFx.packDAO.interfacesDAO.WorkerDAO;
+import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
 
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.gitHub.xMIFx.packDAO.interfacesDAO;
+package com.gitHub.xMIFx.repositories.interfacesDAO;
 
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;

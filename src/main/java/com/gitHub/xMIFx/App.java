@@ -6,10 +6,10 @@ package com.gitHub.xMIFx;
 
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
-import com.gitHub.xMIFx.packDAO.implementationDAO.DepartmentCollectionDAOImpl;
-import com.gitHub.xMIFx.packDAO.implementationDAO.WorkerCollectionDAOImpl;
-import com.gitHub.xMIFx.packDAO.interfacesDAO.DepartmentDAO;
-import com.gitHub.xMIFx.packDAO.interfacesDAO.WorkerDAO;
+import com.gitHub.xMIFx.repositories.implementationDAO.DepartmentCollectionDAOImpl;
+import com.gitHub.xMIFx.repositories.implementationDAO.WorkerCollectionDAOImpl;
+import com.gitHub.xMIFx.repositories.interfacesDAO.DepartmentDAO;
+import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +62,7 @@ public class App {
                 } else if (line.startsWith("del_work_dep")) {
                     String workerName = line.substring(13, line.length());
                     if (isNameOk(workerName)) {
-                        deleteWorkerFromHisDepartmnetAndRelocateHimToNullDep(workerName, nullDepartment);
+                        deleteWorkerFromHisDepartmentAndRelocateHimToNullDep(workerName, nullDepartment);
                     }
                 } else if (line.startsWith("del_work")) {
                     String workerName = line.substring(9, line.length());
@@ -103,7 +103,7 @@ public class App {
         workerDAO.removeWorker(workerForDel);
     }
 
-    private static void deleteWorkerFromHisDepartmnetAndRelocateHimToNullDep(String workerName, Department nullDepartment) {
+    private static void deleteWorkerFromHisDepartmentAndRelocateHimToNullDep(String workerName, Department nullDepartment) {
         Worker workerForDel = workerDAO.getWorkerByName(workerName);
         Department depForUpdate = departmentDAO.getDepartmentByWorker(workerForDel);
         if (depForUpdate != null) {
