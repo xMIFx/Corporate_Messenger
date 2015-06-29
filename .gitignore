@@ -9,3 +9,5 @@
 .idea/libraries/Maven__org_slf4j_slf4j_api_1_7_12.xml
 .idea/libraries/Maven__ch_qos_logback_logback_classic_1_1_3.xml
 .idea/libraries/Maven__ch_qos_logback_logback_core_1_1_3.xml
+.idea/libraries/Maven__org_codehaus_jackson_jackson_mapper_asl_1_6_0.xml
+.idea/libraries/Maven__org_codehaus_jackson_jackson_core_asl_1_6_0.xml

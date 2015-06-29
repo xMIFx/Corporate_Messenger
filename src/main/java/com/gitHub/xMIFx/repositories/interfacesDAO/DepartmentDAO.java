@@ -11,17 +11,17 @@ import java.util.List;
 public interface DepartmentDAO {
 
     //Save department to repositories
-    Long saveDepartment(Department department);
+    Long save(Department department);
     //get department by id
-    Department getDepartmentById(Long id);
+    Department getById(Long id);
     //get department by name
-    Department getDepartmentByName (String name);
+    Department getByName(String name);
     //get department by worker
-    Department getDepartmentByWorker(Worker worker);
+    Department getByWorker(Worker worker);
     //get All department
-     List<Department> getAllDepartments();
+     List<Department> getAll();
     // remove department
-    boolean removeDepartment(Department department);
+    boolean remove(Department department);
     //update department
-    boolean updateDepartment(Department department);
+    boolean update(Department department);
 }

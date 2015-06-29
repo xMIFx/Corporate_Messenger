@@ -1,11 +1,14 @@
 package com.gitHub.xMIFx.domain;
 
-import java.io.Serializable;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.*;
 
 /**
  * Created by Vlad on 23.06.2015.
  */
-public class Worker implements Serializable{
+@XmlRootElement
+public class Worker implements Externalizable {
     private String name;
     private String password;
     private String login;
@@ -23,6 +26,7 @@ public class Worker implements Serializable{
         return name;
     }
 
+    @XmlElement
     public void setName(String name) {
         this.name = name;
     }
@@ -31,6 +35,7 @@ public class Worker implements Serializable{
         return password;
     }
 
+    @XmlElement
     public void setPassword(String password) {
         this.password = password;
     }
@@ -39,6 +44,7 @@ public class Worker implements Serializable{
         return login;
     }
 
+    @XmlElement
     public void setLogin(String login) {
         this.login = login;
     }
@@ -47,6 +53,7 @@ public class Worker implements Serializable{
         return id;
     }
 
+    @XmlElement
     public void setId(Long id) {
         this.id = id;
     }
@@ -54,7 +61,7 @@ public class Worker implements Serializable{
     @Override
     public String toString() {
 
-        return String.format("%d-%s: [%s]", id,name,login);
+        return String.format("%d-%s: [%s]", id, name, login);
 
     }
 
@@ -75,5 +82,21 @@ public class Worker implements Serializable{
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (id != null ? id.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeLong(this.id);
+        out.writeUTF(this.name);
+        /*out.writeUTF(this.login);
+        out.writeUTF(this.password);*/
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+         this.id = in.readLong();
+        this.name = in.readUTF();
+       /* this.login = in.readUTF();
+        this.password = in.readUTF();*/
     }
 }

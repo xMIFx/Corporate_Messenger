@@ -1,4 +1,4 @@
-package com.gitHub.xMIFx.repositories.implementationDAO;
+package com.gitHub.xMIFx.repositories.implementationDAO.collectionDAO;
 
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
@@ -20,18 +20,18 @@ public class DepartmentCollectionDAOImpl implements DepartmentDAO {
 
     }
 
-    public Long saveDepartment(Department department) {
+    public Long save(Department department) {
         index++;
         department.setId(index);
         departmentMap.put(index, department);
         return index;
     }
 
-    public Department getDepartmentById(Long id) {
+    public Department getById(Long id) {
         return departmentMap.get(id);
     }
 
-    public Department getDepartmentByName(String name) {
+    public Department getByName(String name) {
         Department departmentForFind = null;
         for (Map.Entry<Long, Department> pair : departmentMap.entrySet()) {
             if (pair.getValue().getName().equals(name)) {
@@ -42,7 +42,7 @@ public class DepartmentCollectionDAOImpl implements DepartmentDAO {
         return departmentForFind;
     }
 
-    public Department getDepartmentByWorker(Worker worker) {
+    public Department getByWorker(Worker worker) {
         Department departmentForFind = null;
         for (Map.Entry<Long, Department> pair : departmentMap.entrySet()) {
 
@@ -55,20 +55,20 @@ public class DepartmentCollectionDAOImpl implements DepartmentDAO {
     return departmentForFind;
 }
 
-    public List<Department> getAllDepartments() {
+    public List<Department> getAll() {
         List<Department> departmentList = new ArrayList<Department>();
         departmentList.addAll(departmentMap.values());
         return departmentList;
     }
 
-    public boolean removeDepartment(Department department) {
+    public boolean remove(Department department) {
         if (department.getId() != null) {
             departmentMap.remove(department.getId());
         }
         return true;
     }
 
-    public boolean updateDepartment(Department department) {
+    public boolean update(Department department) {
         return true;
     }
 }

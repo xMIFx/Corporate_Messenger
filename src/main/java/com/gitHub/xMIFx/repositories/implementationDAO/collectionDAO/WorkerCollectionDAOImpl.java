@@ -1,4 +1,4 @@
-package com.gitHub.xMIFx.repositories.implementationDAO;
+package com.gitHub.xMIFx.repositories.implementationDAO.collectionDAO;
 
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
@@ -21,18 +21,18 @@ public class WorkerCollectionDAOImpl implements WorkerDAO {
     public WorkerCollectionDAOImpl() {
     }
 
-    public Long saveWorker(Worker worker) {
+    public Long save(Worker worker) {
         index++;
         worker.setId(index);
         workerMap.put(index, worker);
         return index;
     }
 
-    public Worker getWorkerById(Long id) {
+    public Worker getById(Long id) {
         return workerMap.get(id);
     }
 
-    public Worker getWorkerByName(String name) {
+    public Worker getByName(String name) {
         Worker workerForFind = null;
         for (Map.Entry<Long, Worker> pair : workerMap.entrySet()) {
             if (pair.getValue().getName().equals(name)) {
@@ -43,28 +43,28 @@ public class WorkerCollectionDAOImpl implements WorkerDAO {
         return workerForFind;
     }
 
-    public Worker getWorkerByLoginPassword(String login, String pass) {
+    public Worker getByLoginPassword(String login, String pass) {
         return null;
     }
 
-    public List<Worker> getAllWorkers() {
+    public List<Worker> getAll() {
         List<Worker> workerList = new ArrayList<Worker>();
         workerList.addAll(workerMap.values());
         return workerList;
     }
 
-    public List<Worker> getWorkersByDepartment(Department department) {
+    public List<Worker> getByDepartment(Department department) {
         return null;
     }
 
-    public boolean removeWorker(Worker worker) {
+    public boolean remove(Worker worker) {
         if (worker.getId() != null) {
             workerMap.remove(worker.getId());
         }
         return true;
     }
 
-    public boolean updateWorker(Worker worker) {
+    public boolean update(Worker worker) {
         return true;
     }
 

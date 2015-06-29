@@ -10,20 +10,20 @@ import java.util.List;
  */
 public interface WorkerDAO {
     //Save worker to repositories
-    Long saveWorker(Worker worker);
+    Long save(Worker worker);
     //get worker by id
-    Worker getWorkerById(Long id);
+    Worker getById(Long id);
     //get worker by name
-    Worker getWorkerByName (String name);
+    Worker getByName(String name);
     //get worker by login and password
-    Worker getWorkerByLoginPassword(String login, String pass);
+    Worker getByLoginPassword(String login, String pass);
     //get All workers
-    List<Worker> getAllWorkers();
+    List<Worker> getAll();
     //get workers by department
-    List<Worker> getWorkersByDepartment(Department department);
+    List<Worker> getByDepartment(Department department);
     // remove worker
-    boolean removeWorker(Worker worker);
+    boolean remove(Worker worker);
     //update worker
-    boolean updateWorker(Worker worker);
+    boolean update(Worker worker);
 
 }

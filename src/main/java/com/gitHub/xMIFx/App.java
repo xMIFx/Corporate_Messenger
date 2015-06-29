@@ -6,8 +6,12 @@ package com.gitHub.xMIFx;
 
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
-import com.gitHub.xMIFx.repositories.implementationDAO.DepartmentCollectionDAOImpl;
-import com.gitHub.xMIFx.repositories.implementationDAO.WorkerCollectionDAOImpl;
+import com.gitHub.xMIFx.repositories.abstractFactoryDAO.AbstractFactoryForDAO;
+import com.gitHub.xMIFx.repositories.abstractFactoryDAO.CreatorDAOFactory;
+import com.gitHub.xMIFx.repositories.implementationDAO.collectionDAO.DepartmentCollectionDAOImpl;
+import com.gitHub.xMIFx.repositories.implementationDAO.collectionDAO.WorkerCollectionDAOImpl;
+import com.gitHub.xMIFx.repositories.implementationDAO.serializableDAO.DepartmentSerialDAOImpl;
+import com.gitHub.xMIFx.repositories.implementationDAO.serializableDAO.WorkerSerialDAOImpl;
 import com.gitHub.xMIFx.repositories.interfacesDAO.DepartmentDAO;
 import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
 import org.slf4j.Logger;
@@ -19,8 +23,10 @@ import java.io.InputStreamReader;
 
 public class App {
     private static final Logger logger = LoggerFactory.getLogger(App.class.getName());
-    private static DepartmentDAO departmentDAO = new DepartmentCollectionDAOImpl();
-    private static WorkerDAO workerDAO = new WorkerCollectionDAOImpl();
+    private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
+    private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();
+    private static DepartmentDAO departmentDAO = abstractFactoryForDAOf.getDepartmentDAOImpl();
+
     private static String info = "some keyWords: \n" +
             "exit - for end writing.\n" +
             "dep - for creation or change department. Example: dep DepName.\n" +
@@ -32,10 +38,10 @@ public class App {
 
     public static void main(String[] args) {
         logger.info(info);
-        Department nullDepartment = departmentDAO.getDepartmentByName("with out department");
+        Department nullDepartment = departmentDAO.getByName("with out department");
         if (nullDepartment == null) {
             nullDepartment = new Department("with out department");
-            departmentDAO.saveDepartment(nullDepartment);
+            departmentDAO.save(nullDepartment);
         }
         Department currentDepartment = null;
 
@@ -79,8 +85,8 @@ public class App {
             logger.error("readLine exception", e);
         }
 
-        logger.info(workerDAO.getAllWorkers().toString());
-        logger.info(departmentDAO.getAllDepartments().toString());
+        logger.info(workerDAO.getAll().toString());
+        logger.info(departmentDAO.getAll().toString());
 
     }
 
@@ -94,59 +100,66 @@ public class App {
     }
 
     private static void deleteWorkerFromAveryWhere(String workerName) {
-        Worker workerForDel = workerDAO.getWorkerByName(workerName);
-        Department depForUpdate = departmentDAO.getDepartmentByWorker(workerForDel);
+        Worker workerForDel = workerDAO.getByName(workerName);
+        Department depForUpdate = departmentDAO.getByWorker(workerForDel);
         if (depForUpdate != null) {
             depForUpdate.removeWorker(workerForDel);
+            departmentDAO.update(depForUpdate);
         }
-        departmentDAO.updateDepartment(depForUpdate);
-        workerDAO.removeWorker(workerForDel);
+        workerDAO.remove(workerForDel);
     }
 
     private static void deleteWorkerFromHisDepartmentAndRelocateHimToNullDep(String workerName, Department nullDepartment) {
-        Worker workerForDel = workerDAO.getWorkerByName(workerName);
-        Department depForUpdate = departmentDAO.getDepartmentByWorker(workerForDel);
+        Worker workerForDel = workerDAO.getByName(workerName);
+        Department depForUpdate = departmentDAO.getByWorker(workerForDel);
         if (depForUpdate != null) {
             depForUpdate.removeWorker(workerForDel);
             nullDepartment.addWorker(workerForDel);
+            departmentDAO.update(depForUpdate);
+            departmentDAO.update(nullDepartment);
         }
-        departmentDAO.updateDepartment(depForUpdate);
+
     }
 
     private static void deleteDepartmentAndRelocateWorkersToNullDep(String departmentName, Department nullDepartment) {
-        Department depForDel = departmentDAO.getDepartmentByName(departmentName);
+        Department depForDel = departmentDAO.getByName(departmentName);
         if (depForDel != null) {
             nullDepartment.getWorkers().addAll(depForDel.getWorkers());
-            departmentDAO.removeDepartment(depForDel);
+            departmentDAO.remove(depForDel);
+            departmentDAO.update(nullDepartment);
         }
 
     }
 
     private static Worker getWorkOrCreate(Department currentDepartment, Department nullDepartment, String workerName) {
-        Worker w = workerDAO.getWorkerByName(workerName);
+        Worker w = workerDAO.getByName(workerName);
         if (w == null) {
             w = new Worker(workerName);
-            workerDAO.saveWorker(w);
+            workerDAO.save(w);
         } else {
-            Department oldWorkerDep = departmentDAO.getDepartmentByWorker(w);
+            Department oldWorkerDep = departmentDAO.getByWorker(w);
             if (oldWorkerDep != null) {
                 oldWorkerDep.removeWorker(w);
+                departmentDAO.update(oldWorkerDep);
             }
         }
 
         if (currentDepartment != null) {
             currentDepartment.addWorker(w);
+            departmentDAO.update(currentDepartment);
         } else {
             nullDepartment.addWorker(w);
+            departmentDAO.update(nullDepartment);
         }
+
         return w;
     }
 
     public static Department getDepOrCreate(String departmentName) {
-        Department dp = departmentDAO.getDepartmentByName(departmentName);
+        Department dp = departmentDAO.getByName(departmentName);
         if (dp == null) {
             dp = new Department(departmentName);
-            departmentDAO.saveDepartment(dp);
+            departmentDAO.save(dp);
         }
 
         return dp;
