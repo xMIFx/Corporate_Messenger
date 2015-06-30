@@ -3,6 +3,7 @@ package com.gitHub.xMIFx.repositories.implementationDAO.jsonDAO;
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.projectConfig.PropertiesForWork;
+import com.gitHub.xMIFx.repositories.dto.DepartmentsHolder;
 import com.gitHub.xMIFx.repositories.interfacesDAO.DepartmentDAO;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -163,16 +164,5 @@ public class DepartmentJsonDAOImpl implements DepartmentDAO {
     }
 
 
-    private static class DepartmentsHolder {
-        private List<Department> departments;
-
-        public List<Department> getDepartments() {
-            return departments;
-        }
-
-        public void setDepartments(List<Department> departments) {
-            this.departments = departments;
-        }
-    }
 
 }

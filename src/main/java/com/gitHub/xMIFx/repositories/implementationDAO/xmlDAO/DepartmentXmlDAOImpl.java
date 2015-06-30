@@ -3,6 +3,7 @@ package com.gitHub.xMIFx.repositories.implementationDAO.xmlDAO;
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.projectConfig.PropertiesForWork;
+import com.gitHub.xMIFx.repositories.dto.DepartmentsHolder;
 import com.gitHub.xMIFx.repositories.implementationDAO.serializableDAO.WorkerSerialDAOImpl;
 import com.gitHub.xMIFx.repositories.interfacesDAO.DepartmentDAO;
 import org.slf4j.Logger;
@@ -171,16 +172,5 @@ public class DepartmentXmlDAOImpl implements DepartmentDAO {
         return true;
     }
 
-    @XmlRootElement
-    private static class DepartmentsHolder {
-        private List<Department> departments;
 
-        public List<Department> getDepartments() {
-            return departments;
-        }
-
-        public void setDepartments(List<Department> departments) {
-            this.departments = departments;
-        }
-    }
 }

@@ -3,6 +3,7 @@ package com.gitHub.xMIFx.repositories.implementationDAO.xmlDAO;
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.projectConfig.PropertiesForWork;
+import com.gitHub.xMIFx.repositories.dto.WorkersHolder;
 import com.gitHub.xMIFx.repositories.interfacesDAO.DepartmentDAO;
 import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
 import org.slf4j.Logger;
@@ -158,17 +159,5 @@ public class WorkerXmlDAOImpl implements WorkerDAO {
         return true;
     }
 
-    @XmlRootElement
-    private static class WorkersHolder {
-        private List<Worker> workers;
-
-        public List<Worker> getWorkers() {
-            return workers;
-        }
-
-        public void setWorkers(List<Worker> workers) {
-            this.workers = workers;
-        }
-    }
 
 }
