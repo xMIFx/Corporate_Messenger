@@ -1,8 +1,2 @@
 .idea/
 target/
-target/classes/com/gitHub/xMIFx/repositories/abstractFactoryDAO/implementationAbstractFactory/JDBCAbstractFactoryImpl.class
-target/classes/com/gitHub/xMIFx/repositories/abstractFactoryDAO/implementationAbstractFactory/JDBCAbstractFactoryImpl.class
-target/classes/com/gitHub/xMIFx/repositories/abstractFactoryDAO/implementationAbstractFactory/JDBCAbstractFactoryImpl.class
-target/classes/com/gitHub/xMIFx/repositories/abstractFactoryDAO/implementationAbstractFactory/JDBCAbstractFactoryImpl.class
-target/classes/com/gitHub/xMIFx/repositories/implementationDAO/xmlDAO/WorkerXmlDAOImpl.class
-target/classes/com/gitHub/xMIFx/repositories/implementationDAO/xmlDAO/WorkerXmlDAOImpl.class
