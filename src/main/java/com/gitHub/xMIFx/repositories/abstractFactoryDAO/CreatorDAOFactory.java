@@ -25,7 +25,7 @@ public abstract class CreatorDAOFactory {
                 factoryForDAO = new JSONAbstractFactoryImpl();
                 break;
             case JDBC:
-                factoryForDAO = new JDBCAbstractFactoryImpl();
+                factoryForDAO = new JDBCMySQLAbstractFactoryImpl();
                 break;
             default:
                 factoryForDAO = new CollectionAbstractFactoryImpl();

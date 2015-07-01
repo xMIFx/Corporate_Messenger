@@ -1,4 +1,4 @@
-package com.gitHub.xMIFx.repositories.implementationDAO.jdbcDAO;
+package com.gitHub.xMIFx.repositories.implementationDAO.jdbcMySQLDAO;
 
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Vlad on 29.06.2015.
  */
-public class DepartmentJdbcDAOImpl implements DepartmentDAO {
+public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
     @Override
     public Long save(Department department) {
         return null;
