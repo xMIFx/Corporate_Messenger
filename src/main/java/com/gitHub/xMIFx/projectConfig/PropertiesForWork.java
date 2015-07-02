@@ -22,6 +22,8 @@ public class PropertiesForWork {
 
     private PropertiesForWork() {
         Properties prop = new Properties();
+       /* ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try(InputStream input = loader.getResourceAsStream("repository.properties"))*/
         try (InputStream in = new FileInputStream("src/main/resources/config.properties")) {
             prop.load(in);
             this.pathToRepo = prop.getProperty("pathToRepositories");
