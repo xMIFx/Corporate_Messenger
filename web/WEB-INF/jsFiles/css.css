@@ -1,0 +1,128 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    font-family: "Arial";
+      font-size: 14px;
+}
+div.content{
+    background: #3C3232 ;
+    min-height: 100vh;
+}
+div.text1{
+    text-align: center;
+    padding-top: 100px;
+    border-bottom: 5px solid #ffd600;
+    width: 100%;
+    max-width: 980px;
+    margin: 0px auto auto;
+    padding-bottom: 15px
+}
+h1,h2,h3{
+    margin: 0px;
+}
+div.text1 h1{
+      font-size: 36px;
+      text-transform: uppercase;
+      color:#fff;
+    
+      padding-bottom: 20px;
+}
+div.text1 h2{
+      font-size: 24px;
+      color:#fff;
+      font-weight: normal;
+}
+div.cl_menu{
+    background: url("../../../../../public_html/images/menu.png") rgba(0,0,0,0.5) no-repeat;
+    width: 40px;
+    height: 40px;
+    margin: 0px 15px ;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+div.menu{
+    position: fixed;
+    width: 100%;
+    top:0px;
+    background: #fff;
+    padding: 15px 0px;
+}
+div.box_log{
+        display: inline-block;
+    vertical-align: middle;
+    float: right;
+
+}
+div.box_log a{
+    padding: 5px 10px;
+    margin: 6px 10px;
+    background: #ffd600;
+    color: #000;
+  text-align: center;
+       display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
+}
+div.box_log a:hover{
+      text-decoration: underline;
+}
+div.content_menu a{
+    display: table;
+    width: 140px;
+    height: 140px;
+    border: 10px solid #ffd600;
+    background: #fff;
+-moz-border-radius:  100px;
+-webkit-border-radius: 100px; 
+-khtml-border-radius:  100px; 
+border-radius:  100px; 
+text-decoration: none; 
+}
+div.box_m{
+      display: inline-block;
+    vertical-align: middle;
+    width: 160px;
+      padding:  40px 10px;
+     
+}
+div.box_m:hover{
+     background: url("../../../../../public_html/images/yellow.png") center bottom no-repeat;
+}
+div.box_m.hov{
+      background: url("../../../../../public_html/images/yellow.png") center bottom no-repeat;
+}
+div.content_menu{
+    width: 100%;
+    max-width: 980px;
+    margin: 0px auto auto;
+    text-align: center;
+    position: relative;
+}
+div.content_menu a span{
+    color: #000;
+    text-transform: uppercase;
+    font-size: 15px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+div.box_info{
+position: relative;
+    background: #ffd600;
+    width: 100%;
+    padding: 20px 0px;
+    text-align: center;
+    color: #fff;
+}
+div.box_info p{
+    color: #000;
+    padding: 10px 50px;
+   
+    margin: 0px auto auto;
+}
+div.box_info h3{
+    font-size: 18px;
+    text-transform: uppercase;
+    padding-top: 10px;
+}
