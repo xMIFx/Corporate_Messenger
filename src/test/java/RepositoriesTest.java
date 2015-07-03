@@ -18,31 +18,25 @@ public class RepositoriesTest {
         workerDAO.save(worker);
 
         Worker readWorker = workerDAO.getByName("Vlad");
-        if (!worker.equals(readWorker)) {
-            Assert.fail("not the same object after save-getByName");
-        } else {/*NOP*/}
+        Assert.assertEquals("not the same object after save-getByName",worker, readWorker); //test, it's work Ok need refactoring
 
         readWorker = workerDAO.getById(worker.getId());
-        if (!worker.equals(readWorker)) {
-            Assert.fail("not the same object after save-getById");
-        } else {/*NOP*/}
+        Assert.assertEquals("not the same object after save-getById",worker, readWorker);
+
         worker.setLogin("MIF");
         workerDAO.update(worker);
 
         readWorker = workerDAO.getByName("Vlad");
-        if (!worker.equals(readWorker)) {
-            Assert.fail("not the same object after update-getByName");
-        } else {/*NOP*/}
+        Assert.assertEquals("not the same object after update-getByName",worker, readWorker);
+
 
         readWorker = workerDAO.getById(worker.getId());
-        if (!worker.equals(readWorker)) {
-            Assert.fail("not the same object after update-getByName");
-        } else {/*NOP*/}
+        Assert.assertEquals("not the same object after update-getByID",worker, readWorker);
+
         workerDAO.remove(worker);
+
         readWorker = workerDAO.getByName("Vlad");
-        if (readWorker != null) {
-            Assert.fail("remove don't work");
-        }
+        Assert.assertEquals("remove don't work",null, readWorker);
     }
 
     @Test
@@ -52,31 +46,24 @@ public class RepositoriesTest {
         departmentDAO.save(department);
 
         Department readDepartment = departmentDAO.getByName("Vlad");
-        if (!department.equals(readDepartment)) {
-            Assert.fail("not the same object after save-getByName");
-        } else {/*NOP*/}
+        Assert.assertEquals("not the same object after save-getByName",department, readDepartment);
 
         readDepartment = departmentDAO.getById(department.getId());
-        if (!department.equals(readDepartment)) {
-            Assert.fail("not the same object after save-getById");
-        } else {/*NOP*/}
+        Assert.assertEquals("not the same object after save-getByID",department, readDepartment);
+
         department.addWorker(new Worker());
         departmentDAO.update(department);
 
         readDepartment = departmentDAO.getByName("Vlad");
-        if (!department.equals(readDepartment)) {
-            Assert.fail("not the same object after update-getByName");
-        } else {/*NOP*/}
+        Assert.assertEquals("not the same object after update-getByName",department, readDepartment);
 
         readDepartment = departmentDAO.getById(department.getId());
-        if (!department.equals(readDepartment)) {
-            Assert.fail("not the same object after update-getByName");
-        } else {/*NOP*/}
+        Assert.assertEquals("not the same object after update-getByID",department, readDepartment);
+
         departmentDAO.remove(department);
+
         readDepartment = departmentDAO.getByName("Vlad");
-        if (readDepartment != null) {
-            Assert.fail("remove don't work");
-        }
+        Assert.assertEquals("remove don't work",null, readDepartment);
 
     }
 }
