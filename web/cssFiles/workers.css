@@ -1,0 +1,108 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    background: #3C3232;}
+
+div.content {
+
+    min-height: 100vh;
+}
+#table1 {
+    position: relative;
+    top: 190px;;
+    width: 660px;
+    border-collapse: collapse;
+    font-size: 18px;
+    border: 1px solid #000;
+    font-family: Arial;
+    margin: 0px auto auto;
+}
+
+#table1 tr td {
+    width: 25%;
+    text-align: center;
+    padding: 5px 0px;
+    border: 1px solid #000;
+    background-color:#ffffff;
+    padding: 10px 0px;
+
+}
+
+
+div.button_box{
+    width: 514px;
+    margin: 0px auto;
+    background: #3C3232;
+    white-space: nowrap;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.header_id {
+    width: 660px;
+    background: #fff;
+    white-space: nowrap;
+    text-align: center;
+    margin: 0px auto;
+}
+
+.fix{
+    position: fixed;
+    width: 100%;
+    top: 70px;
+    text-align: center;
+    z-index: 5;
+    background: #3C3232;
+}
+div.button_border{
+    width: 700px;
+    height: 40px;
+    left: 49%;
+    margin-left: -249px;
+    background: #3C3232;
+    position: fixed;
+    white-space: nowrap;
+    z-index: 1;
+    top: 110px;
+}
+.header_id div.tt1 {
+    width: 164px;
+    display: inline-block;
+    white-space: normal;
+    border: 1px solid #000;
+    margin-left: -1px;
+    padding: 10px 0px;
+    background: #fff;
+}
+
+.button_cl {
+    width: 32%;
+    display: inline-block;
+    white-space: normal;
+    border: 1px solid #000;
+    margin-left: -1px;
+    padding: 10px 0px;
+    cursor: pointer;
+    background: #ffd600;
+    color: #000;
+    -webkit-transition: 0.2s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+}
+
+.button_cl:hover {
+    background: #D8B916;
+}
+
+ tr.invisible{
+    display: none;
+}
+input.invisible {
+    display: none;
+}
+
+
+
+
+
+
+
+

@@ -10,12 +10,14 @@
 <head>
     <title> Corporate Messenger</title>
     <link href="../cssFiles/main.css" type="text/css" rel="Stylesheet"/>
+    <link href="../cssFiles/header.css" type="text/css" rel="Stylesheet"/>
     <script src="../jsFiles/main.js"></script>
+    <script src="../jsFiles/visible.js"></script>
 </head>
 <body>
 <div class="menu">
     <div class="box_log">
-        <a href="#" id="vhod">Log in</a>
+        <a href="javascript:" onclick="openLoginForm()" id="income">Log in</a>
     </div>
 </div>
 <div class="content">
@@ -29,15 +31,20 @@
         </h2>
     </div>
     <div class="content_menu">
-        <div class="box_m"
-             onMouseOver = "mouseOver('department')"
-                onmouseout="mouseOut('department')"><a href="#" class="m_menu"><span>Departments</span></a></div>
-        <div class="box_m"
-             onMouseOver = "mouseOver('worker')"
-             onmouseout="mouseOut('worker')"><a href="#" class="m_menu"><span>Workers</span></a></div>
-        <div class="box_m"
-             onMouseOver = "mouseOver('messenger')"
-             onmouseout="mouseOut('messenger')"><a href="#" class="m_menu"><span>Messenger</span></a></div>
+        <div class="box_m"><a href="#" class="m_menu" onMouseOver="mouseOver('department')"
+                              onmouseout="mouseOut('department')"><span>Departments</span>
+            <div class="trg"></div></a>
+
+        </div>
+        <div class="box_m"><a href="/worker.do" class="m_menu" onMouseOver="mouseOver('worker')"
+                              onmouseout="mouseOut('worker')"><span>Workers</span>
+            <div class="trg"></div></a>
+            </div>
+        <div class="box_m"><a href="#" class="m_menu"
+                              onMouseOver="mouseOver('messenger')"
+                              onmouseout="mouseOut('messenger')"><span>Messenger</span>
+            <div class="trg"></div></a>
+           </div>
     </div>
     <div class="boxInfoAboutButtons">
         <div class="box_info visible" id="mainInfo">
@@ -56,13 +63,27 @@
                 Attention! Only an administrator can create/remove a worker.
             </p>
         </div>
-        <div class="box_info invisible"id="messengerInfo">
+        <div class="box_info invisible" id="messengerInfo">
             <p class="">
                 Messenger. You can write to any employee of the company.
                 See how much new messages do you have and from whom.
             </p>
         </div>
     </div>
+</div>
+<div class="blockingBackground invisible" id="loginBackground">
+    <form method="post" action="/authorization.do">
+        <div class="autoriz" id="authorization">
+            <input type="text" class="objectRow login" placeholder="login" name="login"/>
+            <input type="password" class="objectRow password" placeholder="password" name="password"/>
+
+            <div class="buttonsBox">
+                <input type="submit" value="ok" class="buttonOK"/>
+
+                <div class="buttonCancel" onclick="closeLoginForm()">cancel</div>
+            </div>
+        </div>
+    </form>
 </div>
 </body>
 </html>

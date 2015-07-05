@@ -4,6 +4,7 @@
 
 function mouseOver(nameOfBlock) {
     var elementForVisible = null;
+    var mainElementInfo = document.getElementById('mainInfo');
     if (nameOfBlock == 'department') {
         elementForVisible = document.getElementById('departmentInfo')
     }
@@ -14,7 +15,8 @@ function mouseOver(nameOfBlock) {
         elementForVisible = document.getElementById('messengerInfo')
     }
     if (elementForVisible != null) {
-        changeInfoVisible(elementForVisible, true);
+        changeVisible(elementForVisible, true);
+        changeVisible(mainElementInfo, false);
     }
     else {/*NOP*/
     }
@@ -22,6 +24,7 @@ function mouseOver(nameOfBlock) {
 
 function mouseOut(nameOfBlock) {
     var elementForInvisible = null;
+    var mainElementInfo = document.getElementById('mainInfo');
     if (nameOfBlock == 'department') {
         elementForInvisible = document.getElementById('departmentInfo')
     }
@@ -32,37 +35,15 @@ function mouseOut(nameOfBlock) {
         elementForInvisible = document.getElementById('messengerInfo')
     }
     if (elementForInvisible != null) {
-        changeInfoVisible(elementForInvisible, false);
+        changeVisible(elementForInvisible, false);
+        changeVisible(mainElementInfo, true);
     }
     else {/*NOP*/
     }
 }
 
-function changeInfoVisible(elementForVisible, needVisualisation) {
-    var needClass, removeClass;
-    if (needVisualisation) {
-        needClass = 'visible';
-        removeClass = 'invisible';
 
-    }
-    else {
-        needClass = 'invisible';
-        removeClass = 'visible';
-    }
-    if (elementForVisible.classList.contains(removeClass)) {
-        elementForVisible.classList.remove(removeClass);
-    }
-    if (!elementForVisible.classList.contains(needClass)) {
-        elementForVisible.classList.add(needClass);
-    }
-    var mainElementInfo = document.getElementById('mainInfo');
-    if (mainElementInfo.classList.contains(needClass)) {
-        mainElementInfo.classList.remove(needClass);
-    }
-    if (!mainElementInfo.classList.contains(removeClass)) {
-        mainElementInfo.classList.add(removeClass);
-    }
-}
+
 
 /*
  function changeInfoVisible(elementForVisible) {

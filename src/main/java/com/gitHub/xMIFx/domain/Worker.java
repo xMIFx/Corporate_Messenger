@@ -22,6 +22,13 @@ public class Worker implements Externalizable {
         this.name = name;
     }
 
+    public Worker(Long id, String name, String login, String password) {
+        this.name = name;
+        this.password = password;
+        this.login = login;
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -94,7 +101,7 @@ public class Worker implements Externalizable {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-         this.id = in.readLong();
+        this.id = in.readLong();
         this.name = in.readUTF();
        /* this.login = in.readUTF();
         this.password = in.readUTF();*/
