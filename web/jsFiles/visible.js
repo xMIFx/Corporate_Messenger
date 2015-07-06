@@ -50,7 +50,7 @@ function openNewObjectForm(){
 function closeObjectForm(){
     var elementForInvisible = document.getElementById('objectsForm');
     changeVisible(elementForInvisible, false);
-    var elementsForClean = document.getElementById('newObjectWorker');
+    var elementsForClean = document.getElementById('objectWorker');
     for (i = 0; i < elementsForClean.childNodes.length; i++) {
         conditionElement = elementsForClean.childNodes[i];
         if (conditionElement.classList === undefined) {/*NOP*/

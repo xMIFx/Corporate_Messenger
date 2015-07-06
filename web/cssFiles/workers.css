@@ -23,11 +23,14 @@ div.content {
     text-align: center;
     padding: 5px 0px;
     border: 1px solid #000;
-    background-color:#ffffff;
+    /*background-color:#ffffff;*/
     padding: 10px 0px;
 
 }
-
+#table1 tr{
+    background-color:#ffffff;
+    cursor: pointer;
+}
 
 div.button_box{
     width: 514px;
@@ -92,9 +95,8 @@ div.button_border{
     background: #D8B916;
 }
 
-tr.selected{
+#table1 tr.selected{
     background: #6495ED;
-    color: #6495ED;
 }
 
  tr.invisible{
