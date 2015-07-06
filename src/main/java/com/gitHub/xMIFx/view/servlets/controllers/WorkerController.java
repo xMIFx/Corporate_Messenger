@@ -61,6 +61,10 @@ public class WorkerController extends HttpServlet {
                     worker.setId(id);
                     workerDAO.update(worker);
                 }
+                else if (action.equalsIgnoreCase("getByID")){
+                    id = Long.valueOf(req.getParameter("id"));
+                    worker = workerDAO.getById(id);
+                }
                 answerStr = getWorker(worker);
             }
         } catch (JAXBException e) {

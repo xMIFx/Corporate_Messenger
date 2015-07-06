@@ -92,6 +92,11 @@ div.button_border{
     background: #D8B916;
 }
 
+tr.selected{
+    background: #6495ED;
+    color: #6495ED;
+}
+
  tr.invisible{
     display: none;
 }

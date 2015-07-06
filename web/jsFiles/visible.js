@@ -42,13 +42,13 @@ function closeLoginForm(){
 }
 
 function openNewObjectForm(){
-    var elementForInvisible = document.getElementById('objectsFrom');
+    var elementForInvisible = document.getElementById('objectsForm');
     changeVisible(elementForInvisible, true);
 }
 
 
 function closeObjectForm(){
-    var elementForInvisible = document.getElementById('objectsFrom');
+    var elementForInvisible = document.getElementById('objectsForm');
     changeVisible(elementForInvisible, false);
     var elementsForClean = document.getElementById('newObjectWorker');
     for (i = 0; i < elementsForClean.childNodes.length; i++) {
@@ -60,3 +60,16 @@ function closeObjectForm(){
         }
     }
 }
+function openExceptionForm(exceptionMessage){
+    var elementForInvisible = document.getElementById('exceptionForm');
+    var elementMessage = document.getElementById('messageExc');
+    elementMessage.innerHTML = exceptionMessage;
+    changeVisible(elementForInvisible, true);
+}
+
+function closeExceptionForm(){
+    var elementForInvisible = document.getElementById('exceptionForm');
+    changeVisible(elementForInvisible, false);
+}
+
+

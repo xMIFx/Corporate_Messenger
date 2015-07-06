@@ -68,7 +68,7 @@ div.blockingBackground {
     z-index: 5;
 }
 
-div.autoriz {
+div.visibleBlock {
     margin-top: -64px;
     padding: 15px 0px;
     position: absolute;
@@ -82,7 +82,7 @@ div.autoriz {
     text-align: center;
 }
 
-div.autoriz input {
+div.visibleBlock input {
     margin: 0px auto auto;
     padding: 5px 10px;
     border: 0px;
@@ -100,7 +100,7 @@ input.login, input.password {
 
 }
 
-div.autoriz input.buttonOK {
+div.visibleBlock input.buttonOK {
     background:#ffd600;
     color: #000;
     width: 100px;
@@ -112,7 +112,7 @@ div.autoriz input.buttonOK {
     transition: 0.2s all ease-in-out;
 }
 
-div.autoriz div.buttonOK {
+div.visibleBlock div.buttonOK {
     border: 0px;
     font-size: 14px;
     outline: none;
@@ -128,7 +128,7 @@ div.autoriz div.buttonOK {
     transition: 0.2s all ease-in-out;
 }
 
-div.autoriz div.buttonCancel {
+div.visibleBlock div.buttonCancel {
     border: 0px;
     font-size: 14px;
     outline: none;
@@ -157,14 +157,24 @@ div.buttonsBox a {
     color: #000;
 }
 
-div.autoriz input.buttonOK:hover {
+div.visibleBlock input.buttonOK:hover {
     background: #D8B916;
 }
 
-div.autoriz div.buttonOK:hover {
+div.visibleBlock div.buttonOK:hover {
     background: #D8B916;
 }
 
-div.autoriz div.buttonCancel:hover {
+div.visibleBlock div.buttonCancel:hover {
     background: #D8B916;
+}
+
+div.messageException{
+    background: #ffffff;
+    padding: 10px;
+    margin: 5px;
+}
+
+div.visibleBlock div.buttonsBox div.buttonOK{
+    margin-right: 0px;
 }

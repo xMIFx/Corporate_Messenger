@@ -73,7 +73,7 @@
 </div>
 <div class="blockingBackground invisible" id="loginBackground">
     <form method="post" action="/authorization.do">
-        <div class="autoriz" id="authorization">
+        <div class="visibleBlock" id="authorization">
             <input type="text" class="objectRow login" placeholder="login" name="login"/>
             <input type="password" class="objectRow password" placeholder="password" name="password"/>
 

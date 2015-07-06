@@ -81,7 +81,6 @@ function getAnswerFromServer() {
     }
 }
 
-
 function parseMessages(responseXML) {
     initGlobalVariable();
     if (responseXML == null) {
@@ -101,7 +100,7 @@ function parseMessages(responseXML) {
             /*NOP*/
         }
         else {
-            var newWorker = creatWorkerByXML(workerXML);
+            var newWorker = createWorkerByXML(workerXML);
             createNewTableRow(newWorker);
             closeObjectForm();
         }
@@ -126,22 +125,26 @@ function fillTable(workersHolder) {
     if (workers.length > 0) {
         for (loop = 0; loop < workers.length; loop++) {
             var workerXml = workers[loop];
-            var worker = creatWorkerByXML(workerXml);
+            var worker = createWorkerByXML(workerXml);
             createNewTableRow(worker);
         }
     }
 }
 
-function creatWorkerByXML(workerXml) {
+function createWorkerByXML(workerXml) {
     var worker = new createWorkerObject();
     var id = workerXml.getElementsByTagName("id")[0];
     var name = workerXml.getElementsByTagName("name")[0];
     var login = workerXml.getElementsByTagName("login")[0];
     var pas = workerXml.getElementsByTagName("password")[0];
-    (id === undefined) ? id = null : (id = id.childNodes[0].nodeValue);
-    (name === undefined) ? name = null : (name = name.childNodes[0].nodeValue);
-    (login === undefined) ? login = null : (login = login.childNodes[0].nodeValue);
-    (pas === undefined) ? pas = null : (pas = pas.childNodes[0].nodeValue);
+    (id === undefined    || id.childNodes === undefined || id.childNodes[0] === undefined) ?
+        id = null :(id = id.childNodes[0].nodeValue);
+    (name === undefined  || name.childNodes === undefined || name.childNodes[0] === undefined) ?
+        name = null : (name = name.childNodes[0].nodeValue);
+    (login === undefined || login.childNodes === undefined || login.childNodes[0] === undefined) ?
+        login = null : (login = login.childNodes[0].nodeValue);
+    (pas === undefined   || pas.childNodes === undefined || pas.childNodes[0] === undefined) ?
+        pas = null : (pas = pas.childNodes[0].nodeValue);
     worker.setID(id);
     worker.setName(name);
     worker.setLogin(login);
@@ -151,11 +154,13 @@ function creatWorkerByXML(workerXml) {
 }
 
 function createNewTableRow(worker) {
+    var itNewRow = false;
     var newRow = document.getElementById(worker.getID());
     if (newRow === undefined || newRow == null) {
         newRow = cloneRow.cloneNode(true);
         newRow.id = worker.getID();
         newRow.classList.remove("invisible");
+        itNewRow = true;
     }
     else {/*NOP*/
     }
@@ -177,7 +182,11 @@ function createNewTableRow(worker) {
             child.innerHTML = worker.getDepartmentName();
         }
     }
-    table.appendChild(newRow);
+    if (itNewRow) {
+        table.appendChild(newRow);
+    }
+    else {/*NOP*/
+    }
 }
 
 function getAllWorkers() {
@@ -185,12 +194,15 @@ function getAllWorkers() {
 }
 
 function createNewWorker() {
-    var elementNewObjectBlock = document.getElementById("newObjectWorker");
+    var elementNewObjectBlock = document.getElementById("objectWorker");
     var newWorker = new createWorkerObject();
     var conditionElement;
     for (i = 0; i < elementNewObjectBlock.childNodes.length; i++) {
         conditionElement = elementNewObjectBlock.childNodes[i];
         if (conditionElement.classList === undefined) {/*NOP*/
+        }
+        else if (conditionElement.classList.contains("id")) {
+            newWorker.setID(conditionElement.value);
         }
         else if (conditionElement.classList.contains("name")) {
             newWorker.setName(conditionElement.value);
@@ -207,7 +219,7 @@ function createNewWorker() {
 
 function sendAjaxFromWorkerObject(worker) {
     var url = urlForAjax;
-    if (worker.getID() == undefined || worker.getID() == null) {
+    if (worker.getID() == undefined || worker.getID() == null || worker.getID() == '') {
         url = url + "?action=create";
     }
     else {
@@ -215,4 +227,108 @@ function sendAjaxFromWorkerObject(worker) {
     }
     url = url + "&name=" + worker.getName() + "&login=" + worker.getLogin() + "&password=" + worker.getPassword();
     sendAjax("GET", url);
+}
+
+function selectRow(objectForSelect) {
+    if (objectForSelect.classList.contains("selected")) {
+        openSelectObjectForm();
+    }
+    else {
+        var allSelectedElements = document.getElementsByClassName("selected");
+        for (i = 0; i < allSelectedElements.length; i++) {
+            allSelectedElements[i].classList.remove("selected");
+        }
+        objectForSelect.classList.add("selected");
+    }
+}
+
+function openSelectObjectForm() {
+    var allSelectedElements = document.getElementsByClassName("selected");
+    if (allSelectedElements.length == 0 || allSelectedElements == null) {
+        openExceptionForm("no line is selected!");
+    }
+    else if (allSelectedElements.length > 1) {
+        openExceptionForm("more then one line is selected!");
+    }
+    else {
+        var elementForInvisible = document.getElementById('objectsForm');
+        changeVisible(elementForInvisible, true);
+        startFillObjectForm(allSelectedElements[0]);
+    }
+}
+
+function startFillObjectForm(selectedElement) {
+    var newWorker = new createWorkerObject();
+    var conditionElement;
+    for (i = 0; i < selectedElement.childNodes.length; i++) {
+        conditionElement = selectedElement.childNodes[i];
+
+        if (conditionElement.classList === undefined) {/*NOP*/
+        }
+        else if (conditionElement.classList.contains("workID")) {
+            newWorker.setID(conditionElement.innerHTML);
+            break;
+        }
+    }
+    sendAjaxForFillObjectForm(newWorker);
+}
+
+function sendAjaxForFillObjectForm(worker) {
+    var url = urlForAjax + "?action=getByID&id=" + worker.getID();
+    sendAjaxGettingByID("GET", url);
+}
+
+function sendAjaxGettingByID(type, url) {
+    mXMLHttpRequest.open(type, url, true);
+    mXMLHttpRequest.onreadystatechange = getAnswerFromServerOnID;
+    mXMLHttpRequest.send(null);
+}
+
+function getAnswerFromServerOnID() {
+    if (mXMLHttpRequest.readyState == 4) {
+        if (mXMLHttpRequest.status == 200) {
+            parseWorkerForFillForm(mXMLHttpRequest.responseXML);
+        }
+        else {/*NOP*/
+        }
+    }
+    else {/*NOP*/
+    }
+}
+
+function parseWorkerForFillForm(responseXML) {
+    if (responseXML == null) {
+        return false;
+    } else {
+        var workerXML = responseXML.getElementsByTagName("worker")[0];
+        if (workerXML === undefined) {
+            /*NOP*/
+        }
+        else {
+            var newWorker = createWorkerByXML(workerXML);
+            fillObjectForm(newWorker);
+        }
+    }
+}
+
+function fillObjectForm(worker) {
+    var elementForFill = document.getElementById('objectWorker');
+    var conditionElement;
+    for (i = 0; i < elementForFill.childNodes.length; i++) {
+        conditionElement = elementForFill.childNodes[i];
+        if (conditionElement.classList === undefined) {/*NOP*/
+        }
+        else if (conditionElement.classList.contains("id")) {
+            conditionElement.value = worker.getID();
+        }
+        else if (conditionElement.classList.contains("name")) {
+            conditionElement.value = worker.getName();
+        }
+        else if (conditionElement.classList.contains("login")) {
+            conditionElement.value = worker.getLogin();
+        }
+        else if (conditionElement.classList.contains("password")) {
+            conditionElement.value = worker.getPassword();
+        }
+    }
 }

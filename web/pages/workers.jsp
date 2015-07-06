@@ -25,7 +25,7 @@
     <div class="fix">
         <div class="button_box">
             <div class="button_cl " onclick="openNewObjectForm()">create</div>
-            <div class="button_cl ">update</div>
+            <div class="button_cl " onclick="openSelectObjectForm()">update</div>
             <div class="button_cl ">delete</div>
         </div>
    <%-- <div class=" button_border fix"></div>--%>
@@ -35,7 +35,7 @@
     </div>
     </div>
     <table id="table1">
-            <tr class="invisible" id="lineForCopy">
+            <tr class="invisible" id="lineForCopy" onclick ="selectRow(this)">
                 <td class="workID">1</td>
                 <td class="workName">2</td>
                 <td class="workLogin">3</td>
@@ -45,7 +45,7 @@
 </div>
 <div class="blockingBackground invisible" id="loginBackground">
     <form method="post" action="/authorization.do">
-        <div class="autoriz" id="authorization">
+        <div class="visibleBlock" id="authorization">
             <input type="text" class="objectRow login" placeholder="login" name="login"/>
             <input type="password" class="objectRow password" placeholder="password" name="password"/>
 
@@ -56,8 +56,8 @@
         </div>
     </form>
 </div>
-<div class="blockingBackground invisible" id="objectsFrom">
-        <div class="autoriz" id="newObjectWorker">
+<div class="blockingBackground invisible" id="objectsForm">
+        <div class="visibleBlock" id="objectWorker">
             <input type="text" class="objectRow id invisible" placeholder="id" name="id"/>
             <input type="text" class="objectRow name" placeholder="name" name="name"/>
             <input type="text" class="objectRow login" placeholder="login" name="login"/>
@@ -67,6 +67,14 @@
                 <div class="buttonCancel" onclick="closeObjectForm()">cancel</div>
             </div>
         </div>
+</div>
+<div class="blockingBackground invisible" id="exceptionForm">
+    <div class="visibleBlock" id="exceptionVisibleForm">
+        <div class="messageException" id="messageExc"></div>
+        <div class="buttonsBox">
+            <div class="buttonOK" onclick="closeExceptionForm()">ok</div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
