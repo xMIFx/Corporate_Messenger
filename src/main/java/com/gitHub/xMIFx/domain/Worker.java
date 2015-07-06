@@ -58,6 +58,17 @@ public class Worker implements Externalizable {
         this.id = id;
     }
 
+    public int calculateSalary(int workingTime, int payment) {
+        if (workingTime < 0) {
+            throw new IllegalArgumentException("working time can't be less 0");
+        }
+        if (payment <= 0) {
+            throw new IllegalArgumentException("payment  can't be less or =  0");
+        }
+        return workingTime * payment;
+
+    }
+
     @Override
     public String toString() {
 
@@ -94,7 +105,7 @@ public class Worker implements Externalizable {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-         this.id = in.readLong();
+        this.id = in.readLong();
         this.name = in.readUTF();
        /* this.login = in.readUTF();
         this.password = in.readUTF();*/

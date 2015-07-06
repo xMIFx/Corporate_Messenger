@@ -1,3 +1,5 @@
+package com.gitHub.xMIFx.repositories;
+
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.repositories.implementationDAO.collectionDAO.DepartmentCollectionDAOImpl;
