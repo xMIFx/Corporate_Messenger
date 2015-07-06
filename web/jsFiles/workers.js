@@ -332,3 +332,17 @@ function fillObjectForm(worker) {
         }
     }
 }
+
+function deleteObject(){
+    var allSelectedElements = document.getElementsByClassName("selected");
+    if (allSelectedElements.length == 0 || allSelectedElements == null) {
+        openExceptionForm("no line is selected!");
+    }
+    else if (allSelectedElements.length > 1) {
+        openExceptionForm("more then one line is selected!");
+    }
+    else {
+        openQuestionForm('Do you really want to delete selected object?!');
+        //startFillObjectForm(allSelectedElements[0]);
+    }
+}

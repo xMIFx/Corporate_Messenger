@@ -26,7 +26,7 @@
         <div class="button_box">
             <div class="button_cl " onclick="openNewObjectForm()">create</div>
             <div class="button_cl " onclick="openSelectObjectForm()">update</div>
-            <div class="button_cl ">delete</div>
+            <div class="button_cl " onclick="deleteObject()">delete</div>
         </div>
    <%-- <div class=" button_border fix"></div>--%>
 
@@ -70,9 +70,18 @@
 </div>
 <div class="blockingBackground invisible" id="exceptionForm">
     <div class="visibleBlock" id="exceptionVisibleForm">
-        <div class="messageException" id="messageExc"></div>
-        <div class="buttonsBox">
+        <div class="messageAboutSomething" id="messageExc"></div>
+        <div class="buttonsBoxExc">
             <div class="buttonOK" onclick="closeExceptionForm()">ok</div>
+        </div>
+    </div>
+</div>
+<div class="blockingBackground invisible" id = "questionForm">
+    <div class="visibleBlock">
+        <div class="messageAboutSomething" id = "messageQuestion"></div>
+        <div class="buttonsBox">
+            <div class="buttonOK" onclick="createNewWorker()">ok</div>
+            <div class="buttonCancel" onclick="closeQuestionForm()">cancel</div>
         </div>
     </div>
 </div>

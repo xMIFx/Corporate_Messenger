@@ -169,12 +169,12 @@ div.visibleBlock div.buttonCancel:hover {
     background: #D8B916;
 }
 
-div.messageException{
+div.messageAboutSomething{
     background: #ffffff;
     padding: 10px;
     margin: 5px;
 }
 
-div.visibleBlock div.buttonsBox div.buttonOK{
+div.visibleBlock div.buttonsBoxExc div.buttonOK{
     margin-right: 0px;
 }

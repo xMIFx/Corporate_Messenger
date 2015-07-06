@@ -72,4 +72,16 @@ function closeExceptionForm(){
     changeVisible(elementForInvisible, false);
 }
 
+function openQuestionForm(questionMessage){
+    var elementForInvisible = document.getElementById('questionForm');
+    var elementMessage = document.getElementById('messageQuestion');
+    elementMessage.innerHTML = questionMessage;
+    changeVisible(elementForInvisible, true);
+}
+
+function closeQuestionForm(){
+    var elementForInvisible = document.getElementById('questionForm');
+    changeVisible(elementForInvisible, false);
+}
+
 
