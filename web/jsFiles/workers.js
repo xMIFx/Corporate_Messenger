@@ -137,13 +137,13 @@ function createWorkerByXML(workerXml) {
     var name = workerXml.getElementsByTagName("name")[0];
     var login = workerXml.getElementsByTagName("login")[0];
     var pas = workerXml.getElementsByTagName("password")[0];
-    (id === undefined    || id.childNodes === undefined || id.childNodes[0] === undefined) ?
-        id = null :(id = id.childNodes[0].nodeValue);
-    (name === undefined  || name.childNodes === undefined || name.childNodes[0] === undefined) ?
+    (id === undefined || id.childNodes === undefined || id.childNodes[0] === undefined) ?
+        id = null : (id = id.childNodes[0].nodeValue);
+    (name === undefined || name.childNodes === undefined || name.childNodes[0] === undefined) ?
         name = null : (name = name.childNodes[0].nodeValue);
     (login === undefined || login.childNodes === undefined || login.childNodes[0] === undefined) ?
         login = null : (login = login.childNodes[0].nodeValue);
-    (pas === undefined   || pas.childNodes === undefined || pas.childNodes[0] === undefined) ?
+    (pas === undefined || pas.childNodes === undefined || pas.childNodes[0] === undefined) ?
         pas = null : (pas = pas.childNodes[0].nodeValue);
     worker.setID(id);
     worker.setName(name);
@@ -193,7 +193,7 @@ function getAllWorkers() {
     sendAjax("GET", urlForAjax + "?action=getAll");
 }
 
-function createNewWorker() {
+function createUpdateWorker() {
     var elementNewObjectBlock = document.getElementById("objectWorker");
     var newWorker = new createWorkerObject();
     var conditionElement;
@@ -333,7 +333,7 @@ function fillObjectForm(worker) {
     }
 }
 
-function deleteObject(){
+function deleteObject() {
     var allSelectedElements = document.getElementsByClassName("selected");
     if (allSelectedElements.length == 0 || allSelectedElements == null) {
         openExceptionForm("no line is selected!");
@@ -343,6 +343,67 @@ function deleteObject(){
     }
     else {
         openQuestionForm('Do you really want to delete selected object?!');
-        //startFillObjectForm(allSelectedElements[0]);
     }
+}
+
+function deleteWorker() {
+    var selectedElement = document.getElementsByClassName("selected")[0];
+    var newWorker = new createWorkerObject();
+    var conditionElement;
+    for (i = 0; i < selectedElement.childNodes.length; i++) {
+        conditionElement = selectedElement.childNodes[i];
+
+        if (conditionElement.classList === undefined) {/*NOP*/
+        }
+        else if (conditionElement.classList.contains("workID")) {
+            newWorker.setID(conditionElement.innerHTML);
+            break;
+        }
+    }
+    sendAjaxForDeleteObjectForm(newWorker);
+    closeQuestionForm();
+}
+
+function sendAjaxForDeleteObjectForm(worker) {
+    var url = urlForAjax + "?action=deleteByID&id=" + worker.getID();
+    sendAjaxDeletingByID("GET", url);
+}
+
+function sendAjaxDeletingByID(type, url) {
+    mXMLHttpRequest.open(type, url, true);
+    mXMLHttpRequest.onreadystatechange = getAnswerFromServerOnDeleteID;
+    mXMLHttpRequest.send(null);
+}
+
+function getAnswerFromServerOnDeleteID() {
+    if (mXMLHttpRequest.readyState == 4) {
+        if (mXMLHttpRequest.status == 200) {
+            parseWorkerForDelete(mXMLHttpRequest.responseXML);
+        }
+        else {/*NOP*/
+        }
+    }
+    else {/*NOP*/
+    }
+}
+
+function parseWorkerForDelete(responseXML) {
+    if (responseXML == null) {
+        return false;
+    } else {
+        var workerXML = responseXML.getElementsByTagName("worker")[0];
+        if (workerXML === undefined) {
+            /*NOP*/
+        }
+        else {
+            var worker = createWorkerByXML(workerXML);
+            deleteRowObject(worker);
+        }
+    }
+}
+
+function deleteRowObject(worker) {
+    var elementForRemove = document.getElementById(worker.getID());
+    elementForRemove.parentNode.removeChild(elementForRemove);
+
 }

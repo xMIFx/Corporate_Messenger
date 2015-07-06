@@ -43,6 +43,7 @@ public class WorkerController extends HttpServlet {
 
     private void readAjax(String action, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String answerStr = null;
+        boolean itsDeleting = false;
         try {
             if (action.equalsIgnoreCase("getAll")) {
                 answerStr = getAllWorkers();
@@ -64,8 +65,18 @@ public class WorkerController extends HttpServlet {
                 else if (action.equalsIgnoreCase("getByID")){
                     id = Long.valueOf(req.getParameter("id"));
                     worker = workerDAO.getById(id);
+                } else if (action.equalsIgnoreCase("deleteByID")) {
+                    id = Long.valueOf(req.getParameter("id"));
+                    worker = workerDAO.getById(id);
+                    itsDeleting = true;
+                    boolean itsOk = workerDAO.remove(worker);
+                    if (!itsOk) {
+                        worker = null;
+                    }
                 }
+
                 answerStr = getWorker(worker);
+
             }
         } catch (JAXBException e) {
             logger.error("some jaxB exception: ", e);
@@ -86,6 +97,17 @@ public class WorkerController extends HttpServlet {
         Marshaller jaxbMarshaller = jaxbRootContext.createMarshaller();
         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         jaxbMarshaller.marshal(worker, writer);
+        System.out.println(writer.toString());
+        return writer.toString();
+    }
+
+    private String getLong(Long workerID) throws JAXBException {
+        JAXBContext jaxbRootContext = null;
+        StringWriter writer = new StringWriter();
+        jaxbRootContext = JAXBContext.newInstance(Long.class);
+        Marshaller jaxbMarshaller = jaxbRootContext.createMarshaller();
+        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        jaxbMarshaller.marshal(workerID, writer);
         System.out.println(writer.toString());
         return writer.toString();
     }

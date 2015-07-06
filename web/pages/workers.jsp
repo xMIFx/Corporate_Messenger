@@ -63,7 +63,7 @@
             <input type="text" class="objectRow login" placeholder="login" name="login"/>
             <input type="password" class="objectRow password" placeholder="password" name="password"/>
             <div class="buttonsBox">
-                <div class="buttonOK" onclick="createNewWorker()">ok</div>
+                <div class="buttonOK" onclick="createUpdateWorker()">ok</div>
                 <div class="buttonCancel" onclick="closeObjectForm()">cancel</div>
             </div>
         </div>
@@ -80,7 +80,7 @@
     <div class="visibleBlock">
         <div class="messageAboutSomething" id = "messageQuestion"></div>
         <div class="buttonsBox">
-            <div class="buttonOK" onclick="createNewWorker()">ok</div>
+            <div class="buttonOK" onclick="deleteWorker()">ok</div>
             <div class="buttonCancel" onclick="closeQuestionForm()">cancel</div>
         </div>
     </div>
