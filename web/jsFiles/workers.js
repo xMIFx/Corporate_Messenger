@@ -13,6 +13,7 @@ function createWorkerObject() {
     this.login;
     this.password;
     this.departmentName;
+    this.confirmPassword;
 
     this.setID = function (ID) {
         this.id = ID;
@@ -31,6 +32,10 @@ function createWorkerObject() {
         this.departmentName = depName;
     }
 
+    this.setConfirmPassword = function (confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
     this.getID = function () {
         return this.id;
     }
@@ -46,6 +51,18 @@ function createWorkerObject() {
 
     this.getDepartmentName = function () {
         return this.departmentName;
+    }
+
+    this.getConfirmPassword = function () {
+        return this.confirmPassword;
+    }
+    this.checkPasswordValidation = function(){
+        if(this.password!=this.confirmPassword){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }
 //Functions

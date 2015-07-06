@@ -62,6 +62,7 @@
             <input type="text" class="objectRow name" placeholder="name" name="name"/>
             <input type="text" class="objectRow login" placeholder="login" name="login"/>
             <input type="password" class="objectRow password" placeholder="password" name="password"/>
+            <input type="password" class="objectRow confirmPassword" placeholder="confirmPassword" name="confirmPassword"/>
             <div class="buttonsBox">
                 <div class="buttonOK" onclick="createUpdateWorker()">ok</div>
                 <div class="buttonCancel" onclick="closeObjectForm()">cancel</div>

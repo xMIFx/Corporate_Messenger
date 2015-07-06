@@ -36,6 +36,7 @@ function changeVisibleAnotherForm(classForInvisibleAllElement, exeptElem) {
 
 function openLoginForm() {
     var elementForInvisible = document.getElementById('loginBackground');
+    changeVisibleAnotherForm("blockingBackground", elementForInvisible);
     changeVisible(elementForInvisible, true);
 }
 
@@ -56,6 +57,7 @@ function closeLoginForm() {
 
 function openNewObjectForm() {
     var elementForInvisible = document.getElementById('objectsForm');
+    changeVisibleAnotherForm("blockingBackground", elementForInvisible);
     changeVisible(elementForInvisible, true);
 }
 
