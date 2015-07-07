@@ -36,6 +36,11 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
     }
 
     @Override
+    public List<Department> getAllWithoutWorkers() {
+        return null;
+    }
+
+    @Override
     public boolean remove(Department department) {
         return false;
     }

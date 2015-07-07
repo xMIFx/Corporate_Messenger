@@ -13,6 +13,9 @@ public class Worker implements Externalizable {
     private String password;
     private String login;
     private Long id;
+    private int objectVersion;
+    private String departmentName;
+
 
     public Worker() {
 
@@ -63,6 +66,22 @@ public class Worker implements Externalizable {
     @XmlElement
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getObjectVersion() {
+        return objectVersion;
+    }
+    @XmlElement
+    public void setObjectVersion(int objectVersion) {
+        this.objectVersion = objectVersion;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+    @XmlElement
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
     public int calculateSalary(int workingTime, int payment) {

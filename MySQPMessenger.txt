@@ -34,3 +34,11 @@ INSERT INTO `corporate_messenger`.`workers` (`id`, `name`, `login`, `password`) 
 
 
 INSERT INTO `corporate_messenger`.`departmentworkers` (`idworker`, `iddepartment`) VALUES ('1', '1');
+
+ALTER TABLE `corporate_messenger`.`departments` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL ,
+ADD COLUMN `objectVersion` INT NOT NULL DEFAULT 0 AFTER `name`;
+
+ALTER TABLE `corporate_messenger`.`workers` 
+ADD COLUMN `objectVersion` INT NOT NULL DEFAULT 0 AFTER `password`;
+

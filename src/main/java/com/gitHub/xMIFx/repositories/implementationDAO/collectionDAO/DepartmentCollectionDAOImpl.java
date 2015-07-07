@@ -61,6 +61,11 @@ public class DepartmentCollectionDAOImpl implements DepartmentDAO {
         return departmentList;
     }
 
+    @Override
+    public List<Department> getAllWithoutWorkers() {
+        return null;
+    }
+
     public boolean remove(Department department) {
         if (department.getId() != null) {
             departmentMap.remove(department.getId());

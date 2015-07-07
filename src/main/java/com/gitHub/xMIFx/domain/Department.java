@@ -18,6 +18,8 @@ public class Department implements Externalizable {
     private String name;
     private Long id;
     private List<Worker> workers;
+    private int objectVersion;
+    private int workersCount;
 
     public Department() {
 
@@ -55,6 +57,22 @@ public class Department implements Externalizable {
     @XmlElement
     public void setWorkers(List<Worker> workers) {
         this.workers = workers;
+    }
+
+    public int getObjectVersion() {
+        return objectVersion;
+    }
+    @XmlElement
+    public void setObjectVersion(int objectVersion) {
+        this.objectVersion = objectVersion;
+    }
+
+    public int getWorkersCount() {
+        return workersCount;
+    }
+    @XmlElement
+    public void setWorkersCount(int workersCount) {
+        this.workersCount = workersCount;
     }
 
     public void addWorker(Worker worker) {
@@ -122,4 +140,5 @@ public class Department implements Externalizable {
             this.addWorker(readWorker);
         }
     }
+
 }

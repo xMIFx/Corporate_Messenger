@@ -95,6 +95,11 @@ public class DepartmentJsonDAOImpl implements DepartmentDAO {
     }
 
     @Override
+    public List<Department> getAllWithoutWorkers() {
+        return null;
+    }
+
+    @Override
     public boolean remove(Department department) {
         boolean allIsOK = true;
         if (department.getId() != null) {

@@ -20,6 +20,8 @@ public interface DepartmentDAO {
     Department getByWorker(Worker worker);
     //get All department
      List<Department> getAll();
+
+    List<Department> getAllWithoutWorkers();
     // remove department
     boolean remove(Department department);
     //update department
