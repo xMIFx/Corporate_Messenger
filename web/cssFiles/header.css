@@ -1,0 +1,180 @@
+div.menu {
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    padding: 15px 0px;
+    background: #3C3232;
+    z-index: 3;
+}
+div.back {
+    margin: 0px 15px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+div.back a{
+    padding: 5px 10px;
+    margin: 6px 10px;
+    background: #ffd600;
+    color: #000;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
+    -webkit-transition: 0.2s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+}
+div.back a:hover{
+    text-decoration: underline;
+    background: #D8B916;
+}
+div.box_log {
+    display: inline-block;
+    vertical-align: middle;
+    float: right;
+}
+div.box_log a {
+    padding: 5px 10px;
+    margin: 6px 10px;
+    background: #ffd600;
+    color: #000;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
+    -webkit-transition: 0.2s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+}
+
+div.box_log a:hover {
+    text-decoration: underline;
+    background: #D8B916;
+}
+
+div.invisible {
+    display: none;
+}
+
+div.visible {
+    display: block;
+}
+
+div.blockingBackground {
+    top: 0px;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(211, 211, 211, 0.6);
+    z-index: 5;
+}
+
+div.visibleBlock {
+    margin-top: -64px;
+    padding: 15px 0px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    margin-left: -150px;
+    background: #3C3232;
+    -webkit-box-shadow: 1px 2px 5px 1px rgba(1, 1, 1, 0.5);
+    box-shadow: 1px 2px 5px 1px rgba(1, 1, 1, 0.5);
+    text-align: center;
+}
+
+div.visibleBlock input {
+    margin: 0px auto auto;
+    padding: 5px 10px;
+    border: 0px;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 10px;
+    width: 250px;
+
+}
+
+input.login, input.password {
+    -webkit-box-shadow: inset -2px -3px 5px 1px rgba(1, 1, 1, 0.2);
+    box-shadow: inset -2px -3px 5px 1px rgba(1, 1, 1, 0.2);
+    display: block;
+
+}
+
+div.visibleBlock input.buttonOK {
+    background:#ffd600;
+    color: #000;
+    width: 100px;
+    display: inline-block;
+    margin-bottom: 0px;
+    margin-right: 48px;
+    cursor: pointer;
+    -webkit-transition: 0.2s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+}
+
+div.visibleBlock div.buttonOK {
+    border: 0px;
+    font-size: 14px;
+    outline: none;
+    background:#ffd600;
+    color: #000;
+    width: 100px;
+    display: inline-block;
+    margin-bottom: 0px;
+    margin-right: 48px;
+    padding: 5px 0px;
+    cursor: pointer;
+    -webkit-transition: 0.2s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+}
+
+div.visibleBlock div.buttonCancel {
+    border: 0px;
+    font-size: 14px;
+    outline: none;
+    background: #ffd600;
+    color: #000;
+    width: 100px;
+    display: inline-block;
+    padding: 5px 0px;
+    cursor: pointer;
+    -webkit-transition: 0.2s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+}
+
+div.buttonsBox {
+    white-space: nowrap;
+}
+
+div.buttonsBox a, div.box input {
+    display: inline-block;
+    *zoom: 1;
+    vertical-align: middle;
+    margin: 5px 10px;
+}
+
+div.buttonsBox a {
+    color: #000;
+}
+
+div.visibleBlock input.buttonOK:hover {
+    background: #D8B916;
+}
+
+div.visibleBlock div.buttonOK:hover {
+    background: #D8B916;
+}
+
+div.visibleBlock div.buttonCancel:hover {
+    background: #D8B916;
+}
+
+div.messageAboutSomething{
+    background: #ffffff;
+    padding: 10px;
+    margin: 5px;
+}
+
+div.visibleBlock div.buttonsBoxExc div.buttonOK{
+    margin-right: 0px;
+}

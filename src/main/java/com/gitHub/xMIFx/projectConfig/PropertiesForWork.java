@@ -22,7 +22,9 @@ public class PropertiesForWork {
 
     private PropertiesForWork() {
         Properties prop = new Properties();
-        try (InputStream in = new FileInputStream("src/main/resources/config.properties")) {
+       ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try(InputStream in = loader.getResourceAsStream("config.properties")){
+       // try (InputStream in = new FileInputStream("src/main/resources/config.properties")) {
             prop.load(in);
             this.pathToRepo = prop.getProperty("pathToRepositories");
             String DAOType = prop.getProperty("typeOfDAO");
