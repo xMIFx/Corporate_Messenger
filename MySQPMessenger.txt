@@ -1,0 +1,36 @@
+CREATE SCHEMA `corporate_messenger` ;
+
+CREATE TABLE `corporate_messenger`.`departments` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC));
+
+
+CREATE TABLE `corporate_messenger`.`workers` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `login` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
+  UNIQUE INDEX `login_UNIQUE` (`login` ASC));
+
+CREATE TABLE `corporate_messenger`.`departmentworkers` (
+  `idworker` INT NOT NULL,
+  `iddepartment` INT NOT NULL,
+  PRIMARY KEY (`idworker`),
+  UNIQUE INDEX `idworker_UNIQUE` (`idworker` ASC))
+COMMENT = 'binding deparment with workers. worker can be only in one department';
+
+
+INSERT INTO `corporate_messenger`.`departments` (`id`, `name`) VALUES ('0', 'WithoutWorkers');
+
+INSERT INTO `corporate_messenger`.`departments` (`id`, `name`) VALUES ('1', 'IT');
+
+INSERT INTO `corporate_messenger`.`workers` (`id`, `name`, `login`, `password`) VALUES ('1', 'Vlad', 'MIF', '123456');
+
+
+INSERT INTO `corporate_messenger`.`departmentworkers` (`idworker`, `iddepartment`) VALUES ('1', '1');
