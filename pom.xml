@@ -66,15 +66,12 @@
         <dependency>
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
 
 =======
-=======
->>>>>>> origin/Web
 =======
 >>>>>>> origin/Web
             <groupId>javax.servlet</groupId>
@@ -89,9 +86,6 @@
             <scope>compile</scope>
         </dependency>
 <<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> origin/Web
-=======
 >>>>>>> origin/Web
 =======
 >>>>>>> origin/Web
