@@ -47,8 +47,8 @@ public class PropertiesForWork {
                     this.pathToWorkers = this.pathToRepo + "/workers.json";
                     this.pathToDepartments = this.pathToRepo + "/departments.json";
                     break;
-                case "JDBC":
-                    this.currentTypeOfDAO = TypeOfDAO.JDBC;
+                case "JDBCMYSQL":
+                    this.currentTypeOfDAO = TypeOfDAO.JDBCMYSQL;
                     break;
                 default:
                     setDefaultValues();

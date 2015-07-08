@@ -24,7 +24,7 @@ public abstract class CreatorDAOFactory {
             case JSON:
                 factoryForDAO = new JSONAbstractFactoryImpl();
                 break;
-            case JDBC:
+            case JDBCMYSQL:
                 factoryForDAO = new JDBCMySQLAbstractFactoryImpl();
                 break;
             default:
