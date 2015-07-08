@@ -32,6 +32,15 @@ public class Worker implements Externalizable {
         this.id = id;
     }
 
+    public Worker( Long id, String name, String login,  String password, int objectVersion, String departmentName) {
+        this.name = name;
+        this.password = password;
+        this.login = login;
+        this.id = id;
+        this.objectVersion = objectVersion;
+        this.departmentName = departmentName;
+    }
+
     public String getName() {
         return name;
     }

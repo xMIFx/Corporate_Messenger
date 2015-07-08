@@ -58,6 +58,8 @@
 </div>
 <div class="blockingBackground invisible" id="objectsForm">
         <div class="visibleBlock" id="objectWorker">
+            <input type="text" class="objectRow depName invisible" placeholder="depName" name="depName"/>
+            <input type="text" class="objectRow objectVersion invisible" placeholder="objectVersion" name="objectVersion"/>
             <input type="text" class="objectRow id invisible" placeholder="id" name="id"/>
             <input type="text" class="objectRow name" placeholder="name" name="name"/>
             <input type="text" class="objectRow login" placeholder="login" name="login"/>

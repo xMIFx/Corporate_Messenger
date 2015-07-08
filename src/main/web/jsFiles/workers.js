@@ -13,6 +13,7 @@ function createWorkerObject() {
     this.login;
     this.password;
     this.departmentName;
+    this.objectVersion;
     this.confirmPassword;
 
     this.setID = function (ID) {
@@ -36,6 +37,10 @@ function createWorkerObject() {
         this.confirmPassword = confirmPassword;
     }
 
+    this.setObjectVersion = function (objVers) {
+        this.objectVersion = objVers
+    }
+
     this.getID = function () {
         return this.id;
     }
@@ -56,11 +61,16 @@ function createWorkerObject() {
     this.getConfirmPassword = function () {
         return this.confirmPassword;
     }
-    this.checkPasswordValidation = function(){
-        if(this.password!=this.confirmPassword){
+
+    this.getObjectVersion = function () {
+        return this.objectVersion;
+    }
+
+    this.checkPasswordValidation = function () {
+        if (this.password != this.confirmPassword) {
             return false;
         }
-        else{
+        else {
             return true;
         }
     }
@@ -154,6 +164,8 @@ function createWorkerByXML(workerXml) {
     var name = workerXml.getElementsByTagName("name")[0];
     var login = workerXml.getElementsByTagName("login")[0];
     var pas = workerXml.getElementsByTagName("password")[0];
+    var depName = workerXml.getElementsByTagName("departmentName")[0];
+    var objVersion = workerXml.getElementsByTagName("objectVersion")[0];
     (id === undefined || id.childNodes === undefined || id.childNodes[0] === undefined) ?
         id = null : (id = id.childNodes[0].nodeValue);
     (name === undefined || name.childNodes === undefined || name.childNodes[0] === undefined) ?
@@ -162,11 +174,16 @@ function createWorkerByXML(workerXml) {
         login = null : (login = login.childNodes[0].nodeValue);
     (pas === undefined || pas.childNodes === undefined || pas.childNodes[0] === undefined) ?
         pas = null : (pas = pas.childNodes[0].nodeValue);
+    (depName === undefined || depName.childNodes === undefined || depName.childNodes[0] === undefined) ?
+        depName = null : (depName = depName.childNodes[0].nodeValue);
+    (objVersion === undefined || objVersion.childNodes === undefined || objVersion.childNodes[0] === undefined) ?
+        objVersion = null : (objVersion = objVersion.childNodes[0].nodeValue);
     worker.setID(id);
     worker.setName(name);
     worker.setLogin(login);
     worker.setPassword(pas);
-    worker.setDepartmentName(null);
+    worker.setDepartmentName(depName);
+    worker.setObjectVersion(objVersion);
     return worker;
 }
 
@@ -230,6 +247,12 @@ function createUpdateWorker() {
         else if (conditionElement.classList.contains("password")) {
             newWorker.setPassword(conditionElement.value);
         }
+        else if (conditionElement.classList.contains("objectVersion")) {
+            newWorker.setObjectVersion(conditionElement.value);
+        }
+        else if (conditionElement.classList.contains("depName")) {
+            newWorker.setDepartmentName(conditionElement.value);
+        }
     }
     sendAjaxFromWorkerObject(newWorker);
 }
@@ -240,7 +263,7 @@ function sendAjaxFromWorkerObject(worker) {
         url = url + "?action=create";
     }
     else {
-        url = url + "?action=update&id=" + worker.getID();
+        url = url + "?action=update&id=" + worker.getID()+ "&objVersion="+ worker.getObjectVersion()+ "&depName="+ worker.getDepartmentName();
     }
     url = url + "&name=" + worker.getName() + "&login=" + worker.getLogin() + "&password=" + worker.getPassword();
     sendAjax("GET", url);
@@ -346,6 +369,12 @@ function fillObjectForm(worker) {
         }
         else if (conditionElement.classList.contains("password")) {
             conditionElement.value = worker.getPassword();
+        }
+        else if (conditionElement.classList.contains("objectVersion")) {
+            conditionElement.value = worker.getObjectVersion();
+        }
+        else if (conditionElement.classList.contains("depName")) {
+            conditionElement.value = worker.getDepartmentName();
         }
     }
 }

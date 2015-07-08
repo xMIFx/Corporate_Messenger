@@ -58,8 +58,10 @@ public class WorkerController extends HttpServlet {
                     workerDAO.save(worker);
 
                 } else if (action.equalsIgnoreCase("update")) {
+                    int objVersion = Integer.valueOf(req.getParameter("objVersion"));
                     id = Long.valueOf(req.getParameter("id"));
                     worker.setId(id);
+                    worker.setDepartmentName(req.getParameter("depName"));
                     workerDAO.update(worker);
                 }
                 else if (action.equalsIgnoreCase("getByID")){
