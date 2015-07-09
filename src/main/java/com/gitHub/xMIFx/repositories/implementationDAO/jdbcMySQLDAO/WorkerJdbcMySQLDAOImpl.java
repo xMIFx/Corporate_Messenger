@@ -303,7 +303,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
 
     private static void setPropertiesForDataSource() {
         PoolProperties p = new PoolProperties();
-        p.setUrl("jdbc:mysql://127.0.0.1:3306/testBase1_0");
+        p.setUrl("jdbc:mysql://127.0.0.1:3306/corporate_messenger");
         p.setDriverClassName("com.mysql.jdbc.Driver");
         p.setUsername("root");
         p.setPassword("Lytghj12");

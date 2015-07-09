@@ -6,6 +6,7 @@ var mXMLHttpRequest = new XMLHttpRequest();
 var cloneRow;
 var table;
 var urlForAjax = "worker.do";
+var selectedWorker = null;
 //Objects
 function createWorkerObject() {
     this.id;
@@ -75,6 +76,56 @@ function createWorkerObject() {
         }
     }
 }
+
+function createWorkerByXML(workerXml) {
+    var worker = new createWorkerObject();
+    var id = workerXml.getElementsByTagName("id")[0];
+    var name = workerXml.getElementsByTagName("name")[0];
+    var login = workerXml.getElementsByTagName("login")[0];
+    var pas = workerXml.getElementsByTagName("password")[0];
+    var depName = workerXml.getElementsByTagName("departmentName")[0];
+    var objVersion = workerXml.getElementsByTagName("objectVersion")[0];
+    (id === undefined || id.childNodes === undefined || id.childNodes[0] === undefined) ?
+        id = null : (id = id.childNodes[0].nodeValue);
+    (name === undefined || name.childNodes === undefined || name.childNodes[0] === undefined) ?
+        name = null : (name = name.childNodes[0].nodeValue);
+    (login === undefined || login.childNodes === undefined || login.childNodes[0] === undefined) ?
+        login = null : (login = login.childNodes[0].nodeValue);
+    (pas === undefined || pas.childNodes === undefined || pas.childNodes[0] === undefined) ?
+        pas = null : (pas = pas.childNodes[0].nodeValue);
+    (depName === undefined || depName.childNodes === undefined || depName.childNodes[0] === undefined) ?
+        depName = null : (depName = depName.childNodes[0].nodeValue);
+    (objVersion === undefined || objVersion.childNodes === undefined || objVersion.childNodes[0] === undefined) ?
+        objVersion = null : (objVersion = objVersion.childNodes[0].nodeValue);
+    worker.setID(id);
+    worker.setName(name);
+    worker.setLogin(login);
+    worker.setPassword(pas);
+    worker.setDepartmentName(depName);
+    worker.setObjectVersion(objVersion);
+    return worker;
+}
+
+function createExceptionObject() {
+    this.exceptionMessege;
+
+    this.setExceptionMessage = function (excMess) {
+        this.exceptionMessege = excMess;
+    }
+
+    this.getExceptionMessage = function () {
+        return this.exceptionMessege;
+    }
+}
+
+function createExceptionByXML(exceptionXML) {
+    var exceptionFromServer = new createExceptionObject();
+    var excMes = exceptionXML.getElementsByTagName("exceptionMessage")[0];
+    (excMes === undefined || excMes.childNodes === undefined || excMes.childNodes[0] === undefined) ?
+        excMes = null : (excMes = excMes.childNodes[0].nodeValue);
+    exceptionFromServer.setExceptionMessage(excMes);
+    return exceptionFromServer;
+}
 //Functions
 function init() {
     getAllWorkers();
@@ -120,6 +171,7 @@ function parseMessages(responseXML) {
         else {
             clearTable();
             fillTable(workers);
+            return;
 
         }
         var workerXML = responseXML.getElementsByTagName("worker")[0];
@@ -130,6 +182,16 @@ function parseMessages(responseXML) {
             var newWorker = createWorkerByXML(workerXML);
             createNewTableRow(newWorker);
             closeObjectForm();
+            return;
+        }
+
+        var exceptionXML = responseXML.getElementsByTagName("exceptionForView")[0];
+        if (exceptionXML === undefined) {/*NOP*/
+        }
+        else {
+            var exceptionFromServer = createExceptionByXML(exceptionXML);
+            openExceptionForm(exceptionFromServer.getExceptionMessage());
+            return;
         }
 
     }
@@ -156,35 +218,6 @@ function fillTable(workersHolder) {
             createNewTableRow(worker);
         }
     }
-}
-
-function createWorkerByXML(workerXml) {
-    var worker = new createWorkerObject();
-    var id = workerXml.getElementsByTagName("id")[0];
-    var name = workerXml.getElementsByTagName("name")[0];
-    var login = workerXml.getElementsByTagName("login")[0];
-    var pas = workerXml.getElementsByTagName("password")[0];
-    var depName = workerXml.getElementsByTagName("departmentName")[0];
-    var objVersion = workerXml.getElementsByTagName("objectVersion")[0];
-    (id === undefined || id.childNodes === undefined || id.childNodes[0] === undefined) ?
-        id = null : (id = id.childNodes[0].nodeValue);
-    (name === undefined || name.childNodes === undefined || name.childNodes[0] === undefined) ?
-        name = null : (name = name.childNodes[0].nodeValue);
-    (login === undefined || login.childNodes === undefined || login.childNodes[0] === undefined) ?
-        login = null : (login = login.childNodes[0].nodeValue);
-    (pas === undefined || pas.childNodes === undefined || pas.childNodes[0] === undefined) ?
-        pas = null : (pas = pas.childNodes[0].nodeValue);
-    (depName === undefined || depName.childNodes === undefined || depName.childNodes[0] === undefined) ?
-        depName = null : (depName = depName.childNodes[0].nodeValue);
-    (objVersion === undefined || objVersion.childNodes === undefined || objVersion.childNodes[0] === undefined) ?
-        objVersion = null : (objVersion = objVersion.childNodes[0].nodeValue);
-    worker.setID(id);
-    worker.setName(name);
-    worker.setLogin(login);
-    worker.setPassword(pas);
-    worker.setDepartmentName(depName);
-    worker.setObjectVersion(objVersion);
-    return worker;
 }
 
 function createNewTableRow(worker) {
@@ -228,16 +261,22 @@ function getAllWorkers() {
 }
 
 function createUpdateWorker() {
+    var newWorker;
+    if (selectedWorker == null) {
+        newWorker = new createWorkerObject();
+    }
+    else {
+        newWorker = selectedWorker;
+    }
     var elementNewObjectBlock = document.getElementById("objectWorker");
-    var newWorker = new createWorkerObject();
     var conditionElement;
     for (i = 0; i < elementNewObjectBlock.childNodes.length; i++) {
         conditionElement = elementNewObjectBlock.childNodes[i];
         if (conditionElement.classList === undefined) {/*NOP*/
         }
-        else if (conditionElement.classList.contains("id")) {
-            newWorker.setID(conditionElement.value);
-        }
+        /*  else if (conditionElement.classList.contains("id")) {
+         newWorker.setID(conditionElement.value);
+         }*/
         else if (conditionElement.classList.contains("name")) {
             newWorker.setName(conditionElement.value);
         }
@@ -247,13 +286,14 @@ function createUpdateWorker() {
         else if (conditionElement.classList.contains("password")) {
             newWorker.setPassword(conditionElement.value);
         }
-        else if (conditionElement.classList.contains("objectVersion")) {
-            newWorker.setObjectVersion(conditionElement.value);
-        }
-        else if (conditionElement.classList.contains("depName")) {
-            newWorker.setDepartmentName(conditionElement.value);
-        }
+        /*   else if (conditionElement.classList.contains("objectVersion")) {
+         newWorker.setObjectVersion(conditionElement.value);
+         }
+         else if (conditionElement.classList.contains("depName")) {
+         newWorker.setDepartmentName(conditionElement.value);
+         }*/
     }
+    selectedWorker = null;
     sendAjaxFromWorkerObject(newWorker);
 }
 
@@ -263,7 +303,7 @@ function sendAjaxFromWorkerObject(worker) {
         url = url + "?action=create";
     }
     else {
-        url = url + "?action=update&id=" + worker.getID()+ "&objVersion="+ worker.getObjectVersion()+ "&depName="+ worker.getDepartmentName();
+        url = url + "?action=update&id=" + worker.getID() + "&objVersion=" + worker.getObjectVersion() + "&depName=" + worker.getDepartmentName();
     }
     url = url + "&name=" + worker.getName() + "&login=" + worker.getLogin() + "&password=" + worker.getPassword();
     sendAjax("GET", url);
@@ -274,10 +314,7 @@ function selectRow(objectForSelect) {
         openSelectObjectForm();
     }
     else {
-        var allSelectedElements = document.getElementsByClassName("selected");
-        for (i = 0; i < allSelectedElements.length; i++) {
-            allSelectedElements[i].classList.remove("selected");
-        }
+        removeSelectionFromAll();
         objectForSelect.classList.add("selected");
     }
 }
@@ -345,8 +382,17 @@ function parseWorkerForFillForm(responseXML) {
             /*NOP*/
         }
         else {
-            var newWorker = createWorkerByXML(workerXML);
-            fillObjectForm(newWorker);
+            selectedWorker = createWorkerByXML(workerXML);
+            fillObjectForm(selectedWorker);
+            return;
+        }
+        var exceptionXML = responseXML.getElementsByTagName("exceptionForView")[0];
+        if (exceptionXML === undefined) {/*NOP*/
+        }
+        else {
+            var exceptionFromServer = createExceptionByXML(exceptionXML);
+            openExceptionForm(exceptionFromServer.getExceptionMessage());
+            return;
         }
     }
 }
@@ -358,9 +404,9 @@ function fillObjectForm(worker) {
         conditionElement = elementForFill.childNodes[i];
         if (conditionElement.classList === undefined) {/*NOP*/
         }
-        else if (conditionElement.classList.contains("id")) {
-            conditionElement.value = worker.getID();
-        }
+        /* else if (conditionElement.classList.contains("id")) {
+         conditionElement.value = worker.getID();
+         }*/
         else if (conditionElement.classList.contains("name")) {
             conditionElement.value = worker.getName();
         }
@@ -370,12 +416,12 @@ function fillObjectForm(worker) {
         else if (conditionElement.classList.contains("password")) {
             conditionElement.value = worker.getPassword();
         }
-        else if (conditionElement.classList.contains("objectVersion")) {
-            conditionElement.value = worker.getObjectVersion();
-        }
-        else if (conditionElement.classList.contains("depName")) {
-            conditionElement.value = worker.getDepartmentName();
-        }
+        /* else if (conditionElement.classList.contains("objectVersion")) {
+         conditionElement.value = worker.getObjectVersion();
+         }
+         else if (conditionElement.classList.contains("depName")) {
+         conditionElement.value = worker.getDepartmentName();
+         }*/
     }
 }
 
@@ -406,6 +452,7 @@ function deleteWorker() {
             break;
         }
     }
+    selectedWorker = null;
     sendAjaxForDeleteObjectForm(newWorker);
     closeQuestionForm();
 }
@@ -444,6 +491,15 @@ function parseWorkerForDelete(responseXML) {
         else {
             var worker = createWorkerByXML(workerXML);
             deleteRowObject(worker);
+            return;
+        }
+        var exceptionXML = responseXML.getElementsByTagName("exceptionForView")[0];
+        if (exceptionXML === undefined) {/*NOP*/
+        }
+        else {
+            var exceptionFromServer = createExceptionByXML(exceptionXML);
+            openExceptionForm(exceptionFromServer.getExceptionMessage());
+            return;
         }
     }
 }
@@ -452,4 +508,33 @@ function deleteRowObject(worker) {
     var elementForRemove = document.getElementById(worker.getID());
     elementForRemove.parentNode.removeChild(elementForRemove);
 
+}
+
+function closeObjectWorkerForm() {
+    selectedWorker = null;
+    closeObjectForm();
+}
+
+function closeExceptionWorkerForm() {
+    selectedWorker = null;
+    closeExceptionForm();
+}
+
+function closeQuestionWorkerForm() {
+    selectedWorker = null;
+    closeQuestionForm();
+}
+
+function removeSelection() {
+    var t = event.target || event.srcElement;
+    if (t.id == 'content') {
+        removeSelectionFromAll();
+    }
+}
+
+function removeSelectionFromAll() {
+    var allSelectedElements = document.getElementsByClassName("selected");
+    for (i = 0; i < allSelectedElements.length; i++) {
+        allSelectedElements[i].classList.remove("selected");
+    }
 }

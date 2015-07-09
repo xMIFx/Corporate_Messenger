@@ -21,8 +21,8 @@
         <a href="javascript:" onclick="openLoginForm()" id="income">Log in</a>
     </div>
 </div>
-<div class="content">
-    <div class="fix">
+<div class="content" id ="content" onclick="removeSelection()">
+    <div class="fix" id="fix">
         <div class="button_box">
             <div class="button_cl " onclick="openNewObjectForm()">create</div>
             <div class="button_cl " onclick="openSelectObjectForm()">update</div>
@@ -58,16 +58,16 @@
 </div>
 <div class="blockingBackground invisible" id="objectsForm">
         <div class="visibleBlock" id="objectWorker">
-            <input type="text" class="objectRow depName invisible" placeholder="depName" name="depName"/>
+            <%--<input type="text" class="objectRow depName invisible" placeholder="depName" name="depName"/>
             <input type="text" class="objectRow objectVersion invisible" placeholder="objectVersion" name="objectVersion"/>
-            <input type="text" class="objectRow id invisible" placeholder="id" name="id"/>
+            <input type="text" class="objectRow id invisible" placeholder="id" name="id"/>--%>
             <input type="text" class="objectRow name" placeholder="name" name="name"/>
             <input type="text" class="objectRow login" placeholder="login" name="login"/>
             <input type="password" class="objectRow password" placeholder="password" name="password"/>
             <input type="password" class="objectRow confirmPassword" placeholder="confirmPassword" name="confirmPassword"/>
             <div class="buttonsBox">
                 <div class="buttonOK" onclick="createUpdateWorker()">ok</div>
-                <div class="buttonCancel" onclick="closeObjectForm()">cancel</div>
+                <div class="buttonCancel" onclick="closeObjectWorkerForm()">cancel</div>
             </div>
         </div>
 </div>
@@ -75,7 +75,7 @@
     <div class="visibleBlock" id="exceptionVisibleForm">
         <div class="messageAboutSomething" id="messageExc"></div>
         <div class="buttonsBoxExc">
-            <div class="buttonOK" onclick="closeExceptionForm()">ok</div>
+            <div class="buttonOK" onclick="closeExceptionWorkerForm()">ok</div>
         </div>
     </div>
 </div>
@@ -84,7 +84,7 @@
         <div class="messageAboutSomething" id = "messageQuestion"></div>
         <div class="buttonsBox">
             <div class="buttonOK" onclick="deleteWorker()">ok</div>
-            <div class="buttonCancel" onclick="closeQuestionForm()">cancel</div>
+            <div class="buttonCancel" onclick="closeQuestionWorkerForm()">cancel</div>
         </div>
     </div>
 </div>

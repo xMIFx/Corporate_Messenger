@@ -5,6 +5,7 @@ import com.gitHub.xMIFx.repositories.abstractFactoryDAO.AbstractFactoryForDAO;
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.CreatorDAOFactory;
 import com.gitHub.xMIFx.repositories.dto.WorkersHolder;
 import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
+import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +45,8 @@ public class WorkerController extends HttpServlet {
     private void readAjax(String action, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String answerStr = null;
         boolean itsDeleting = false;
+        boolean withException = false;
+        ExceptionForView exceptionForView = new ExceptionForView();
         try {
             if (action.equalsIgnoreCase("getAll")) {
                 answerStr = getAllWorkers();
@@ -55,16 +58,24 @@ public class WorkerController extends HttpServlet {
                 String pas = req.getParameter("password");
                 Worker worker = new Worker(id, name, login, pas);
                 if (action.equalsIgnoreCase("create")) {
-                    workerDAO.save(worker);
+                    if (workerDAO.save(worker) == null) {
+                        withException = true;
+                        exceptionForView.setExceptionMessage("Error when saving. Try later.");
+                    }
+                    ;
 
                 } else if (action.equalsIgnoreCase("update")) {
                     int objVersion = Integer.valueOf(req.getParameter("objVersion"));
                     id = Long.valueOf(req.getParameter("id"));
                     worker.setId(id);
                     worker.setDepartmentName(req.getParameter("depName"));
-                    workerDAO.update(worker);
-                }
-                else if (action.equalsIgnoreCase("getByID")){
+                    worker.setObjectVersion(objVersion);
+                    if (!workerDAO.update(worker)) {
+                        withException = true;
+                        exceptionForView.setExceptionMessage("Error when update. Try later.");
+                    }
+                    ;
+                } else if (action.equalsIgnoreCase("getByID")) {
                     id = Long.valueOf(req.getParameter("id"));
                     worker = workerDAO.getById(id);
                 } else if (action.equalsIgnoreCase("deleteByID")) {
@@ -73,12 +84,16 @@ public class WorkerController extends HttpServlet {
                     itsDeleting = true;
                     boolean itsOk = workerDAO.remove(worker);
                     if (!itsOk) {
+                        withException = true;
+                        exceptionForView.setExceptionMessage("Error when delete. Try later.");
                         worker = null;
                     }
                 }
-
-                answerStr = getWorker(worker);
-
+                if (withException) {
+                    answerStr = getExceptionMessage(exceptionForView);
+                } else {
+                    answerStr = getWorker(worker);
+                }
             }
         } catch (JAXBException e) {
             logger.error("some jaxB exception: ", e);
@@ -90,6 +105,17 @@ public class WorkerController extends HttpServlet {
             resp.setHeader("Cache-Control", "no-cache");
             resp.getWriter().write(answerStr);
         }
+    }
+
+    private String getExceptionMessage(ExceptionForView exceptionForView) throws JAXBException {
+        JAXBContext jaxbRootContext = null;
+        StringWriter writer = new StringWriter();
+        jaxbRootContext = JAXBContext.newInstance(ExceptionForView.class);
+        Marshaller jaxbMarshaller = jaxbRootContext.createMarshaller();
+        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        jaxbMarshaller.marshal(exceptionForView, writer);
+        System.out.println(writer.toString());
+        return writer.toString();
     }
 
     private String getWorker(Worker worker) throws JAXBException {
