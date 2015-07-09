@@ -91,6 +91,8 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
                     worker.setDepartmentName(res.getString("depName"));
                 }
             }
+        }catch (IllegalArgumentException e){
+            logger.error("Exception when get by id:"+worker.getId()+" worker from MySQL: ", e);
 
         } catch (SQLException e) {
             logger.error("Exception when get by id:"+worker.getId()+" worker from MySQL: ", e);

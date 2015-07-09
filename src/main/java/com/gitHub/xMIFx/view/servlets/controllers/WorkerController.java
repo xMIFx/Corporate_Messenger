@@ -56,8 +56,9 @@ public class WorkerController extends HttpServlet {
                 String name = req.getParameter("name");
                 String login = req.getParameter("login");
                 String pas = req.getParameter("password");
-                Worker worker = new Worker(id, name, login, pas);
+                Worker worker = null;
                 if (action.equalsIgnoreCase("create")) {
+                    worker = new Worker(id, name, login, pas);
                     if (workerDAO.save(worker) == null) {
                         withException = true;
                         exceptionForView.setExceptionMessage("Error when saving. Try later.");
@@ -65,6 +66,7 @@ public class WorkerController extends HttpServlet {
                     ;
 
                 } else if (action.equalsIgnoreCase("update")) {
+                    worker = new Worker(id, name, login, pas);
                     int objVersion = Integer.valueOf(req.getParameter("objVersion"));
                     id = Long.valueOf(req.getParameter("id"));
                     worker.setId(id);

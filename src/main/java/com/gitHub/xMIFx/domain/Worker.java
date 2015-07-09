@@ -22,17 +22,47 @@ public class Worker implements Externalizable {
     }
 
     public Worker(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("name can't be null");
+        }
+        name = name.trim();
+        if (name.equals("")) {
+            throw new IllegalArgumentException("name can't be empty");
+        }
+        if (name.length() < 3) {
+            throw new IllegalArgumentException("name length can't be < 3");
+        }
+        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
+            throw new IllegalArgumentException("wrong symbols");
+        }
         this.name = name;
     }
 
     public Worker(Long id, String name, String login, String password) {
+        if (name == null || login == null || password == null) {
+            throw new IllegalArgumentException("name/login/password can't be null");
+        }
+        name = name.trim();
+        login = login.trim();
+        password = password.trim();
+        if (name.equals("") || login.equals("") || password.equals("")) {
+            throw new IllegalArgumentException("name/login/password can't be empty");
+        }
+        if (name.length() < 3 || password.length() < 3) {
+            throw new IllegalArgumentException("name/password length can't be < 3");
+        }
+        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")
+                || !password.matches("[A-Za-z0-9]*")
+                || !login.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
+            throw new IllegalArgumentException("wrong symbols");
+        }
         this.name = name;
         this.password = password;
         this.login = login;
         this.id = id;
     }
 
-    public Worker( Long id, String name, String login,  String password, int objectVersion, String departmentName) {
+    public Worker(Long id, String name, String login, String password, int objectVersion, String departmentName) {
         this.name = name;
         this.password = password;
         this.login = login;
@@ -47,6 +77,20 @@ public class Worker implements Externalizable {
 
     @XmlElement
     public void setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("name can't be null");
+        }
+        name = name.trim();
+        if (name.equals("")) {
+            throw new IllegalArgumentException("name can't be empty");
+        }
+        if (name.length() < 3) {
+            throw new IllegalArgumentException("name length can't be < 3");
+        }
+        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
+            throw new IllegalArgumentException("wrong symbols");
+        }
+
         this.name = name;
     }
 
@@ -56,6 +100,19 @@ public class Worker implements Externalizable {
 
     @XmlElement
     public void setPassword(String password) {
+        if (password == null) {
+            throw new IllegalArgumentException("password can't be null");
+        }
+        password = password.trim();
+        if (password.equals("")) {
+            throw new IllegalArgumentException("password can't be empty");
+        }
+        if (password.length() < 3) {
+            throw new IllegalArgumentException("password length can't be < 3");
+        }
+        if (!password.matches("[A-Za-z0-9]*")) {
+            throw new IllegalArgumentException("wrong symbols");
+        }
         this.password = password;
     }
 
@@ -65,6 +122,16 @@ public class Worker implements Externalizable {
 
     @XmlElement
     public void setLogin(String login) {
+        if (login == null) {
+            throw new IllegalArgumentException("login can't be null");
+        }
+        login = login.trim();
+        if (login.equals("")) {
+            throw new IllegalArgumentException("login can't be empty");
+        }
+        if (!login.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
+            throw new IllegalArgumentException("wrong symbols");
+        }
         this.login = login;
     }
 
@@ -74,20 +141,28 @@ public class Worker implements Externalizable {
 
     @XmlElement
     public void setId(Long id) {
+        if (id == null || id < 0) {
+            throw new IllegalArgumentException("id can'be null or <0");
+        }
         this.id = id;
     }
 
     public int getObjectVersion() {
         return objectVersion;
     }
+
     @XmlElement
     public void setObjectVersion(int objectVersion) {
+        if (objectVersion < 0) {
+            throw new IllegalArgumentException("objectVersion can't be  <0");
+        }
         this.objectVersion = objectVersion;
     }
 
     public String getDepartmentName() {
         return departmentName;
     }
+
     @XmlElement
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;

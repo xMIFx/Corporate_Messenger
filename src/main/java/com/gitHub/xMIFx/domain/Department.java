@@ -26,6 +26,16 @@ public class Department implements Externalizable {
     }
 
     public Department(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("name can't be null");
+        }
+        name = name.trim();
+        if (name.equals("")) {
+            throw new IllegalArgumentException("name can't be empty");
+        }
+        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
+            throw new IllegalArgumentException("wrong symbols");
+        }
         this.name = name;
     }
 
@@ -35,6 +45,16 @@ public class Department implements Externalizable {
 
     @XmlElement
     public void setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("name can't be null");
+        }
+        name = name.trim();
+        if (name.equals("")) {
+            throw new IllegalArgumentException("name can't be empty");
+        }
+        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
+            throw new IllegalArgumentException("wrong symbols");
+        }
         this.name = name;
     }
 
@@ -44,6 +64,9 @@ public class Department implements Externalizable {
 
     @XmlElement
     public void setId(Long id) {
+        if (id == null || id < 0) {
+            throw new IllegalArgumentException("id can'be null or <0");
+        }
         this.id = id;
     }
 
@@ -62,16 +85,25 @@ public class Department implements Externalizable {
     public int getObjectVersion() {
         return objectVersion;
     }
+
     @XmlElement
     public void setObjectVersion(int objectVersion) {
+        if (objectVersion < 0) {
+            throw new IllegalArgumentException("objectVersion can't be  <0");
+        }
+
         this.objectVersion = objectVersion;
     }
 
     public int getWorkersCount() {
         return workersCount;
     }
+
     @XmlElement
     public void setWorkersCount(int workersCount) {
+        if (workersCount < 0) {
+            throw new IllegalArgumentException("workersCount can't be <0");
+        }
         this.workersCount = workersCount;
     }
 
