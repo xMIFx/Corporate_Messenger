@@ -61,9 +61,9 @@
             <%--<input type="text" class="objectRow depName invisible" placeholder="depName" name="depName"/>
             <input type="text" class="objectRow objectVersion invisible" placeholder="objectVersion" name="objectVersion"/>
             <input type="text" class="objectRow id invisible" placeholder="id" name="id"/>--%>
-            <input type="text" class="objectRow name" placeholder="name" name="name"/>
-            <input type="text" class="objectRow login" placeholder="login" name="login"/>
-            <input type="password" class="objectRow password" placeholder="password" name="password"/>
+            <input type="text" onchange="isNameValid(this.value)" class="objectRow name" placeholder="name" name="name"/>
+            <input type="text" onchange="isLoginValid(this.value)" class="objectRow login" placeholder="login" name="login"/>
+            <input type="password" onchange="isPasswordValid(this.value)" class="objectRow password" placeholder="password" name="password"/>
             <input type="password" class="objectRow confirmPassword" placeholder="confirmPassword" name="confirmPassword"/>
             <div class="buttonsBox">
                 <div class="buttonOK" onclick="createUpdateWorker()">ok</div>

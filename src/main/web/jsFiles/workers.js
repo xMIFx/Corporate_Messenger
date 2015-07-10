@@ -16,6 +16,7 @@ function createWorkerObject() {
     this.departmentName;
     this.objectVersion;
     this.confirmPassword;
+    this.needCheckPassword;
 
     this.setID = function (ID) {
         this.id = ID;
@@ -40,6 +41,10 @@ function createWorkerObject() {
 
     this.setObjectVersion = function (objVers) {
         this.objectVersion = objVers
+    }
+
+    this.checkPassword = function (check) {
+        this.needCheckPassword = check;
     }
 
     this.getID = function () {
@@ -67,15 +72,108 @@ function createWorkerObject() {
         return this.objectVersion;
     }
 
-    this.checkPasswordValidation = function () {
-        if (this.password != this.confirmPassword) {
-            return false;
+    this.isNeedCheckPassword = function () {
+        return this.needCheckPassword;
+    }
+
+    this.objectValidation = function () {
+        var itsOk = true;
+        if (this.isNeedCheckPassword()) {
+            itsOk = isConfirmPasswordValid(this.password, this.confirmPassword);
+        }
+        if (itsOk) {
+            itsOk = isNameValid(this.name);
         }
         else {
-            return true;
+            isNameValid(this.name);
         }
+        if (itsOk) {
+            itsOk = isLoginValid(this.login);
+        }
+        else {
+            isLoginValid(this.login);
+        }
+        if (itsOk) {
+            itsOk = isPasswordValid(this.password);
+        }
+        else {
+            isPasswordValid(this.password);
+        }
+        return itsOk;
     }
 }
+
+function isNameValid(name) {
+    var itValid = true;
+    if (name == null) {
+        itValid = false;
+        writeMessageAboutValidation('field "name" need to be fill', "name");
+    }
+    else {
+        name = name.trim();
+        if (name == "") {
+            itValid = false;
+            writeMessageAboutValidation('field "name" need to be fill', "name");
+        }
+        else if (name.length < 3) {
+            itValid = false;
+            writeMessageAboutValidation('length field "name" need to be more 3', "name");
+        }
+        else if (!/^[a-zA-Z]+[A-Za-z0-9\s.]*/.test(name)){
+            itValid = false;
+            writeMessageAboutValidation('field "name" contains some illegal symbols', "name");
+        }
+    }
+    return itValid;
+}
+
+function isLoginValid(login) {
+    var itValid = true;
+    if (login == null || login.trim() == "") {
+        itValid = false;
+        writeMessageAboutValidation('field "login" need to be fill', "login");
+    }
+    else if (!/^[a-zA-Z]+[A-Za-z0-9\s.]*/.test(login)){
+        itValid = false;
+        writeMessageAboutValidation('field "login" contains some illegal symbols', "login");
+    }
+    return itValid;
+}
+
+function isPasswordValid(pas) {
+    var itValid = true;
+    if (pas == null) {
+        itValid = false;
+        writeMessageAboutValidation('field "password" need to be fill', "password");
+    }
+    else {
+        pas = pas.trim();
+        if (pas == "") {
+            itValid = false;
+            writeMessageAboutValidation('field "password" need to be fill', "password");
+        }
+        else if (pas.length < 3) {
+            itValid = false;
+            writeMessageAboutValidation('length field "password" need to be more 3', "password");
+        }
+        else if (!/[A-Za-z0-9]*/.test(pas)){
+            itValid = false;
+            writeMessageAboutValidation('field "password" contains some illegal symbols', "password");
+        }
+
+    }
+    return itValid;
+}
+
+function isConfirmPasswordValid(password, confirmPassword) {
+    var itValid = true;
+    if (password != confirmPassword) {
+        itValid = false;
+        writeMessageAboutValidation("confirmPassword is wrong", "confirmPassword");
+    }
+    return itValid;
+}
+
 
 function createWorkerByXML(workerXml) {
     var worker = new createWorkerObject();
@@ -278,13 +376,22 @@ function createUpdateWorker() {
          newWorker.setID(conditionElement.value);
          }*/
         else if (conditionElement.classList.contains("name")) {
-            newWorker.setName(conditionElement.value);
+            newWorker.setName(conditionElement.value.trim());
         }
         else if (conditionElement.classList.contains("login")) {
-            newWorker.setLogin(conditionElement.value);
+            newWorker.setLogin(conditionElement.value.trim());
         }
         else if (conditionElement.classList.contains("password")) {
+            if (selectedWorker.getPassword() != conditionElement.value) {
+                newWorker.checkPassword(true);
+            }
+            else {
+                newWorker.checkPassword(false);
+            }
             newWorker.setPassword(conditionElement.value);
+        }
+        else if (conditionElement.classList.contains("confirmPassword")) {
+            newWorker.setConfirmPassword(conditionElement.value);
         }
         /*   else if (conditionElement.classList.contains("objectVersion")) {
          newWorker.setObjectVersion(conditionElement.value);
@@ -293,8 +400,10 @@ function createUpdateWorker() {
          newWorker.setDepartmentName(conditionElement.value);
          }*/
     }
-    selectedWorker = null;
-    sendAjaxFromWorkerObject(newWorker);
+    if (newWorker.objectValidation()) {
+        selectedWorker = null;
+        sendAjaxFromWorkerObject(newWorker);
+    }
 }
 
 function sendAjaxFromWorkerObject(worker) {
@@ -537,4 +646,8 @@ function removeSelectionFromAll() {
     for (i = 0; i < allSelectedElements.length; i++) {
         allSelectedElements[i].classList.remove("selected");
     }
+}
+
+function writeMessageAboutValidation(message, className) {
+    alert(message);
 }

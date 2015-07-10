@@ -73,7 +73,7 @@ public class App {
                 } else if (line.startsWith("del_work")) {
                     String workerName = line.substring(9, line.length());
                     if (isNameOk(workerName)) {
-                        deleteWorkerFromAveryWhere(workerName);
+                        deleteWorkerFromAnywhere(workerName);
                     }
 
                 } else {
@@ -99,7 +99,7 @@ public class App {
         return isOk;
     }
 
-    private static void deleteWorkerFromAveryWhere(String workerName) {
+    private static void deleteWorkerFromAnywhere(String workerName) {
         Worker workerForDel = workerDAO.getByName(workerName);
         Department depForUpdate = departmentDAO.getByWorker(workerForDel);
         if (depForUpdate != null) {
