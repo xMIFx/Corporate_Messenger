@@ -26,4 +26,10 @@ public interface WorkerDAO {
     //update worker
     boolean update(Worker worker);
 
+    List<Worker> findByName(String name);
+
+    List<Worker> findByLogin(String login);
+
+    List<Worker> findByDepartmentName(String depName);
+
 }

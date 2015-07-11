@@ -91,11 +91,11 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
                     worker.setDepartmentName(res.getString("depName"));
                 }
             }
-        }catch (IllegalArgumentException e){
-            logger.error("Exception when get by id:"+worker.getId()+" worker from MySQL: ", e);
+        } catch (IllegalArgumentException e) {
+            logger.error("Exception when get by id:" + worker.getId() + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get by id:"+worker.getId()+" worker from MySQL: ", e);
+            logger.error("Exception when get by id:" + worker.getId() + " worker from MySQL: ", e);
         }
 
         return worker;
@@ -133,7 +133,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             }
 
         } catch (SQLException e) {
-            logger.error("Exception when get by name:"+worker.getName()+" worker from MySQL: ", e);
+            logger.error("Exception when get by name:" + worker.getName() + " worker from MySQL: ", e);
         }
 
         return worker;
@@ -246,7 +246,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             }
 
         } catch (SQLException e) {
-            logger.error("Exception when get by department id: "+department.getId()+" worker from MySQL: ", e);
+            logger.error("Exception when get by department id: " + department.getId() + " worker from MySQL: ", e);
         }
 
         return workerList;
@@ -268,7 +268,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
                 result = true;
             }
         } catch (SQLException e) {
-            logger.error("Exception when remove worker id:"+worker.getId()+" to MySQL: ", e);
+            logger.error("Exception when remove worker id:" + worker.getId() + " to MySQL: ", e);
         }
         return result;
     }
@@ -298,9 +298,126 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
                 worker.setObjectVersion(nextObjVersion);
             }
         } catch (SQLException e) {
-            logger.error("Exception when update worker id:"+worker.getId()+" to MySQL: ", e);
+            logger.error("Exception when update worker id:" + worker.getId() + " to MySQL: ", e);
         }
         return result;
+    }
+
+    @Override
+    public List<Worker> findByName(String name) {
+        String getByLoginPasSql = "SELECT \n" +
+                "w.id\n" +
+                ", w.name\n" +
+                ", w.login\n" +
+                ", w.password\n" +
+                ", w.objectVersion\n" +
+                ",IFNULL(dep.name, \"Without department\") depName\n" +
+                "FROM corporate_messenger.workers w\n" +
+                "left join corporate_messenger.departmentworkers depwork\n" +
+                "\tleft join corporate_messenger.departments dep\n" +
+                "\t on depwork.iddepartment = dep.id\n" +
+                "on w.id = depwork.idworker\n" +
+                "where w.name  LIKE ?";
+        List<Worker> workerList = new ArrayList<>();
+        String searchValue = "%" + name + "%";
+        try (Connection con = datasource.getConnection();
+             PreparedStatement st = con.prepareStatement(getByLoginPasSql)) {
+            st.setString(1, searchValue);
+            try (ResultSet res = st.executeQuery()) {
+                while (res.next()) {
+                    Worker worker = new Worker(res.getLong("id")
+                            , res.getString("name")
+                            , res.getString("login")
+                            , res.getString("password")
+                            , res.getInt("objectVersion")
+                            , res.getString("depName"));
+                    workerList.add(worker);
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.error("Exception when search by name: " + name + " worker from MySQL: ", e);
+        }
+
+        return workerList;
+    }
+
+    @Override
+    public List<Worker> findByLogin(String login) {
+        String getByLoginPasSql = "SELECT \n" +
+                "w.id\n" +
+                ", w.name\n" +
+                ", w.login\n" +
+                ", w.password\n" +
+                ", w.objectVersion\n" +
+                ",IFNULL(dep.name, \"Without department\") depName\n" +
+                "FROM corporate_messenger.workers w\n" +
+                "left join corporate_messenger.departmentworkers depwork\n" +
+                "\tleft join corporate_messenger.departments dep\n" +
+                "\t on depwork.iddepartment = dep.id\n" +
+                "on w.id = depwork.idworker\n" +
+                "where w.login  LIKE ?";
+        List<Worker> workerList = new ArrayList<>();
+        String searchValue = "%" + login + "%";
+        try (Connection con = datasource.getConnection();
+             PreparedStatement st = con.prepareStatement(getByLoginPasSql)) {
+            st.setString(1, searchValue);
+            try (ResultSet res = st.executeQuery()) {
+                while (res.next()) {
+                    Worker worker = new Worker(res.getLong("id")
+                            , res.getString("name")
+                            , res.getString("login")
+                            , res.getString("password")
+                            , res.getInt("objectVersion")
+                            , res.getString("depName"));
+                    workerList.add(worker);
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.error("Exception when search by login: " + login + " worker from MySQL: ", e);
+        }
+
+        return workerList;
+    }
+
+    @Override
+    public List<Worker> findByDepartmentName(String depName) {
+        String getByLoginPasSql = "SELECT \n" +
+                "w.id\n" +
+                ", w.name\n" +
+                ", w.login\n" +
+                ", w.password\n" +
+                ", w.objectVersion\n" +
+                ",IFNULL(dep.name, \"Without department\") depName\n" +
+                "FROM corporate_messenger.workers w\n" +
+                "left join corporate_messenger.departmentworkers depwork\n" +
+                "\tleft join corporate_messenger.departments dep\n" +
+                "\t on depwork.iddepartment = dep.id\n" +
+                "on w.id = depwork.idworker\n" +
+                "where IFNULL(dep.name, \"Without department\")  LIKE ?";
+        List<Worker> workerList = new ArrayList<>();
+        String searchValue = "%" + depName + "%";
+        try (Connection con = datasource.getConnection();
+             PreparedStatement st = con.prepareStatement(getByLoginPasSql)) {
+            st.setString(1, searchValue);
+            try (ResultSet res = st.executeQuery()) {
+                while (res.next()) {
+                    Worker worker = new Worker(res.getLong("id")
+                            , res.getString("name")
+                            , res.getString("login")
+                            , res.getString("password")
+                            , res.getInt("objectVersion")
+                            , res.getString("depName"));
+                    workerList.add(worker);
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.error("Exception when search by departmentName: " + depName + " worker from MySQL: ", e);
+        }
+
+        return workerList;
     }
 
     private static void setPropertiesForDataSource() {

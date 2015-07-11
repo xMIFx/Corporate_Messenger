@@ -5,6 +5,9 @@ import com.gitHub.xMIFx.repositories.abstractFactoryDAO.AbstractFactoryForDAO;
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.CreatorDAOFactory;
 import com.gitHub.xMIFx.repositories.dto.WorkersHolder;
 import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
+import com.gitHub.xMIFx.services.FinderType;
+import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
+import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +30,7 @@ import java.util.List;
 @WebServlet("/worker.do")
 public class WorkerController extends HttpServlet {
     private static final String PAGE_OK = "pages/workers.jsp";
-    private static final Logger logger = LoggerFactory.getLogger(WorkerController.class.getName());
-    private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
-    private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();
+    private static final WorkerService workerService = new WorkerServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -44,62 +45,43 @@ public class WorkerController extends HttpServlet {
 
     private void readAjax(String action, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String answerStr = null;
-        boolean itsDeleting = false;
-        boolean withException = false;
-        ExceptionForView exceptionForView = new ExceptionForView();
-        try {
-            if (action.equalsIgnoreCase("getAll")) {
-                answerStr = getAllWorkers();
-            } else {
-
-                Long id = null;
-                String name = req.getParameter("name");
-                String login = req.getParameter("login");
-                String pas = req.getParameter("password");
-                Worker worker = null;
-                if (action.equalsIgnoreCase("create")) {
-                    worker = new Worker(id, name, login, pas);
-                    if (workerDAO.save(worker) == null) {
-                        withException = true;
-                        exceptionForView.setExceptionMessage("Error when saving. Try later.");
-                    }
-                    ;
-
-                } else if (action.equalsIgnoreCase("update")) {
-                    worker = new Worker(id, name, login, pas);
-                    int objVersion = Integer.valueOf(req.getParameter("objVersion"));
-                    id = Long.valueOf(req.getParameter("id"));
-                    worker.setId(id);
-                    worker.setDepartmentName(req.getParameter("depName"));
-                    worker.setObjectVersion(objVersion);
-                    if (!workerDAO.update(worker)) {
-                        withException = true;
-                        exceptionForView.setExceptionMessage("Error when update. Try later.");
-                    }
-                    ;
-                } else if (action.equalsIgnoreCase("getByID")) {
-                    id = Long.valueOf(req.getParameter("id"));
-                    worker = workerDAO.getById(id);
-                } else if (action.equalsIgnoreCase("deleteByID")) {
-                    id = Long.valueOf(req.getParameter("id"));
-                    worker = workerDAO.getById(id);
-                    itsDeleting = true;
-                    boolean itsOk = workerDAO.remove(worker);
-                    if (!itsOk) {
-                        withException = true;
-                        exceptionForView.setExceptionMessage("Error when delete. Try later.");
-                        worker = null;
-                    }
-                }
-                if (withException) {
-                    answerStr = getExceptionMessage(exceptionForView);
-                } else {
-                    answerStr = getWorker(worker);
-                }
+        if (action.equalsIgnoreCase("getAll")) {
+            answerStr = workerService.getAll();
+        } else if (action.startsWith("findByPartOf")) {
+            String value = req.getParameter("valueForSearch");
+            String searchTypeString = req.getParameter("searchType");
+            FinderType finderType = null;
+            if ("name".equals(searchTypeString)) {
+                finderType = FinderType.NAME;
+            } else if ("login".equals(searchTypeString)) {
+                finderType = FinderType.LOGIN;
+            } else if ("departmentName".equals(searchTypeString)) {
+                finderType = FinderType.DEPARTMENT;
             }
-        } catch (JAXBException e) {
-            logger.error("some jaxB exception: ", e);
+            answerStr = workerService.find(finderType, value);
+        } else {
+
+            Long id = Long.valueOf(req.getParameter("id"));
+            String name = req.getParameter("name");
+            String login = req.getParameter("login");
+            String pas = req.getParameter("password");
+            if (action.equalsIgnoreCase("create")) {
+                answerStr = workerService.create(name, login, pas);
+
+            } else if (action.equalsIgnoreCase("update")) {
+                int objVersion = Integer.valueOf(req.getParameter("objVersion"));
+                String depName = req.getParameter("depName");
+                answerStr = workerService.update(id, name, login, pas, objVersion, depName);
+
+            } else if (action.equalsIgnoreCase("getByID")) {
+                answerStr = workerService.getByID(id);
+
+            } else if (action.equalsIgnoreCase("deleteByID")) {
+                answerStr = workerService.deleteByID(id);
+            }
+
         }
+
         if (answerStr == null) {
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {
@@ -107,53 +89,6 @@ public class WorkerController extends HttpServlet {
             resp.setHeader("Cache-Control", "no-cache");
             resp.getWriter().write(answerStr);
         }
-    }
-
-    private String getExceptionMessage(ExceptionForView exceptionForView) throws JAXBException {
-        JAXBContext jaxbRootContext = null;
-        StringWriter writer = new StringWriter();
-        jaxbRootContext = JAXBContext.newInstance(ExceptionForView.class);
-        Marshaller jaxbMarshaller = jaxbRootContext.createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        jaxbMarshaller.marshal(exceptionForView, writer);
-        System.out.println(writer.toString());
-        return writer.toString();
-    }
-
-    private String getWorker(Worker worker) throws JAXBException {
-        JAXBContext jaxbRootContext = null;
-        StringWriter writer = new StringWriter();
-        jaxbRootContext = JAXBContext.newInstance(Worker.class);
-        Marshaller jaxbMarshaller = jaxbRootContext.createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        jaxbMarshaller.marshal(worker, writer);
-        System.out.println(writer.toString());
-        return writer.toString();
-    }
-
-    private String getLong(Long workerID) throws JAXBException {
-        JAXBContext jaxbRootContext = null;
-        StringWriter writer = new StringWriter();
-        jaxbRootContext = JAXBContext.newInstance(Long.class);
-        Marshaller jaxbMarshaller = jaxbRootContext.createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        jaxbMarshaller.marshal(workerID, writer);
-        System.out.println(writer.toString());
-        return writer.toString();
-    }
-
-    private String getAllWorkers() throws JAXBException {
-        List<Worker> workerList = workerDAO.getAll();
-        WorkersHolder workersHolder = new WorkersHolder();
-        workersHolder.setWorkers(workerList);
-        JAXBContext jaxbRootContext = null;
-        StringWriter writer = new StringWriter();
-        jaxbRootContext = JAXBContext.newInstance(WorkersHolder.class);
-        Marshaller jaxbMarshaller = jaxbRootContext.createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        jaxbMarshaller.marshal(workersHolder, writer);
-        return writer.toString();
-
     }
 
     @Override

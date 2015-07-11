@@ -39,23 +39,7 @@ public class Worker implements Externalizable {
     }
 
     public Worker(Long id, String name, String login, String password) {
-        if (name == null || login == null || password == null) {
-            throw new IllegalArgumentException("name/login/password can't be null");
-        }
-        name = name.trim();
-        login = login.trim();
-        password = password.trim();
-        if (name.equals("") || login.equals("") || password.equals("")) {
-            throw new IllegalArgumentException("name/login/password can't be empty");
-        }
-        if (name.length() < 3 || password.length() < 3) {
-            throw new IllegalArgumentException("name/password length can't be < 3");
-        }
-        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")
-                || !password.matches("[A-Za-z0-9]*")
-                || !login.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
-            throw new IllegalArgumentException("wrong symbols");
-        }
+        validateAllStringFields(name, login, password);
         this.name = name;
         this.password = password;
         this.login = login;
@@ -63,6 +47,7 @@ public class Worker implements Externalizable {
     }
 
     public Worker(Long id, String name, String login, String password, int objectVersion, String departmentName) {
+        validateAllStringFields(name, login, password);
         this.name = name;
         this.password = password;
         this.login = login;
@@ -219,5 +204,25 @@ public class Worker implements Externalizable {
         this.name = in.readUTF();
        /* this.login = in.readUTF();
         this.password = in.readUTF();*/
+    }
+
+    private void validateAllStringFields(String name, String login, String password) {
+        if (name == null || login == null || password == null) {
+            throw new IllegalArgumentException("name/login/password can't be null");
+        }
+        name = name.trim();
+        login = login.trim();
+        password = password.trim();
+        if (name.equals("") || login.equals("") || password.equals("")) {
+            throw new IllegalArgumentException("name/login/password can't be empty");
+        }
+        if (name.length() < 3 || password.length() < 3) {
+            throw new IllegalArgumentException("name/password length can't be < 3");
+        }
+        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")
+                || !password.matches("[A-Za-z0-9]*")
+                || !login.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
+            throw new IllegalArgumentException("wrong symbols");
+        }
     }
 }

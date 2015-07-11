@@ -634,20 +634,14 @@ function closeQuestionWorkerForm() {
     closeQuestionForm();
 }
 
-function removeSelection() {
-    var t = event.target || event.srcElement;
-    if (t.id == 'content') {
-        removeSelectionFromAll();
+function search(valueForSearch){
+    if(valueForSearch == null || valueForSearch.trim() == ""){
+        getAllWorkers();
     }
+    else{
+        var typeSearch = document.getElementById("searchType").value;
+        sendAjax("GET", urlForAjax + "?action=findByPartOf&searchType="+typeSearch+"&valueForSearch="+valueForSearch);
+    }
+
 }
 
-function removeSelectionFromAll() {
-    var allSelectedElements = document.getElementsByClassName("selected");
-    for (i = 0; i < allSelectedElements.length; i++) {
-        allSelectedElements[i].classList.remove("selected");
-    }
-}
-
-function writeMessageAboutValidation(message, className) {
-    alert(message);
-}

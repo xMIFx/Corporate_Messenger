@@ -114,6 +114,21 @@ public class WorkerSerialDAOImpl implements WorkerDAO {
         return allIsOK;
     }
 
+    @Override
+    public List<Worker> findByName(String name) {
+        return null;
+    }
+
+    @Override
+    public List<Worker> findByLogin(String login) {
+        return null;
+    }
+
+    @Override
+    public List<Worker> findByDepartmentName(String depName) {
+        return null;
+    }
+
     private static void readAllObject() throws IOException {
         try (FileInputStream fileInputStream = new FileInputStream(filePath);
              ObjectInputStream in = new ObjectInputStream(fileInputStream)) {

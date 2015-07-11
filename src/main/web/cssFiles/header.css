@@ -178,3 +178,17 @@ div.messageAboutSomething{
 div.visibleBlock div.buttonsBoxExc div.buttonOK{
     margin-right: 0px;
 }
+
+
+div.forSearch{
+    width: 660px;
+    margin: 0px auto 20px auto;
+    padding: 5px 0px;
+}
+
+div.validationException{
+    background-color: #B22222;
+    margin: 0px auto auto;
+    width: 250px;
+    margin-bottom: 5px;
+}

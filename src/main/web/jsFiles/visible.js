@@ -101,4 +101,34 @@ function closeQuestionForm() {
     changeVisible(elementForInvisible, false);
 }
 
+function doItInvisible(elemId) {
+    var element = document.getElementById(elemId);
+    if (!element.classList.contains('invisible')) {
+        element.classList.add('invisible');
+    }
+}
+
+function removeSelection() {
+    var t = event.target || event.srcElement;
+    if (t.id == 'content' || t.id == 'searchType' || t.id == 'inputSearch') {
+        removeSelectionFromAll();
+    }
+}
+
+function removeSelectionFromAll() {
+    var allSelectedElements = document.getElementsByClassName("selected");
+    for (i = 0; i < allSelectedElements.length; i++) {
+        allSelectedElements[i].classList.remove("selected");
+    }
+}
+
+function writeMessageAboutValidation(message, className) {
+    var element = document.getElementById(className+"Exception");
+    if(element.classList.contains("invisible")){
+        element.classList.remove("invisible");
+    }
+    element.innerHTML = message;
+}
+
+
 

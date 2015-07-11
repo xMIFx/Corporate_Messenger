@@ -68,5 +68,20 @@ public class WorkerCollectionDAOImpl implements WorkerDAO {
         return true;
     }
 
+    @Override
+    public List<Worker> findByName(String name) {
+        return null;
+    }
+
+    @Override
+    public List<Worker> findByLogin(String login) {
+        return null;
+    }
+
+    @Override
+    public List<Worker> findByDepartmentName(String depName) {
+        return null;
+    }
+
 
 }
