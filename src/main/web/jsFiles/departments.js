@@ -4,9 +4,13 @@
 
 var mXMLHttpRequest = new XMLHttpRequest();
 var cloneRow;
+var cloneRowWorker;
+var cloneRowForChooseWorker;
 var table;
-var urlForAjax = "worker.do";
-var selectedWorker = null;
+var tableWorker;
+var tableForChooseWorker;
+var urlForAjax = "department.do";
+var selectedDepartment = null;
 //Objects
 function createWorkerObject() {
     this.id;
@@ -103,6 +107,93 @@ function createWorkerObject() {
     }
 }
 
+function createDepartmentObject() {
+    this.id;
+    this.name;
+    this.countWorkers;
+    this.workersList;
+    this.objectVersion;
+
+    this.setID = function (ID) {
+        this.id = ID;
+    }
+
+    this.setName = function (name) {
+        this.name = name;
+    }
+
+    this.setCountWorkers = function (countWorkers) {
+        this.countWorkers = countWorkers;
+    }
+
+    this.setWorkersList = function (workerList) {
+        this.workersList = workerList;
+    }
+
+    this.setObjectVersion = function (objectVersion) {
+        this.objectVersion = objectVersion;
+    }
+
+    this.getID = function () {
+        return this.id;
+    }
+
+    this.getName = function () {
+        return this.name;
+    }
+
+    this.getCountWorkers = function () {
+        return this.countWorkers;
+    }
+
+    this.getWorkersList = function () {
+        return this.workersList;
+    }
+
+    this.getObjectVersion = function () {
+        return this.objectVersion;
+    }
+
+}
+
+function createDepartmentByXML(departmentXml) {
+    var department = new createDepartmentObject();
+    var id = departmentXml.getElementsByTagName("id")[0];
+    var name = departmentXml.getElementsByTagName("name")[0];
+    var countWorkers = departmentXml.getElementsByTagName("workersCount")[0];
+    var workerList = departmentXml.getElementsByTagName("workers");
+    var objVersion = departmentXml.getElementsByTagName("objectVersion")[0];
+    (id === undefined || id.childNodes === undefined || id.childNodes[0] === undefined) ?
+        id = null : (id = id.childNodes[0].nodeValue);
+    (name === undefined || name.childNodes === undefined || name.childNodes[0] === undefined) ?
+        name = null : (name = name.childNodes[0].nodeValue);
+    (countWorkers === undefined || countWorkers.childNodes === undefined || countWorkers.childNodes[0] === undefined) ?
+        countWorkers = null : (countWorkers = countWorkers.childNodes[0].nodeValue);
+    (workerList === undefined || workerList == null || workerList.length == 0) ?
+        workerList = null : (workerList = getWorkers(workerList));
+    (objVersion === undefined || objVersion.childNodes === undefined || objVersion.childNodes[0] === undefined) ?
+        objVersion = null : (objVersion = objVersion.childNodes[0].nodeValue);
+    department.setID(id);
+    department.setName(name);
+    department.setCountWorkers(countWorkers);
+    department.setWorkersList(workerList);
+    department.setObjectVersion(objVersion);
+
+    return department;
+}
+
+function getWorkers(workersHolder) {
+    var workers = new Array(workersHolder.length);
+    if (workersHolder.length > 0) {
+        for (var loop = 0; loop < workersHolder.length; loop++) {
+            var workerXML = workersHolder[loop];
+            var worker = createWorkerByXML(workerXML);
+            workers[loop] = worker;
+        }
+    }
+    return workers;
+}
+
 function isNameValid(name) {
     var itValid = true;
     if (name == null) {
@@ -115,65 +206,17 @@ function isNameValid(name) {
             itValid = false;
             writeMessageAboutValidation('field "name" need to be fill', "name");
         }
-        else if (name.length < 3) {
+        else if (name.length < 2) {
             itValid = false;
             writeMessageAboutValidation('length field "name" need to be more 3', "name");
         }
-        else if (!/^[a-zA-Z]+[A-Za-z0-9\s.]*/.test(name)){
+        else if (!/^[a-zA-Z]+[A-Za-z0-9\s.]*/.test(name)) {
             itValid = false;
             writeMessageAboutValidation('field "name" contains some illegal symbols', "name");
         }
     }
     return itValid;
 }
-
-function isLoginValid(login) {
-    var itValid = true;
-    if (login == null || login.trim() == "") {
-        itValid = false;
-        writeMessageAboutValidation('field "login" need to be fill', "login");
-    }
-    else if (!/^[a-zA-Z]+[A-Za-z0-9\s.]*/.test(login)){
-        itValid = false;
-        writeMessageAboutValidation('field "login" contains some illegal symbols', "login");
-    }
-    return itValid;
-}
-
-function isPasswordValid(pas) {
-    var itValid = true;
-    if (pas == null) {
-        itValid = false;
-        writeMessageAboutValidation('field "password" need to be fill', "password");
-    }
-    else {
-        pas = pas.trim();
-        if (pas == "") {
-            itValid = false;
-            writeMessageAboutValidation('field "password" need to be fill', "password");
-        }
-        else if (pas.length < 3) {
-            itValid = false;
-            writeMessageAboutValidation('length field "password" need to be more 3', "password");
-        }
-        else if (!/[A-Za-z0-9]*/.test(pas)){
-            itValid = false;
-            writeMessageAboutValidation('field "password" contains some illegal symbols', "password");
-        }
-
-    }
-    return itValid;
-}
-
-function isConfirmPasswordValid(password, confirmPassword) {
-    var itValid = true;
-    if (password != confirmPassword) {
-        itValid = false;
-        writeMessageAboutValidation("confirmPassword is wrong", "confirmPassword");
-    }
-    return itValid;
-}
-
 
 function createWorkerByXML(workerXml) {
     var worker = new createWorkerObject();
@@ -226,7 +269,7 @@ function createExceptionByXML(exceptionXML) {
 }
 //Functions
 function init() {
-    getAllWorkers();
+    getAllDepartments();
     initGlobalVariable();
 }
 
@@ -236,6 +279,19 @@ function initGlobalVariable() {
     }
     if (table == null) {
         table = document.getElementById("table1");
+    }
+    if (cloneRowWorker == null) {
+        cloneRowWorker = document.getElementById("lineForCopyWorker");
+    }
+    if (tableWorker == null) {
+        tableWorker = document.getElementById("tableWorker");
+    }
+
+    if (cloneRowForChooseWorker == null) {
+        cloneRowForChooseWorker = document.getElementById("lineForCopyAllWorker");
+    }
+    if (tableForChooseWorker == null) {
+        tableForChooseWorker = document.getElementById("tableAllWorker");
     }
 }
 
@@ -262,24 +318,24 @@ function parseMessages(responseXML) {
     if (responseXML == null) {
         return false;
     } else {
-        var workers = responseXML.getElementsByTagName("workersHolder")[0];
-        if (workers === undefined) {
+        var departments = responseXML.getElementsByTagName("departmentsHolder")[0];
+        if (departments === undefined) {
             /*NOP*/
         }
         else {
-            clearTable();
-            fillTable(workers);
+            clearTable(table);
+            fillTable(departments);
             return;
 
         }
-        var workerXML = responseXML.getElementsByTagName("worker")[0];
-        if (workerXML === undefined) {
+        var departmentXML = responseXML.getElementsByTagName("department")[0];
+        if (departmentXML === undefined) {
             /*NOP*/
         }
         else {
-            var newWorker = createWorkerByXML(workerXML);
-            createNewTableRow(newWorker);
-            closeObjectForm('objectWorker');
+            var newDepartment = createDepartmentByXML(departmentXML);
+            createNewTableRow(newDepartment);
+            closeObjectForm('objectDepartment');
             return;
         }
 
@@ -295,35 +351,35 @@ function parseMessages(responseXML) {
     }
 }
 
-function clearTable() {
-    if (table.getElementsByTagName("tr").length > 1) {
+function clearTable(tableForClean) {
+    if (tableForClean.getElementsByTagName("tr").length > 1) {
         var child;
-        for (var loop = table.childNodes.length - 1; loop >= 0; loop--) {
-            child = table.childNodes[loop];
+        for (var loop = tableForClean.childNodes.length - 1; loop >= 0; loop--) {
+            child = tableForClean.childNodes[loop];
             if (child.id != "lineForCopy") {
-                table.removeChild(child);
+                tableForClean.removeChild(child);
             }
         }
     }
 }
 
-function fillTable(workersHolder) {
-    var workers = workersHolder.getElementsByTagName('workers');
-    if (workers.length > 0) {
-        for (var loop = 0; loop < workers.length; loop++) {
-            var workerXml = workers[loop];
-            var worker = createWorkerByXML(workerXml);
-            createNewTableRow(worker);
+function fillTable(departmentsHolder) {
+    var departments = departmentsHolder.getElementsByTagName('departments');
+    if (departments.length > 0) {
+        for (var loop = 0; loop < departments.length; loop++) {
+            var departmentXml = departments[loop];
+            var department = createDepartmentByXML(departmentXml);
+            createNewTableRow(department);
         }
     }
 }
 
-function createNewTableRow(worker) {
+function createNewTableRow(department) {
     var itNewRow = false;
-    var newRow = document.getElementById(worker.getID());
+    var newRow = document.getElementById(department.getID());
     if (newRow === undefined || newRow == null) {
         newRow = cloneRow.cloneNode(true);
-        newRow.id = worker.getID();
+        newRow.id = department.getID();
         newRow.classList.remove("invisible");
         itNewRow = true;
     }
@@ -334,17 +390,14 @@ function createNewTableRow(worker) {
         child = newRow.childNodes[i];
         if (child.classList === undefined) {/*NOP*/
         }
-        else if (child.classList.contains('workID')) {
-            child.innerHTML = worker.getID();
+        else if (child.classList.contains('depID')) {
+            child.innerHTML = department.getID();
         }
-        else if (child.classList.contains('workName')) {
-            child.innerHTML = worker.getName();
+        else if (child.classList.contains('depName')) {
+            child.innerHTML = department.getName();
         }
-        else if (child.classList.contains('workLogin')) {
-            child.innerHTML = worker.getLogin();
-        }
-        else if (child.classList.contains('workDep')) {
-            child.innerHTML = worker.getDepartmentName();
+        else if (child.classList.contains('depWorkers')) {
+            child.innerHTML = department.getCountWorkers();
         }
     }
     if (itNewRow) {
@@ -354,11 +407,11 @@ function createNewTableRow(worker) {
     }
 }
 
-function getAllWorkers() {
+function getAllDepartments() {
     sendAjax("GET", urlForAjax + "?action=getAll");
 }
 
-function createUpdateWorker() {
+function createUpdateDepartment() {
     var newWorker;
     if (selectedWorker == null) {
         newWorker = new createWorkerObject();
@@ -423,8 +476,28 @@ function selectRow(objectForSelect) {
         openSelectObjectForm();
     }
     else {
-        removeSelectionFromAll();
+        removeSelectionFromAll("selected");
         objectForSelect.classList.add("selected");
+    }
+}
+
+function selectWorkerRow(objectForSelect) {
+    if (objectForSelect.classList.contains("selectedWorker")) {
+        objectForSelect.classList.remove("selectedWorker");;
+    }
+    else {
+        removeSelectionFromAll("selectedWorker");
+        objectForSelect.classList.add("selectedWorker");
+    }
+}
+
+function selectWorkerRowForChoose(objectForSelect) {
+    if (objectForSelect.classList.contains("selectedWorkerForChoose")) {
+
+    }
+    else {
+        removeSelectionFromAll("selectedWorkerForChoose");
+        objectForSelect.classList.add("selectedWorkerForChoose");
     }
 }
 
@@ -444,23 +517,23 @@ function openSelectObjectForm() {
 }
 
 function startFillObjectForm(selectedElement) {
-    var newWorker = new createWorkerObject();
+    var newDepartment = new createDepartmentObject();
     var conditionElement;
     for (var i = 0; i < selectedElement.childNodes.length; i++) {
         conditionElement = selectedElement.childNodes[i];
 
         if (conditionElement.classList === undefined) {/*NOP*/
         }
-        else if (conditionElement.classList.contains("workID")) {
-            newWorker.setID(conditionElement.innerHTML);
+        else if (conditionElement.classList.contains("depID")) {
+            newDepartment.setID(conditionElement.innerHTML);
             break;
         }
     }
-    sendAjaxForFillObjectForm(newWorker);
+    sendAjaxForFillObjectForm(newDepartment);
 }
 
-function sendAjaxForFillObjectForm(worker) {
-    var url = urlForAjax + "?action=getByID&id=" + worker.getID();
+function sendAjaxForFillObjectForm(department) {
+    var url = urlForAjax + "?action=getByID&id=" + department.getID();
     sendAjaxGettingByID("GET", url);
 }
 
@@ -486,13 +559,13 @@ function parseWorkerForFillForm(responseXML) {
     if (responseXML == null) {
         return false;
     } else {
-        var workerXML = responseXML.getElementsByTagName("worker")[0];
-        if (workerXML === undefined) {
+        var departmentXML = responseXML.getElementsByTagName("department")[0];
+        if (departmentXML === undefined) {
             /*NOP*/
         }
         else {
-            selectedWorker = createWorkerByXML(workerXML);
-            fillObjectForm(selectedWorker);
+            selectedDepartment = createDepartmentByXML(departmentXML);
+            fillObjectForm(selectedDepartment);
             return;
         }
         var exceptionXML = responseXML.getElementsByTagName("exceptionForView")[0];
@@ -506,8 +579,8 @@ function parseWorkerForFillForm(responseXML) {
     }
 }
 
-function fillObjectForm(worker) {
-    var elementForFill = document.getElementById('objectWorker');
+function fillObjectForm(department) {
+    var elementForFill = document.getElementById('objectDepartment');
     var conditionElement;
     for (var i = 0; i < elementForFill.childNodes.length; i++) {
         conditionElement = elementForFill.childNodes[i];
@@ -517,20 +590,48 @@ function fillObjectForm(worker) {
          conditionElement.value = worker.getID();
          }*/
         else if (conditionElement.classList.contains("name")) {
-            conditionElement.value = worker.getName();
+            conditionElement.value = department.getName();
         }
-        else if (conditionElement.classList.contains("login")) {
-            conditionElement.value = worker.getLogin();
+    }
+    var workerList = department.getWorkersList();
+    for (var i = 0; i < workerList.length; i++) {
+        createNewTableWorkersRow(tableWorker, cloneRowWorker, workerList[i]);
+    }
+}
+
+function createNewTableWorkersRow(tableForAdding, cloneRowWorker, worker) {
+    var itNewRow = false;
+    var newRow = document.getElementById("worker_" + worker.getID());
+    if (newRow === undefined || newRow == null) {
+        newRow = cloneRowWorker.cloneNode(true);
+        newRow.id = "worker_" + worker.getID();
+        newRow.classList.remove("invisible");
+        itNewRow = true;
+    }
+    else {/*NOP*/
+    }
+    var child;
+    for (var i = 0; i < newRow.childNodes.length; i++) {
+        child = newRow.childNodes[i];
+        if (child.classList === undefined) {/*NOP*/
         }
-        else if (conditionElement.classList.contains("password")) {
-            conditionElement.value = worker.getPassword();
+        else if (child.classList.contains('workID')) {
+            child.innerHTML = worker.getID();
         }
-        /* else if (conditionElement.classList.contains("objectVersion")) {
-         conditionElement.value = worker.getObjectVersion();
-         }
-         else if (conditionElement.classList.contains("depName")) {
-         conditionElement.value = worker.getDepartmentName();
-         }*/
+        else if (child.classList.contains('workName')) {
+            child.innerHTML = worker.getName();
+        }
+        else if (child.classList.contains('workLogin')) {
+            child.innerHTML = worker.getLogin();
+        }
+        else if (child.classList.contains('workDep')) {
+            child.innerHTML = worker.getDepartmentName();
+        }
+    }
+    if (itNewRow) {
+        tableForAdding.appendChild(newRow);
+    }
+    else {/*NOP*/
     }
 }
 
@@ -551,7 +652,7 @@ function deleteWorker() {
     var selectedElement = document.getElementsByClassName("selected")[0];
     var newWorker = new createWorkerObject();
     var conditionElement;
-    for (var i = 0; i < selectedElement.childNodes.length; i++) {
+    for (i = 0; i < selectedElement.childNodes.length; i++) {
         conditionElement = selectedElement.childNodes[i];
 
         if (conditionElement.classList === undefined) {/*NOP*/
@@ -619,29 +720,36 @@ function deleteRowObject(worker) {
 
 }
 
-function closeObjectWorkerForm() {
-    selectedWorker = null;
-    closeObjectForm('objectWorker');
+function closeObjectDepartmentForm() {
+    selectedDepartment = null;
+    closeObjectForm("objectDepartment");
+    clearTable(tableWorker);
+
 }
 
-function closeExceptionWorkerForm() {
+function closeExceptionDepartmentForm() {
     selectedWorker = null;
     closeExceptionForm();
 }
 
-function closeQuestionWorkerForm() {
+function closeQuestionDepartmentForm() {
     selectedWorker = null;
     closeQuestionForm();
 }
 
-function search(valueForSearch){
-    if(valueForSearch == null || valueForSearch.trim() == ""){
-        getAllWorkers();
+function search(valueForSearch) {
+    if (valueForSearch == null || valueForSearch.trim() == "") {
+        getAllDepartments();
     }
-    else{
+    else {
         var typeSearch = document.getElementById("searchType").value;
-        sendAjax("GET", urlForAjax + "?action=findByPartOf&searchType="+typeSearch+"&valueForSearch="+valueForSearch);
+        sendAjax("GET", urlForAjax + "?action=findByPartOf&searchType=" + typeSearch + "&valueForSearch=" + valueForSearch);
     }
 
+}
+
+function openWorkersFromForAdd() {
+    var elementForInvisible = document.getElementById('objectsFormFroAdd');
+    changeVisible(elementForInvisible, true);
 }
 

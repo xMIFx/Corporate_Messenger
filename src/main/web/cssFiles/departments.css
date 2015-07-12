@@ -1,0 +1,289 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    background: #3C3232;}
+
+div.content {
+
+    min-height: 100vh;
+}
+#table1 {
+    position: relative;
+    top: 250px;;
+    width: 660px;
+    border-collapse: collapse;
+    font-size: 18px;
+    border: 1px solid #000;
+    font-family: Arial;
+    margin: 0px auto auto;
+}
+
+#table1 tr td {
+    width: 25%;
+    text-align: center;
+    padding: 5px 0px;
+    border: 1px solid #000;
+    /*background-color:#ffffff;*/
+    padding: 10px 0px;
+
+}
+#table1 tr{
+    background-color:#ffffff;
+    cursor: pointer;
+}
+
+div.button_box{
+    width: 514px;
+    margin: 0px auto;
+    background: #3C3232;
+    white-space: nowrap;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.header_id {
+    width: 660px;
+    background: #fff;
+    white-space: nowrap;
+    text-align: center;
+    margin: 0px auto;
+}
+
+.fix{
+    position: fixed;
+    width: 100%;
+    top: 70px;
+    text-align: center;
+    z-index: 2;
+    background: #3C3232;
+}
+div.button_border{
+    width: 700px;
+    height: 40px;
+    left: 49%;
+    margin-left: -249px;
+    background: #3C3232;
+    position: fixed;
+    white-space: nowrap;
+    z-index: 1;
+    top: 110px;
+}
+.header_id div.tt1 {
+    width: 220px;
+    display: inline-block;
+    white-space: normal;
+    border: 1px solid #000;
+    margin-left: -1px;
+    padding: 10px 0px;
+    background: #fff;
+}
+
+.button_cl {
+    width: 32%;
+    display: inline-block;
+    white-space: normal;
+    border: 1px solid #000;
+    margin-left: -1px;
+    padding: 10px 0px;
+    cursor: pointer;
+    background: #ffd600;
+    color: #000;
+    -webkit-transition: 0.2s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+}
+
+.button_cl:hover {
+    background: #D8B916;
+}
+
+#table1 tr.selected{
+    background: #6495ED;
+}
+
+ tr.invisible{
+    display: none;
+}
+input.invisible {
+    display: none;
+}
+
+div.visibleObjectBlock input.buttonOK:hover {
+    background: #D8B916;
+}
+
+div.visibleObjectBlock div.buttonOK:hover {
+    background: #D8B916;
+}
+
+div.visibleObjectBlock div.buttonCancel:hover {
+    background: #D8B916;
+}
+
+div.visibleObjectBlock div.buttonsBoxExc div.buttonOK{
+    margin-right: 0px;
+}
+
+div.visibleObjectBlock input.buttonOK {
+    background:#ffd600;
+    color: #000;
+    width: 100px;
+    display: inline-block;
+    margin-bottom: 0px;
+    margin-right: 48px;
+    cursor: pointer;
+    -webkit-transition: 0.2s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+}
+
+div.visibleObjectBlock div.buttonOK {
+    border: 0px;
+    font-size: 14px;
+    outline: none;
+    background:#ffd600;
+    color: #000;
+    width: 100px;
+    display: inline-block;
+    margin-bottom: 0px;
+    margin-right: 48px;
+    padding: 5px 0px;
+    cursor: pointer;
+    -webkit-transition: 0.2s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+}
+
+div.visibleObjectBlock div.buttonCancel {
+    border: 0px;
+    font-size: 14px;
+    outline: none;
+    background: #ffd600;
+    color: #000;
+    width: 100px;
+    display: inline-block;
+    padding: 5px 0px;
+    cursor: pointer;
+    -webkit-transition: 0.2s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+}
+
+div.visibleObjectBlock {
+    margin-top: -221px;
+    padding: 15px 0px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 662px;
+    margin-left: -330px;
+    background: #3C3232;
+    -webkit-box-shadow: 1px 2px 5px 1px rgba(1, 1, 1, 0.5);
+    box-shadow: 1px 2px 5px 1px rgba(1, 1, 1, 0.5);
+    text-align: center;
+}
+
+div.visibleObjectBlock input {
+    margin: 0px auto auto;
+    padding: 5px 10px;
+    border: 0px;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 10px;
+    width: 250px;
+}
+
+.header_WorkerId {
+    width: 442px;
+    background: #fff;
+    white-space: nowrap;
+    text-align: center;
+    margin: 0px auto;
+}
+.header_WorkerId div.tt1 {
+    width: 220px;
+    display: inline-block;
+    white-space: normal;
+    border: 1px solid #000;
+    margin-left: -1px;
+    padding: 10px 0px;
+    background: #fff;
+}
+
+#tableWorker tr.selectedWorker{
+    background: #6495ED;
+}
+
+#tableWorker tr td {
+    width: 25%;
+    text-align: center;
+    padding: 5px 0px;
+    border: 1px solid #000;
+    /*background-color:#ffffff;*/
+    padding: 10px 0px;
+
+}
+#tableWorker tr {
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+#tableWorker {
+    top: 250px;;
+    width: 432px;
+    border-collapse: collapse;
+    font-size: 18px;
+    border: 1px solid #000;
+    font-family: Arial;
+    margin: 0px auto;
+}
+div.scroller{
+    height: 300px;
+    overflow-y: scroll;
+    margin: 15px auto 15px 110px;
+    width: 454px;
+}
+
+#tableAllWorker tr.selectedWorkerForChoose{
+    background: #6495ED;
+}
+
+#tableAllWorker tr td {
+    width: 25%;
+    text-align: center;
+    padding: 5px 0px;
+    border: 1px solid #000;
+    /*background-color:#ffffff;*/
+    padding: 10px 0px;
+
+}
+#tableAllWorker tr {
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+#tableAllWorker {
+    top: 250px;;
+    width: 432px;
+    border-collapse: collapse;
+    font-size: 18px;
+    border: 1px solid #000;
+    font-family: Arial;
+    margin: 0px auto;
+}
+
+.header_WorkerAllId {
+    width: 436px;
+    background: #fff;
+    white-space: nowrap;
+    text-align: center;
+    margin: 0px auto;
+}
+.header_WorkerAllId div.tt1 {
+    width: 108px;
+    display: inline-block;
+    white-space: normal;
+    border: 1px solid #000;
+    margin-left: -1px;
+    padding: 10px 0px;
+    background: #fff;
+}
+
+div.forAdd{
+    left: 70%;
+}

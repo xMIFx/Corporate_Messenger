@@ -4,11 +4,10 @@ import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
 
-import org.apache.tomcat.jdbc.pool.PoolProperties;
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
     private static DataSource datasource;
 
     static {
-        datasource = new DataSource();
-        setPropertiesForDataSource();
+        datasource = ConnectionPoolTomcat.getDataSource();
     }
 
 
@@ -92,10 +90,10 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
                 }
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Exception when get by id:" + worker.getId() + " worker from MySQL: ", e);
+            logger.error("Exception when get by id:" + id + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get by id:" + worker.getId() + " worker from MySQL: ", e);
+            logger.error("Exception when get by id:" + id + " worker from MySQL: ", e);
         }
 
         return worker;
@@ -133,7 +131,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             }
 
         } catch (SQLException e) {
-            logger.error("Exception when get by name:" + worker.getName() + " worker from MySQL: ", e);
+            logger.error("Exception when get by name:" + name + " worker from MySQL: ", e);
         }
 
         return worker;
@@ -420,31 +418,5 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
         return workerList;
     }
 
-    private static void setPropertiesForDataSource() {
-        PoolProperties p = new PoolProperties();
-        p.setUrl("jdbc:mysql://127.0.0.1:3306/corporate_messenger");
-        p.setDriverClassName("com.mysql.jdbc.Driver");
-        p.setUsername("root");
-        p.setPassword("Lytghj12");
-        p.setJmxEnabled(true);
-        p.setTestWhileIdle(false);
-        p.setTestOnBorrow(true);
-        p.setValidationQuery("SELECT 1");
-        p.setTestOnReturn(false);
-        p.setValidationInterval(30000);
-        p.setTimeBetweenEvictionRunsMillis(30000);
-        p.setMaxActive(100);
-        p.setInitialSize(10);
-        p.setMaxWait(10000);
-        p.setRemoveAbandonedTimeout(60);
-        p.setMinEvictableIdleTimeMillis(30000);
-        p.setMinIdle(10);
-        p.setLogAbandoned(true);
-        p.setRemoveAbandoned(true);
-        p.setJdbcInterceptors(
-                "org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" +
-                        "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
-        datasource.setPoolProperties(p);
 
-    }
 }

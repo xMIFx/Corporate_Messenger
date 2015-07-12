@@ -76,4 +76,9 @@ public class DepartmentCollectionDAOImpl implements DepartmentDAO {
     public boolean update(Department department) {
         return true;
     }
+
+    @Override
+    public List<Department> findByName(String name) {
+        return null;
+    }
 }

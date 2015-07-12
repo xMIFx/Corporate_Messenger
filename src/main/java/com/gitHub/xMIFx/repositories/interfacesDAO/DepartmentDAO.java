@@ -26,4 +26,6 @@ public interface DepartmentDAO {
     boolean remove(Department department);
     //update department
     boolean update(Department department);
+
+    List<Department> findByName(String name);
 }

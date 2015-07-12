@@ -134,6 +134,11 @@ public class DepartmentSerialDAOImpl implements DepartmentDAO {
         return allIsOK;
     }
 
+    @Override
+    public List<Department> findByName(String name) {
+        return null;
+    }
+
     private static void readAllObject() throws IOException {
         try (FileInputStream fileInputStream = new FileInputStream(filePath);
              ObjectInputStream in = new ObjectInputStream(fileInputStream)) {

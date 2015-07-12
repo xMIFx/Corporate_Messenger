@@ -138,6 +138,11 @@ public class DepartmentJsonDAOImpl implements DepartmentDAO {
         return allIsOK;
     }
 
+    @Override
+    public List<Department> findByName(String name) {
+        return null;
+    }
+
     private static void readAllObject() throws IOException {
 
         File file = new File(filePath);

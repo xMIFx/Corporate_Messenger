@@ -1,15 +1,11 @@
 package com.gitHub.xMIFx.services.interfaces;
 
-import com.gitHub.xMIFx.domain.Worker;
-import com.gitHub.xMIFx.services.FinderType;
-
-import java.util.List;
+        import com.gitHub.xMIFx.services.FinderType;
 
 /**
- * Created by Vlad on 10.07.2015.
+ * Created by Vlad on 11.07.2015.
  */
-public interface WorkerService {
-
+public interface DepartmentService {
     String find(FinderType finderType, String searchValue);
 
     String getAll();

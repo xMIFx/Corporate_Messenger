@@ -31,7 +31,7 @@
         </h2>
     </div>
     <div class="content_menu">
-        <div class="box_m"><a href="#" class="m_menu" onMouseOver="mouseOver('department')"
+        <div class="box_m"><a href="/department.do" class="m_menu" onMouseOver="mouseOver('department')"
                               onmouseout="mouseOut('department')"><span>Departments</span>
             <div class="trg"></div></a>
 

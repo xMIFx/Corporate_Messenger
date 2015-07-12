@@ -40,7 +40,6 @@ function openLoginForm() {
     changeVisible(elementForInvisible, true);
 }
 
-
 function closeLoginForm() {
     var elementForInvisible = document.getElementById('loginBackground');
     changeVisible(elementForInvisible, false);
@@ -61,11 +60,10 @@ function openNewObjectForm() {
     changeVisible(elementForInvisible, true);
 }
 
-
-function closeObjectForm() {
+function closeObjectForm(idForClean) {
     var elementForInvisible = document.getElementById('objectsForm');
     changeVisible(elementForInvisible, false);
-    var elementsForClean = document.getElementById('objectWorker');
+    var elementsForClean = document.getElementById(idForClean);
     for (i = 0; i < elementsForClean.childNodes.length; i++) {
         conditionElement = elementsForClean.childNodes[i];
         if (conditionElement.classList === undefined) {/*NOP*/
@@ -80,7 +78,7 @@ function openExceptionForm(exceptionMessage) {
     var elementForInvisible = document.getElementById('exceptionForm');
     var elementMessage = document.getElementById('messageExc');
     elementMessage.innerHTML = exceptionMessage;
-    changeVisibleAnotherForm("blockingBackground", elementForInvisible);
+    //changeVisibleAnotherForm("blockingBackground", elementForInvisible);
     changeVisible(elementForInvisible, true);
 }
 
@@ -111,14 +109,14 @@ function doItInvisible(elemId) {
 function removeSelection() {
     var t = event.target || event.srcElement;
     if (t.id == 'content' || t.id == 'searchType' || t.id == 'inputSearch') {
-        removeSelectionFromAll();
+        removeSelectionFromAll("selected");
     }
 }
 
-function removeSelectionFromAll() {
-    var allSelectedElements = document.getElementsByClassName("selected");
+function removeSelectionFromAll(className) {
+    var allSelectedElements = document.getElementsByClassName(className);
     for (i = 0; i < allSelectedElements.length; i++) {
-        allSelectedElements[i].classList.remove("selected");
+        allSelectedElements[i].classList.remove(className);
     }
 }
 
