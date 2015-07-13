@@ -125,7 +125,6 @@ public class WorkerServiceImpl implements WorkerService {
     public String deleteByID(Long id) {
         String answer = null;
         Worker worker = workerDAO.getById(id);
-        worker = workerDAO.getById(id);
         try {
             if (!workerDAO.remove(worker)) {
                 ExceptionForView exceptionForView = new ExceptionForView();

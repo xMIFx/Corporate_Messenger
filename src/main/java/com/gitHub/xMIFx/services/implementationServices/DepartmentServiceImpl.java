@@ -11,6 +11,8 @@ import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
 import com.gitHub.xMIFx.services.FinderType;
 import com.gitHub.xMIFx.services.interfaces.DepartmentService;
 import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;
 import org.codehaus.jackson.node.ArrayNode;
@@ -77,7 +79,23 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public String create(String jsonText) {
-        return null;
+        String answer = null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Department department = objectMapper.readValue(jsonText, Department.class);
+            if (departmentDAO.save(department) == null) {
+                ExceptionForView exceptionForView = new ExceptionForView();
+                exceptionForView.setExceptionMessage("Error when saving. Try later.");
+                answer = getXMLMessage(exceptionForView);
+            } else {
+                answer = getXMLMessage(department);
+            }
+        } catch (JAXBException e) {
+            logger.error("some jaxB exception: ", e);
+        } catch (IOException e) {
+            logger.error("some json parsing exception: ", e);
+        }
+        return answer;
     }
 
     @Override
@@ -137,7 +155,21 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public String deleteByID(Long id) {
-        return null;
+        String answer = null;
+        Department department = departmentDAO.getById(id);
+        try {
+            if (!departmentDAO.remove(department)) {
+                ExceptionForView exceptionForView = new ExceptionForView();
+                exceptionForView.setExceptionMessage("Error when delete. Try later.");
+                department = null;
+                answer = getXMLMessage(exceptionForView);
+            } else {
+                answer = getXMLMessage(department);
+            }
+        } catch (JAXBException e) {
+            logger.error("some jaxB exception: ", e);
+        }
+        return answer;
     }
 
 

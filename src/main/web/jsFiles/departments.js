@@ -611,27 +611,27 @@ function deleteObject() {
     }
 }
 
-function deleteWorker() {
+function deleteDepartment() {
     var selectedElement = document.getElementsByClassName("selected")[0];
-    var newWorker = new createWorkerObject();
+    var department = new createDepartmentObject();
     var conditionElement;
     for (i = 0; i < selectedElement.childNodes.length; i++) {
         conditionElement = selectedElement.childNodes[i];
 
         if (conditionElement.classList === undefined) {/*NOP*/
         }
-        else if (conditionElement.classList.contains("workID")) {
-            newWorker.setID(conditionElement.innerHTML);
+        else if (conditionElement.classList.contains("depID")) {
+            department.setID(conditionElement.innerHTML);
             break;
         }
     }
     selectedWorker = null;
-    sendAjaxForDeleteObjectForm(newWorker);
+    sendAjaxForDeleteObjectForm(department);
     closeQuestionForm();
 }
 
-function sendAjaxForDeleteObjectForm(worker) {
-    var url = urlForAjax + "?action=deleteByID&id=" + worker.getID();
+function sendAjaxForDeleteObjectForm(department) {
+    var url = urlForAjax + "?action=deleteByID&id=" + department.getID();
     sendAjaxDeletingByID("GET", url);
 }
 
@@ -657,13 +657,13 @@ function parseWorkerForDelete(responseXML) {
     if (responseXML == null) {
         return false;
     } else {
-        var workerXML = responseXML.getElementsByTagName("worker")[0];
-        if (workerXML === undefined) {
+        var departmentXML = responseXML.getElementsByTagName("department")[0];
+        if (departmentXML === undefined) {
             /*NOP*/
         }
         else {
-            var worker = createWorkerByXML(workerXML);
-            deleteRowObject(worker);
+            var department = createDepartmentByXML(departmentXML);
+            deleteRowObject(department);
             return;
         }
         var exceptionXML = responseXML.getElementsByTagName("exceptionForView")[0];
@@ -677,8 +677,8 @@ function parseWorkerForDelete(responseXML) {
     }
 }
 
-function deleteRowObject(worker) {
-    var elementForRemove = document.getElementById(worker.getID());
+function deleteRowObject(department) {
+    var elementForRemove = document.getElementById(department.getID());
     elementForRemove.parentNode.removeChild(elementForRemove);
 
 }

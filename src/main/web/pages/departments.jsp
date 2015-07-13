@@ -143,7 +143,7 @@
     <div class="visibleBlock">
         <div class="messageAboutSomething" id="messageQuestion"></div>
         <div class="buttonsBox">
-            <div class="buttonOK" onclick="deleteWorker()">ok</div>
+            <div class="buttonOK" onclick="deleteDepartment()">ok</div>
             <div class="buttonCancel" onclick="closeQuestionDepartmentForm()">cancel</div>
         </div>
     </div>

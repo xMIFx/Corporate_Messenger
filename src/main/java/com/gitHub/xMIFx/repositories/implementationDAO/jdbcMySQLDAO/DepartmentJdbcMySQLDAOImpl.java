@@ -27,7 +27,73 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
 
     @Override
     public Long save(Department department) {
-        return null;
+        if (department.getId() != null) {
+            return department.getId();
+        }
+        String sqlCreate = "INSERT INTO corporate_messenger.departments" +
+                "(name, objectVersion) " +
+                "VALUES (?, ?);";
+        String sqlDeleteBindingWorker = "DELETE FROM corporate_messenger.departmentworkers WHERE idworker=?;";
+        String sqlAddBindingWorkerDepartment = "INSERT INTO corporate_messenger.departmentworkers " +
+                "(idworker, iddepartment) " +
+                "VALUES (?, ?);";
+        Long autoIncKeyId = -1L;
+        final int batchSize = 1000;
+        try (Connection con = datasource.getConnection()) {
+            con.setAutoCommit(false);
+            try (PreparedStatement st = con.prepareStatement(sqlCreate, Statement.RETURN_GENERATED_KEYS)) {
+                st.setString(1, department.getName());
+                st.setInt(2, department.getObjectVersion());
+                st.executeUpdate();
+                try (ResultSet rs = st.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        autoIncKeyId = rs.getLong(1);
+                    }
+                }
+                if (autoIncKeyId == -1L) {
+                    throw new SQLException("can't get iD");
+                }
+
+                //first: delete binding worker-department for new workers
+                if (department.getWorkers().size() > 0) {
+                    try (PreparedStatement stForWorkerBindingDelete = con.prepareStatement(sqlDeleteBindingWorker)) {
+                        int count = 0;
+                        for (Worker worker : department.getWorkers()) {
+                            stForWorkerBindingDelete.setLong(1, worker.getId());
+                            stForWorkerBindingDelete.addBatch();
+                            System.out.println(worker.getName());
+                            if (++count % batchSize == 0) {
+                                stForWorkerBindingDelete.executeBatch();
+                            }
+                        }
+                        stForWorkerBindingDelete.executeBatch();
+                    }
+                    //second: add to binding workerDepartment all workers
+                    try (PreparedStatement stForAddDepartmentBinding = con.prepareStatement(sqlAddBindingWorkerDepartment)) {
+                        int count = 0;
+                        for (Worker worker : department.getWorkers()) {
+                            stForAddDepartmentBinding.setLong(1, worker.getId());
+                            stForAddDepartmentBinding.setLong(2, autoIncKeyId);
+                            stForAddDepartmentBinding.addBatch();
+                            System.out.println(worker.getName());
+                            if (++count % batchSize == 0) {
+                                stForAddDepartmentBinding.executeBatch();
+                            }
+                        }
+                        stForAddDepartmentBinding.executeBatch();
+                    }
+                }
+                con.commit();
+                department.setId(autoIncKeyId);
+
+            } catch (SQLException e) {
+                logger.error("Exception when saving department to MySQL: ", e);
+                con.rollback();
+            }
+        } catch (SQLException e) {
+            logger.error("Exception when saving department to MySQL: ", e);
+        }
+        return department.getId();
     }
 
     @Override
@@ -71,7 +137,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Exception when get by id:" + id + " worker from MySQL: ", e);
+            logger.error("Exception in create department bean when get by id:" + id + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
             logger.error("Exception when get by id:" + id + " worker from MySQL: ", e);
@@ -121,7 +187,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Exception when get by name:" + name + " worker from MySQL: ", e);
+            logger.error("Exception in create department bean when get by name:" + name + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
             logger.error("Exception when get by name:" + name + " worker from MySQL: ", e);
@@ -171,7 +237,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Exception when get by worker:" + worker + " worker from MySQL: ", e);
+            logger.error("Exception in create department bean when get by worker:" + worker + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
             logger.error("Exception when get by worker:" + worker + " worker from MySQL: ", e);
@@ -223,10 +289,10 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                     department.addWorker(worker);
                 }
             }
-        } catch (SQLException e) {
-            logger.error("Exception when get all workers from MySQL: ", e);
         } catch (IllegalArgumentException e) {
-            logger.error("Exception when get all workers from MySQL: ", e);
+            logger.error("Exception when create department bean get all department from MySQL: ", e);
+        } catch (SQLException e) {
+            logger.error("Exception when get all department from MySQL: ", e);
         }
         List<Department> departmentList = new ArrayList<>();
         departmentList.addAll(departmentMap.values());
@@ -258,14 +324,30 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 departmentList.add(department);
             }
         } catch (SQLException e) {
-            logger.error("Exception when get all workers from MySQL: ", e);
+            logger.error("Exception when get all department from MySQL: ", e);
         }
         return departmentList;
     }
 
     @Override
     public boolean remove(Department department) {
-        return false;
+        if (department.getId() == null) {
+            return false;
+        }
+        boolean result = false;
+        String sqlDelete = "DELETE FROM corporate_messenger.departments WHERE id=?;";
+
+        try (Connection con = datasource.getConnection();
+             PreparedStatement st = con.prepareStatement(sqlDelete)) {
+            st.setLong(1, department.getId());
+            int countRows = st.executeUpdate();
+            if (countRows > 0) {
+                result = true;
+            }
+        } catch (SQLException e) {
+            logger.error("Exception when remove department id:" + department.getId() + " to MySQL: ", e);
+        }
+        return result;
     }
 
     @Override
@@ -277,6 +359,13 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
         String sqlUpdate = "UPDATE corporate_messenger.departments " +
                 "SET name=?, objectVersion=? " +
                 "WHERE id=? and objectVersion=?;";
+
+        String sqlDeleteBindingWorker = "DELETE FROM corporate_messenger.departmentworkers WHERE idworker=?;";
+        String sqlDeleteBindingDepartment = "DELETE FROM corporate_messenger.departmentworkers WHERE iddepartment=?;";
+        String sqlAddBindingWorkerDepartment = "INSERT INTO corporate_messenger.departmentworkers " +
+                "(idworker, iddepartment) " +
+                "VALUES (?, ?);";
+        final int batchSize = 1000;
 
         try (Connection con = datasource.getConnection()) {
             try (PreparedStatement st = con.prepareStatement(sqlUpdate)) {
@@ -291,19 +380,48 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                     result = true;
                     department.setObjectVersion(nextObjVersion);
                 }
-               /* PreparedStatement statement = connection.prepareStatement("INSERT INTO test_table VALUES(?)");
-                // Insert 10 rows of data
-                for (int i = 0; i < 10; i++) {
-                    statement.setString(1, "test_value_" + i);
-                    statement.addBatch();
-                }*/
+                // first: delete all workers from department
+                try (PreparedStatement stForDepartmentBindingDelete = con.prepareStatement(sqlDeleteBindingDepartment)) {
+                    stForDepartmentBindingDelete.setLong(1, department.getId());
+                    stForDepartmentBindingDelete.executeUpdate();
+                }
+                //second: delete binding worker-department for new workers
+                if (department.getWorkers().size() > 0) {
+                    try (PreparedStatement stForWorkerBindingDelete = con.prepareStatement(sqlDeleteBindingWorker)) {
+                        int count = 0;
+                        for (Worker worker : department.getWorkers()) {
+                            stForWorkerBindingDelete.setLong(1, worker.getId());
+                            stForWorkerBindingDelete.addBatch();
+                            System.out.println(worker.getName());
+                            if (++count % batchSize == 0) {
+                                stForWorkerBindingDelete.executeBatch();
+                            }
+                        }
+                        stForWorkerBindingDelete.executeBatch();
+                    }
+                    //third: add to binding workerDepartment all workers
+                    try (PreparedStatement stForAddDepartmentBinding = con.prepareStatement(sqlAddBindingWorkerDepartment)) {
+                        int count = 0;
+                        for (Worker worker : department.getWorkers()) {
+                            stForAddDepartmentBinding.setLong(1, worker.getId());
+                            stForAddDepartmentBinding.setLong(2, department.getId());
+                            stForAddDepartmentBinding.addBatch();
+                            System.out.println(worker.getName());
+                            if (++count % batchSize == 0) {
+                                stForAddDepartmentBinding.executeBatch();
+                            }
+                        }
+                        stForAddDepartmentBinding.executeBatch();
+                    }
+                }
                 con.commit();
             } catch (SQLException e) {
-                logger.error("Exception when update worker id:" + department.getId() + " to MySQL: ", e);
+                logger.error("Exception when update department id:" + department.getId() + " to MySQL: ", e);
                 con.rollback();
+                result = false;
             }
         } catch (SQLException e) {
-            logger.error("Exception when getting connection by worker id:" + department.getId() + " to MySQL: ", e);
+            logger.error("Exception when getting connection by department id:" + department.getId() + " to MySQL: ", e);
         }
         return result;
     }
@@ -355,9 +473,9 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Exception when get all workers from MySQL: ", e);
+            logger.error("Exception when get all department from MySQL: ", e);
         } catch (IllegalArgumentException e) {
-            logger.error("Exception when get all workers from MySQL: ", e);
+            logger.error("Exception when get all department from MySQL: ", e);
         }
         List<Department> departmentList = new ArrayList<>();
         departmentList.addAll(departmentMap.values());

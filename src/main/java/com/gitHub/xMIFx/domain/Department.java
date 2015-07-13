@@ -79,8 +79,10 @@ public class Department implements Externalizable {
 
     @XmlElement
     public void setWorkers(List<Worker> workers) {
-        this.workers = workers;
-        this.workersCount = workers.size();
+        if (workers != null) {
+            this.workers = workers;
+            this.workersCount = workers.size();
+        }
     }
 
     public int getObjectVersion() {
