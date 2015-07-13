@@ -10,9 +10,9 @@ public interface DepartmentService {
 
     String getAll();
 
-    String create(String name, String login, String password);
+    String create(String jsonText);
 
-    String update(Long id, String name, String login, String password, int objVersion, String depName);
+    String update(String jsonText);
 
     String getByID(Long id);
 

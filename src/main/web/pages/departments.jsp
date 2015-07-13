@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Workers</title>
+    <title>Departments</title>
     <link href="../cssFiles/departments.css" type="text/css" rel="Stylesheet"/>
     <link href="../cssFiles/header.css" type="text/css" rel="Stylesheet"/>
     <script src="../jsFiles/departments.js"></script>
@@ -66,7 +66,7 @@
             <div class="invisible validationException" id="nameException"></div>
             <input type="text" onclick="doItInvisible('nameException')" onchange="isNameValid(this.value)" class="objectRow name" placeholder="name"
                    name="name"/>
-        <div class="contentWorker" id="contentWorker" onclick="removeSelection()">
+        <div class="contentWorker" id="contentWorker" onclick="removeSelectionFromWorkerTable()">
             <div class="fixWorkerTable" id="fixWorkerTable">
                 <div class="button_box">
                     <div class="button_cl " onclick="openWorkersFromForAdd()">add new worker</div>

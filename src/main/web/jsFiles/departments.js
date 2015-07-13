@@ -19,8 +19,6 @@ function createWorkerObject() {
     this.password;
     this.departmentName;
     this.objectVersion;
-    this.confirmPassword;
-    this.needCheckPassword;
 
     this.setID = function (ID) {
         this.id = ID;
@@ -39,16 +37,8 @@ function createWorkerObject() {
         this.departmentName = depName;
     }
 
-    this.setConfirmPassword = function (confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
     this.setObjectVersion = function (objVers) {
         this.objectVersion = objVers
-    }
-
-    this.checkPassword = function (check) {
-        this.needCheckPassword = check;
     }
 
     this.getID = function () {
@@ -68,23 +58,12 @@ function createWorkerObject() {
         return this.departmentName;
     }
 
-    this.getConfirmPassword = function () {
-        return this.confirmPassword;
-    }
-
     this.getObjectVersion = function () {
         return this.objectVersion;
     }
 
-    this.isNeedCheckPassword = function () {
-        return this.needCheckPassword;
-    }
-
     this.objectValidation = function () {
         var itsOk = true;
-        if (this.isNeedCheckPassword()) {
-            itsOk = isConfirmPasswordValid(this.password, this.confirmPassword);
-        }
         if (itsOk) {
             itsOk = isNameValid(this.name);
         }
@@ -97,12 +76,7 @@ function createWorkerObject() {
         else {
             isLoginValid(this.login);
         }
-        if (itsOk) {
-            itsOk = isPasswordValid(this.password);
-        }
-        else {
-            isPasswordValid(this.password);
-        }
+
         return itsOk;
     }
 }
@@ -110,8 +84,8 @@ function createWorkerObject() {
 function createDepartmentObject() {
     this.id;
     this.name;
-    this.countWorkers;
-    this.workersList;
+    this.workersCount;
+    this.workers;
     this.objectVersion;
 
     this.setID = function (ID) {
@@ -123,11 +97,11 @@ function createDepartmentObject() {
     }
 
     this.setCountWorkers = function (countWorkers) {
-        this.countWorkers = countWorkers;
+        this.workersCount = countWorkers;
     }
 
     this.setWorkersList = function (workerList) {
-        this.workersList = workerList;
+        this.workers = workerList;
     }
 
     this.setObjectVersion = function (objectVersion) {
@@ -143,15 +117,26 @@ function createDepartmentObject() {
     }
 
     this.getCountWorkers = function () {
-        return this.countWorkers;
+        return this.workersCount;
     }
 
     this.getWorkersList = function () {
-        return this.workersList;
+        return this.workers;
     }
 
     this.getObjectVersion = function () {
         return this.objectVersion;
+    }
+
+    this.objectValidation = function () {
+        var itsOk = true;
+       itsOk = isNameValid(this.name);
+        return itsOk;
+    }
+
+    this.createJSON = function () {
+        var json = JSON.stringify(this);
+            return json;
     }
 
 }
@@ -335,6 +320,7 @@ function parseMessages(responseXML) {
         else {
             var newDepartment = createDepartmentByXML(departmentXML);
             createNewTableRow(newDepartment);
+            selectedDepartment = null;
             closeObjectForm('objectDepartment');
             return;
         }
@@ -412,62 +398,39 @@ function getAllDepartments() {
 }
 
 function createUpdateDepartment() {
-    var newWorker;
-    if (selectedWorker == null) {
-        newWorker = new createWorkerObject();
+    var newDepartment;
+    if (selectedDepartment == null) {
+        newDepartment = new createDepartmentObject();
     }
     else {
-        newWorker = selectedWorker;
+        newDepartment = selectedDepartment;
     }
-    var elementNewObjectBlock = document.getElementById("objectWorker");
+    var elementNewObjectBlock = document.getElementById("objectDepartment");
     var conditionElement;
     for (var i = 0; i < elementNewObjectBlock.childNodes.length; i++) {
         conditionElement = elementNewObjectBlock.childNodes[i];
         if (conditionElement.classList === undefined) {/*NOP*/
         }
-        /*  else if (conditionElement.classList.contains("id")) {
-         newWorker.setID(conditionElement.value);
-         }*/
         else if (conditionElement.classList.contains("name")) {
-            newWorker.setName(conditionElement.value.trim());
+            newDepartment.setName(conditionElement.value.trim());
         }
-        else if (conditionElement.classList.contains("login")) {
-            newWorker.setLogin(conditionElement.value.trim());
-        }
-        else if (conditionElement.classList.contains("password")) {
-            if (selectedWorker.getPassword() != conditionElement.value) {
-                newWorker.checkPassword(true);
-            }
-            else {
-                newWorker.checkPassword(false);
-            }
-            newWorker.setPassword(conditionElement.value);
-        }
-        else if (conditionElement.classList.contains("confirmPassword")) {
-            newWorker.setConfirmPassword(conditionElement.value);
-        }
-        /*   else if (conditionElement.classList.contains("objectVersion")) {
-         newWorker.setObjectVersion(conditionElement.value);
-         }
-         else if (conditionElement.classList.contains("depName")) {
-         newWorker.setDepartmentName(conditionElement.value);
-         }*/
+        // need fill workers
     }
-    if (newWorker.objectValidation()) {
-        selectedWorker = null;
-        sendAjaxFromWorkerObject(newWorker);
+    if (newDepartment.objectValidation()) {
+        //selectedDepartment = null;
+        sendAjaxFromDepartmentObject(newDepartment);
     }
 }
 
-function sendAjaxFromWorkerObject(worker) {
+function sendAjaxFromDepartmentObject(department) {
     var url = urlForAjax;
-    if (worker.getID() == undefined || worker.getID() == null || worker.getID() == '') {
+    if (department.getID() == undefined || department.getID() == null || department.getID() == '') {
         url = url + "?action=create";
     }
     else {
-        url = url + "?action=update&id=" + worker.getID() + "&objVersion=" + worker.getObjectVersion() + "&depName=" + worker.getDepartmentName();
+        url = url + "?action=update";
     }
-    url = url + "&name=" + worker.getName() + "&login=" + worker.getLogin() + "&password=" + worker.getPassword();
+    url = url +  "&department="+department.createJSON();
     sendAjax("GET", url);
 }
 

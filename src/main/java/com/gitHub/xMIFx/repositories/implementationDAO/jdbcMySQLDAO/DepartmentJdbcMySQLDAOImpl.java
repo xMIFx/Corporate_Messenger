@@ -270,7 +270,42 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
 
     @Override
     public boolean update(Department department) {
-        return false;
+        if (department.getId() == null) {
+            return false;
+        }
+        boolean result = false;
+        String sqlUpdate = "UPDATE corporate_messenger.departments " +
+                "SET name=?, objectVersion=? " +
+                "WHERE id=? and objectVersion=?;";
+
+        try (Connection con = datasource.getConnection()) {
+            try (PreparedStatement st = con.prepareStatement(sqlUpdate)) {
+                con.setAutoCommit(false);
+                int nextObjVersion = department.getObjectVersion() + 1;
+                st.setString(1, department.getName());
+                st.setInt(2, nextObjVersion);
+                st.setLong(3, department.getId());
+                st.setInt(4, department.getObjectVersion());
+                int countRows = st.executeUpdate();
+                if (countRows > 0) {
+                    result = true;
+                    department.setObjectVersion(nextObjVersion);
+                }
+               /* PreparedStatement statement = connection.prepareStatement("INSERT INTO test_table VALUES(?)");
+                // Insert 10 rows of data
+                for (int i = 0; i < 10; i++) {
+                    statement.setString(1, "test_value_" + i);
+                    statement.addBatch();
+                }*/
+                con.commit();
+            } catch (SQLException e) {
+                logger.error("Exception when update worker id:" + department.getId() + " to MySQL: ", e);
+                con.rollback();
+            }
+        } catch (SQLException e) {
+            logger.error("Exception when getting connection by worker id:" + department.getId() + " to MySQL: ", e);
+        }
+        return result;
     }
 
     @Override

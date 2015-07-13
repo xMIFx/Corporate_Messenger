@@ -113,6 +113,13 @@ function removeSelection() {
     }
 }
 
+function removeSelectionFromWorkerTable() {
+    var t = event.target || event.srcElement;
+    if (t.id == 'contentWorker') {
+        removeSelectionFromAll("selectedWorker");
+    }
+}
+
 function removeSelectionFromAll(className) {
     var allSelectedElements = document.getElementsByClassName(className);
     for (i = 0; i < allSelectedElements.length; i++) {

@@ -279,6 +279,7 @@ function parseMessages(responseXML) {
         else {
             var newWorker = createWorkerByXML(workerXML);
             createNewTableRow(newWorker);
+            selectedWorker = null;
             closeObjectForm('objectWorker');
             return;
         }
@@ -401,7 +402,7 @@ function createUpdateWorker() {
          }*/
     }
     if (newWorker.objectValidation()) {
-        selectedWorker = null;
+        //selectedWorker = null;
         sendAjaxFromWorkerObject(newWorker);
     }
 }

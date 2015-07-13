@@ -85,7 +85,7 @@ public class Worker implements Externalizable {
 
     @XmlElement
     public void setPassword(String password) {
-        if (password == null) {
+       /* if (password == null) {
             throw new IllegalArgumentException("password can't be null");
         }
         password = password.trim();
@@ -97,7 +97,7 @@ public class Worker implements Externalizable {
         }
         if (!password.matches("[A-Za-z0-9]*")) {
             throw new IllegalArgumentException("wrong symbols");
-        }
+        }*/
         this.password = password;
     }
 
