@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 public class App {
     private static final Logger logger = LoggerFactory.getLogger(App.class.getName());
@@ -36,6 +37,7 @@ public class App {
             "del_work_dep - for deleting worker by name only from department. Example: del_work_dep WorkerName.\n" +
             "name can't be empty!";
 
+
     public static void main(String[] args) {
         logger.info(info);
         Department nullDepartment = departmentDAO.getByName("with out department");
@@ -45,41 +47,43 @@ public class App {
         }
         Department currentDepartment = null;
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, Charset.forName("UTF-8")))) {
             while (true) {
                 String line = reader.readLine();
-                if (line.equals("exit")) {
-                    break;
-                } else if (line.startsWith("dep")) {
-                    String departmentName = line.substring(4, line.length());
-                    if (isNameOk(departmentName)) {
-                        currentDepartment = getDepOrCreate(departmentName);
-                    }
-                } else if (line.startsWith("work")) {
-                    String workerName = line.substring(5, line.length());
-                    if (isNameOk(workerName)) {
-                        Worker newWorker = getWorkOrCreate(currentDepartment, nullDepartment, workerName);
-                    }
-                } else if (line.startsWith("del_dep")) {
-                    String departmentName = line.substring(8, line.length());
-                    if (isNameOk(departmentName)) {
-                        deleteDepartmentAndRelocateWorkersToNullDep(departmentName, nullDepartment);
-                    }
-                } else if (line.startsWith("del_work_dep")) {
-                    String workerName = line.substring(13, line.length());
-                    if (isNameOk(workerName)) {
-                        deleteWorkerFromHisDepartmentAndRelocateHimToNullDep(workerName, nullDepartment);
-                    }
-                } else if (line.startsWith("del_work")) {
-                    String workerName = line.substring(9, line.length());
-                    if (isNameOk(workerName)) {
-                        deleteWorkerFromAnywhere(workerName);
+                if (line != null) {
+                    if (line.equals("exit")) {
+                        break;
+                    } else if (line.startsWith("dep")) {
+                        String departmentName = line.substring(4, line.length());
+                        if (isNameOk(departmentName)) {
+                            currentDepartment = getDepOrCreate(departmentName);
+                        }
+                    } else if (line.startsWith("work")) {
+                        String workerName = line.substring(5, line.length());
+                        if (isNameOk(workerName)) {
+                            Worker newWorker = getWorkOrCreate(currentDepartment, nullDepartment, workerName);
+                        }
+                    } else if (line.startsWith("del_dep")) {
+                        String departmentName = line.substring(8, line.length());
+                        if (isNameOk(departmentName)) {
+                            deleteDepartmentAndRelocateWorkersToNullDep(departmentName, nullDepartment);
+                        }
+                    } else if (line.startsWith("del_work_dep")) {
+                        String workerName = line.substring(13, line.length());
+                        if (isNameOk(workerName)) {
+                            deleteWorkerFromHisDepartmentAndRelocateHimToNullDep(workerName, nullDepartment);
+                        }
+                    } else if (line.startsWith("del_work")) {
+                        String workerName = line.substring(9, line.length());
+                        if (isNameOk(workerName)) {
+                            deleteWorkerFromAnywhere(workerName);
+                        }
+
+                    } else {
+                        repeatInfoMessage();
                     }
 
-                } else {
-                    repeatInfoMessage();
                 }
-
             }
         } catch (IOException e) {
             logger.error("readLine exception", e);

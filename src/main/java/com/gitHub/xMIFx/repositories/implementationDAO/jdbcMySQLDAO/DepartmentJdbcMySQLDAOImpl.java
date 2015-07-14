@@ -61,7 +61,6 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                         for (Worker worker : department.getWorkers()) {
                             stForWorkerBindingDelete.setLong(1, worker.getId());
                             stForWorkerBindingDelete.addBatch();
-                            System.out.println(worker.getName());
                             if (++count % batchSize == 0) {
                                 stForWorkerBindingDelete.executeBatch();
                             }
@@ -75,7 +74,6 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                             stForAddDepartmentBinding.setLong(1, worker.getId());
                             stForAddDepartmentBinding.setLong(2, autoIncKeyId);
                             stForAddDepartmentBinding.addBatch();
-                            System.out.println(worker.getName());
                             if (++count % batchSize == 0) {
                                 stForAddDepartmentBinding.executeBatch();
                             }
@@ -366,7 +364,6 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 "(idworker, iddepartment) " +
                 "VALUES (?, ?);";
         final int batchSize = 1000;
-
         try (Connection con = datasource.getConnection()) {
             try (PreparedStatement st = con.prepareStatement(sqlUpdate)) {
                 con.setAutoCommit(false);
@@ -392,7 +389,6 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                         for (Worker worker : department.getWorkers()) {
                             stForWorkerBindingDelete.setLong(1, worker.getId());
                             stForWorkerBindingDelete.addBatch();
-                            System.out.println(worker.getName());
                             if (++count % batchSize == 0) {
                                 stForWorkerBindingDelete.executeBatch();
                             }
@@ -406,7 +402,6 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                             stForAddDepartmentBinding.setLong(1, worker.getId());
                             stForAddDepartmentBinding.setLong(2, department.getId());
                             stForAddDepartmentBinding.addBatch();
-                            System.out.println(worker.getName());
                             if (++count % batchSize == 0) {
                                 stForAddDepartmentBinding.executeBatch();
                             }
@@ -415,6 +410,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                     }
                 }
                 con.commit();
+                con.close();
             } catch (SQLException e) {
                 logger.error("Exception when update department id:" + department.getId() + " to MySQL: ", e);
                 con.rollback();

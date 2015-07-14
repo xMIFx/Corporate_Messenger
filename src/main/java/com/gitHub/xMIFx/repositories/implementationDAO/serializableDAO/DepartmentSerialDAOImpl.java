@@ -35,10 +35,14 @@ public class DepartmentSerialDAOImpl implements DepartmentDAO {
     public DepartmentSerialDAOImpl() {
     }
 
+    private static synchronized Long increaseIndex() {
+        return ++index;
+    }
+
     @Override
     public Long save(Department department) {
-        index++;
-        department.setId(index);
+
+        department.setId(increaseIndex());
         departmentMap.put(index, department);
         try {
             saveAllObject();

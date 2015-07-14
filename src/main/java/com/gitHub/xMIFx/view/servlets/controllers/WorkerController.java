@@ -69,7 +69,7 @@ public class WorkerController extends HttpServlet {
                 answerStr = workerService.create(name, login, pas);
 
             } else if (action.equalsIgnoreCase("update")) {
-                int objVersion = Integer.valueOf(req.getParameter("objVersion"));
+                int objVersion = Integer.parseInt(req.getParameter("objVersion"));
                 String depName = req.getParameter("depName");
                 answerStr = workerService.update(id, name, login, pas, objVersion, depName);
 

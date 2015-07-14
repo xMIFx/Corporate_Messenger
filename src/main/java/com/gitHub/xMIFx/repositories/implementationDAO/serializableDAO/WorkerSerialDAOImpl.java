@@ -34,9 +34,13 @@ public class WorkerSerialDAOImpl implements WorkerDAO {
     public WorkerSerialDAOImpl() {
     }
 
+    private static synchronized Long increaseIndex() {
+        return ++index;
+    }
+
     public Long save(Worker worker) {
-        index++;
-        worker.setId(index);
+
+        worker.setId(increaseIndex());
         workerMap.put(index, worker);
         try {
             saveAllObject();

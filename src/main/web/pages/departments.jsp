@@ -40,7 +40,7 @@
         </div>
     </div>
     <table id="table1">
-        <tr class="invisible" id="lineForCopy" onclick="selectRow(this)">
+        <tr class="invisible lineForCopy" id="lineForCopy" onclick="selectRow(this)">
             <td class="depID">1</td>
             <td class="depName">2</td>
             <td class="depWorkers">3</td>
@@ -70,7 +70,7 @@
             <div class="fixWorkerTable" id="fixWorkerTable">
                 <div class="button_box">
                     <div class="button_cl " onclick="openWorkersFromForAdd()">add new worker</div>
-                    <div class="button_cl " onclick="deleteObject()">delete worker</div>
+                    <div class="button_cl " onclick="deleteWorkerRow()">delete worker</div>
                 </div>
                 <div class="header_WorkerId">
                     <div class="tt1">Name</div><div class="tt1">Login</div>
@@ -78,7 +78,7 @@
             </div>
             <div class="scroller">
             <table id="tableWorker">
-                <tr class="invisible" id="lineForCopyWorker" onclick="selectWorkerRow(this)">
+                <tr class="invisible lineForCopy" id="lineForCopyWorker" onclick="selectWorkerRow(this)">
                     <td class="workName">2</td>
                     <td class="workLogin">3</td>
                  </tr>
@@ -86,7 +86,7 @@
             </div>
         </div>
             <div class="buttonsBox">
-            <div class="buttonOK" onclick="createUpdateDepartment()">ok</div>
+            <div class="buttonOK" onclick="createUpdateDepartment()">save</div>
             <div class="buttonCancel" onclick="closeObjectDepartmentForm()">cancel</div>
         </div>
     </div>
@@ -111,7 +111,7 @@
             </div>
             <div class="scroller">
                 <table id="tableAllWorker">
-                    <tr class="invisible" id="lineForCopyAllWorker" onclick="selectWorkerRowForChoose(this)">
+                    <tr class="invisible lineForCopy" id="lineForCopyAllWorker" onclick="selectWorkerRowForChoose(this)">
                         <td class="workID">1</td>
                         <td class="workName">2</td>
                         <td class="workLogin">3</td>
@@ -143,7 +143,7 @@
     <div class="visibleBlock">
         <div class="messageAboutSomething" id="messageQuestion"></div>
         <div class="buttonsBox">
-            <div class="buttonOK" onclick="deleteDepartment()">ok</div>
+            <div class="buttonOK" id="buttonOkInQuestion" onclick="deleteDepartment()">ok</div>
             <div class="buttonCancel" onclick="closeQuestionDepartmentForm()">cancel</div>
         </div>
     </div>

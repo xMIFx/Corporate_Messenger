@@ -41,9 +41,13 @@ public class WorkerXmlDAOImpl implements WorkerDAO {
     public WorkerXmlDAOImpl() {
     }
 
+    private static synchronized Long increaseIndex() {
+        return ++index;
+    }
+
     public Long save(Worker worker) {
-        index++;
-        worker.setId(index);
+
+        worker.setId(increaseIndex());
         workerMap.put(index, worker);
         try {
             saveAllObject();

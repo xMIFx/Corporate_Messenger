@@ -84,7 +84,7 @@
                    name="confirmPassword"/>
 
             <div class="buttonsBox">
-            <div class="buttonOK" onclick="createUpdateWorker()">ok</div>
+            <div class="buttonOK" onclick="createUpdateWorker()">save</div>
             <div class="buttonCancel" onclick="closeObjectWorkerForm()">cancel</div>
         </div>
     </div>

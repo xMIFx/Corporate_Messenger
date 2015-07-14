@@ -39,10 +39,14 @@ public class DepartmentJsonDAOImpl implements DepartmentDAO {
     public DepartmentJsonDAOImpl() {
     }
 
+    private static synchronized Long increaseIndex() {
+        return ++index;
+    }
+
     @Override
     public Long save(Department department) {
-        index++;
-        department.setId(index);
+
+        department.setId(increaseIndex());
         departmentMap.put(index, department);
         try {
             saveAllObject();
@@ -172,7 +176,6 @@ public class DepartmentJsonDAOImpl implements DepartmentDAO {
 
         return true;
     }
-
 
 
 }

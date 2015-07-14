@@ -94,6 +94,15 @@ function openQuestionForm(questionMessage) {
     changeVisible(elementForInvisible, true);
 }
 
+function openQuestionFormAndSetOnclickAction(questionMessage, actionOK) {
+    var elementForInvisible = document.getElementById('questionForm');
+    var elementMessage = document.getElementById('messageQuestion');
+    var elementForChengeOnClick = document.getElementById('buttonOkInQuestion');
+    elementMessage.innerHTML = questionMessage;
+    elementForChengeOnClick.onclick = actionOK;
+    changeVisible(elementForInvisible, true);
+}
+
 function closeQuestionForm() {
     var elementForInvisible = document.getElementById('questionForm');
     changeVisible(elementForInvisible, false);

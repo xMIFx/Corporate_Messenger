@@ -20,9 +20,12 @@ public class DepartmentCollectionDAOImpl implements DepartmentDAO {
 
     }
 
+    private static synchronized Long increaseIndex() {
+        return ++index;
+    }
+
     public Long save(Department department) {
-        index++;
-        department.setId(index);
+        department.setId(increaseIndex());
         departmentMap.put(index, department);
         return index;
     }
@@ -52,8 +55,8 @@ public class DepartmentCollectionDAOImpl implements DepartmentDAO {
             }
         }
 
-    return departmentForFind;
-}
+        return departmentForFind;
+    }
 
     public List<Department> getAll() {
         List<Department> departmentList = new ArrayList<Department>();

@@ -21,9 +21,13 @@ public class WorkerCollectionDAOImpl implements WorkerDAO {
     public WorkerCollectionDAOImpl() {
     }
 
+    private static synchronized Long increaseIndex() {
+        return ++index;
+    }
+
     public Long save(Worker worker) {
-        index++;
-        worker.setId(index);
+
+        worker.setId(increaseIndex());
         workerMap.put(index, worker);
         return index;
     }

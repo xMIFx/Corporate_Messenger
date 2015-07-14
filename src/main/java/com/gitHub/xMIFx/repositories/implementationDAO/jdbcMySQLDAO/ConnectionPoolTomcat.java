@@ -46,7 +46,7 @@ public class ConnectionPoolTomcat {
         p.setJdbcInterceptors(
                 "org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" +
                         "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
-        datasource.setPoolProperties(p);
+        this.datasource.setPoolProperties(p);
 
     }
 }

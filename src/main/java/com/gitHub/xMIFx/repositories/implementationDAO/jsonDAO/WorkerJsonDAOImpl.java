@@ -43,9 +43,13 @@ public class WorkerJsonDAOImpl implements WorkerDAO {
     public WorkerJsonDAOImpl() {
     }
 
+    private static synchronized Long increaseIndex() {
+        return ++index;
+    }
+
     public Long save(Worker worker) {
-        index++;
-        worker.setId(index);
+        increaseIndex();
+        worker.setId(increaseIndex());
         workerMap.put(index, worker);
         try {
             saveAllObject();
@@ -169,7 +173,6 @@ public class WorkerJsonDAOImpl implements WorkerDAO {
 
         return true;
     }
-
 
 
 }

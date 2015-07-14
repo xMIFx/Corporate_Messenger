@@ -130,13 +130,13 @@ function createDepartmentObject() {
 
     this.objectValidation = function () {
         var itsOk = true;
-       itsOk = isNameValid(this.name);
+        itsOk = isNameValid(this.name);
         return itsOk;
     }
 
     this.createJSON = function () {
         var json = JSON.stringify(this);
-            return json;
+        return json;
     }
 
 }
@@ -155,7 +155,7 @@ function createDepartmentByXML(departmentXml) {
     (countWorkers === undefined || countWorkers.childNodes === undefined || countWorkers.childNodes[0] === undefined) ?
         countWorkers = null : (countWorkers = countWorkers.childNodes[0].nodeValue);
     (workerList === undefined || workerList == null || workerList.length == 0) ?
-        workerList = null : (workerList = getWorkers(workerList));
+        workerList = new Array() : (workerList = getWorkers(workerList));
     (objVersion === undefined || objVersion.childNodes === undefined || objVersion.childNodes[0] === undefined) ?
         objVersion = null : (objVersion = objVersion.childNodes[0].nodeValue);
     department.setID(id);
@@ -321,7 +321,7 @@ function parseMessages(responseXML) {
             var newDepartment = createDepartmentByXML(departmentXML);
             createNewTableRow(newDepartment);
             selectedDepartment = null;
-            closeObjectForm('objectDepartment');
+            closeObjectDepartmentForm('objectDepartment');
             return;
         }
 
@@ -338,11 +338,15 @@ function parseMessages(responseXML) {
 }
 
 function clearTable(tableForClean) {
-    if (tableForClean.getElementsByTagName("tr").length > 1) {
+    var elementsForDelete = tableForClean.getElementsByTagName("tr");
+    if (elementsForDelete.length > 1) {
         var child;
-        for (var loop = tableForClean.childNodes.length - 1; loop >= 0; loop--) {
-            child = tableForClean.childNodes[loop];
-            if (child.id != "lineForCopy") {
+        for (var loop = elementsForDelete.length - 1; loop >= 0; loop--) {
+            child = elementsForDelete[loop];
+            if (child.classList === undefined) {
+                /*NOP*/
+            }
+            else if (!child.classList.contains("lineForCopy")) {
                 tableForClean.removeChild(child);
             }
         }
@@ -367,6 +371,7 @@ function createNewTableRow(department) {
         newRow = cloneRow.cloneNode(true);
         newRow.id = department.getID();
         newRow.classList.remove("invisible");
+        newRow.classList.remove("lineForCopy");
         itNewRow = true;
     }
     else {/*NOP*/
@@ -430,7 +435,7 @@ function sendAjaxFromDepartmentObject(department) {
     else {
         url = url + "?action=update";
     }
-    url = url +  "&department="+department.createJSON();
+    url = url + "&department=" + department.createJSON();
     sendAjax("GET", url);
 }
 
@@ -446,7 +451,8 @@ function selectRow(objectForSelect) {
 
 function selectWorkerRow(objectForSelect) {
     if (objectForSelect.classList.contains("selectedWorker")) {
-        objectForSelect.classList.remove("selectedWorker");;
+        objectForSelect.classList.remove("selectedWorker");
+        ;
     }
     else {
         removeSelectionFromAll("selectedWorker");
@@ -569,6 +575,7 @@ function createNewTableWorkersRow(tableForAdding, cloneRowWorker, worker) {
         newRow = cloneRowWorker.cloneNode(true);
         newRow.id = "worker_" + worker.getID();
         newRow.classList.remove("invisible");
+        newRow.classList.remove("lineForCopy");
         itNewRow = true;
     }
     else {/*NOP*/
@@ -625,7 +632,7 @@ function deleteDepartment() {
             break;
         }
     }
-    selectedWorker = null;
+    selectedDepartment = null;
     sendAjaxForDeleteObjectForm(department);
     closeQuestionForm();
 }
@@ -714,5 +721,42 @@ function search(valueForSearch) {
 function openWorkersFromForAdd() {
     var elementForInvisible = document.getElementById('objectsFormFroAdd');
     changeVisible(elementForInvisible, true);
+}
+
+function deleteWorkerRow() {
+    var allSelectedElements = document.getElementsByClassName("selectedWorker");
+    if (allSelectedElements.length == 0 || allSelectedElements == null) {
+        openExceptionForm("no line is selected!");
+    }
+    else if (allSelectedElements.length > 1) {
+        openExceptionForm("more then one line is selected!");
+    }
+    else {
+
+        openQuestionFormAndSetOnclickAction('Do you really want to delete selected row?!', deleteRowFromTableWorkers);
+    }
+}
+
+function deleteRowFromTableWorkers() {
+    var selectedElement = document.getElementsByClassName("selectedWorker")[0];
+    var conditionElement, nameForFind;
+    for (i = 0; i < selectedElement.childNodes.length; i++) {
+        conditionElement = selectedElement.childNodes[i];
+
+        if (conditionElement.classList === undefined) {/*NOP*/
+        }
+        else if (conditionElement.classList.contains("workName")) {
+            nameForFind = conditionElement.innerHTML;
+            break;
+        }
+    }
+    for (var i = 0; i < selectedDepartment.getWorkersList().length; i++) {
+        if (selectedDepartment.getWorkersList()[i].getName() == nameForFind) {
+            selectedDepartment.getWorkersList().splice(i, 1);
+        }
+
+    }
+    selectedElement.parentNode.removeChild(selectedElement);
+    closeQuestionForm();
 }
 
