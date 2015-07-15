@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by Vlad on 29.06.2015.
  */
 public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
-    private static final Logger logger = LoggerFactory.getLogger(WorkerJdbcMySQLDAOImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(DepartmentJdbcMySQLDAOImpl.class.getName());
     private static final String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/testBase1_0?user=root&password=Lytghj12";
     private static javax.sql.DataSource datasource;
 
@@ -362,6 +362,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
         String sqlAddBindingWorkerDepartment = "INSERT INTO corporate_messenger.departmentworkers " +
                 "(idworker, iddepartment) " +
                 "VALUES (?, ?);";
+        System.out.println(department);
         final int batchSize = 1000;
         try (Connection con = datasource.getConnection()) {
             try (PreparedStatement st = con.prepareStatement(sqlUpdate)) {

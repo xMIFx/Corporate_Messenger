@@ -69,7 +69,7 @@
         <div class="contentWorker" id="contentWorker" onclick="removeSelectionFromWorkerTable()">
             <div class="fixWorkerTable" id="fixWorkerTable">
                 <div class="button_box">
-                    <div class="button_cl " onclick="openWorkersFromForAdd()">add new worker</div>
+                    <div class="button_cl " onclick="openWorkersFormForAdd()">add new worker</div>
                     <div class="button_cl " onclick="deleteWorkerRow()">delete worker</div>
                 </div>
                 <div class="header_WorkerId">
@@ -92,7 +92,7 @@
     </div>
 </div>
 
-<div class="blockingBackground invisible" id="objectsFormFroAdd">
+<div class="blockingBackground invisible" id="objectsFormForAdd">
     <div class="visibleObjectBlock forAdd" id="listWorkers">
 
         <div class="contentWorker" id="contentAllWorkers" onclick="removeSelection()">
@@ -103,7 +103,7 @@
                         <option>login</option>
                         <option>departmentName</option>
                     </select>
-                    <input type="search" id="inputWorkerSearch" onchange="search(this.value)">
+                    <input type="search" id="inputWorkerSearch" onchange="searchWorkers(this.value)">
                 </div>
                 <div class="header_WorkerAllId">
                     <div class="tt1">Id</div><div class="tt1">Name</div><div class="tt1">Login</div><div class="tt1">Department</div>
@@ -117,17 +117,11 @@
                         <td class="workLogin">3</td>
                         <td class="workDep">4</td>
                     </tr>
-                    <tr onclick="selectRow(this)">
-                        <td class="workID">1</td>
-                        <td class="workName">2</td>
-                        <td class="workLogin">3</td>
-                        <td class="workDep">4</td>
-                    </tr>
                 </table>
             </div>
         </div>
         <div class="buttonsBox">
-            <div class="buttonCancel" onclick="closeObjectDepartmentForm()">cancel</div>
+            <div class="buttonCancel" onclick="closeContentAllWorkersForm()">cancel</div>
         </div>
     </div>
 </div>

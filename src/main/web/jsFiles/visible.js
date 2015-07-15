@@ -74,6 +74,11 @@ function closeObjectForm(idForClean) {
     }
 }
 
+function closeFormForAdd(idForClose) {
+    var elementForInvisible = document.getElementById(idForClose);
+    changeVisible(elementForInvisible, false);
+}
+
 function openExceptionForm(exceptionMessage) {
     var elementForInvisible = document.getElementById('exceptionForm');
     var elementMessage = document.getElementById('messageExc');

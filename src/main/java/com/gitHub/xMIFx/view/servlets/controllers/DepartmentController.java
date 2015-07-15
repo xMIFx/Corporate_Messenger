@@ -2,7 +2,9 @@ package com.gitHub.xMIFx.view.servlets.controllers;
 
 import com.gitHub.xMIFx.services.FinderType;
 import com.gitHub.xMIFx.services.implementationServices.DepartmentServiceImpl;
+import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.DepartmentService;
+import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
@@ -22,6 +24,7 @@ import java.util.Map;
 public class DepartmentController extends HttpServlet {
     private static final String PAGE_OK = "pages/departments.jsp";
     private static final DepartmentService departmentService = new DepartmentServiceImpl();
+    private static final WorkerService workerService = new WorkerServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -61,9 +64,22 @@ public class DepartmentController extends HttpServlet {
         } else if ("deleteByID".equalsIgnoreCase(action)) {
             Long id = Long.valueOf(req.getParameter("id"));
             answerStr = departmentService.deleteByID(id);
+
+        } else if ("getAllWorkers".equalsIgnoreCase(action)) {
+            answerStr = workerService.getAll();
+        } else if (action != null && action.startsWith("findWorker")) {
+            String value = req.getParameter("valueForSearch");
+            String searchTypeString = req.getParameter("searchType");
+            FinderType finderType = null;
+            if ("name".equals(searchTypeString)) {
+                finderType = FinderType.NAME;
+            } else if ("login".equals(searchTypeString)) {
+                finderType = FinderType.LOGIN;
+            } else if ("departmentName".equals(searchTypeString)) {
+                finderType = FinderType.DEPARTMENT;
+            }
+            answerStr = workerService.find(finderType, value);
         }
-
-
         if (answerStr == null)
 
         {

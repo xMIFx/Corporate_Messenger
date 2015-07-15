@@ -102,7 +102,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public String update(String jsonText) {
         String answer = null;
         ObjectMapper objectMapper = new ObjectMapper();
-
+        System.out.println(jsonText);
       /*  Map<String, Object> myMap = null;*/
         try {
             Department department = objectMapper.readValue(jsonText, Department.class);
