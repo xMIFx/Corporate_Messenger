@@ -45,9 +45,9 @@ public class WorkerController extends HttpServlet {
 
     private void readAjax(String action, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String answerStr = null;
-        if (action.equalsIgnoreCase("getAll")) {
+        if ("getAll".equalsIgnoreCase(action)) {
             answerStr = workerService.getAll();
-        } else if (action.startsWith("findByPartOf")) {
+        } else if (action != null && action.startsWith("findByPartOf")) {
             String value = req.getParameter("valueForSearch");
             String searchTypeString = req.getParameter("searchType");
             FinderType finderType = null;
@@ -65,18 +65,18 @@ public class WorkerController extends HttpServlet {
             String name = req.getParameter("name");
             String login = req.getParameter("login");
             String pas = req.getParameter("password");
-            if (action.equalsIgnoreCase("create")) {
+            if ("create".equalsIgnoreCase(action)) {
                 answerStr = workerService.create(name, login, pas);
 
-            } else if (action.equalsIgnoreCase("update")) {
+            } else if ("update".equalsIgnoreCase(action)) {
                 int objVersion = Integer.parseInt(req.getParameter("objVersion"));
                 String depName = req.getParameter("depName");
                 answerStr = workerService.update(id, name, login, pas, objVersion, depName);
 
-            } else if (action.equalsIgnoreCase("getByID")) {
+            } else if ("getByID".equalsIgnoreCase(action)) {
                 answerStr = workerService.getByID(id);
 
-            } else if (action.equalsIgnoreCase("deleteByID")) {
+            } else if ("deleteByID".equalsIgnoreCase(action)) {
                 answerStr = workerService.deleteByID(id);
             }
 

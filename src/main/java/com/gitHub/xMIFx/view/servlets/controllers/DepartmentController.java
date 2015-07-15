@@ -36,9 +36,9 @@ public class DepartmentController extends HttpServlet {
 
     private void readAjax(String action, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String answerStr = null;
-        if (action.equalsIgnoreCase("getAll")) {
+        if ("getAll".equalsIgnoreCase(action)) {
             answerStr = departmentService.getAll();
-        } else if (action.startsWith("findByPartOf")) {
+        } else if (action != null && action.startsWith("findByPartOf")) {
             String value = req.getParameter("valueForSearch");
             String searchTypeString = req.getParameter("searchType");
             FinderType finderType = null;
@@ -46,19 +46,19 @@ public class DepartmentController extends HttpServlet {
                 finderType = FinderType.NAME;
             }
             answerStr = departmentService.find(finderType, value);
-        } else if (action.equalsIgnoreCase("create")) {
+        } else if ("create".equalsIgnoreCase(action)) {
             String jsonText = req.getParameter("department");
             answerStr = departmentService.create(jsonText);
 
-        } else if (action.equalsIgnoreCase("update")) {
-           String jsonText = req.getParameter("department");
-           answerStr = departmentService.update(jsonText);
+        } else if ("update".equalsIgnoreCase(action)) {
+            String jsonText = req.getParameter("department");
+            answerStr = departmentService.update(jsonText);
 
-        } else if (action.equalsIgnoreCase("getByID")) {
+        } else if ("getByID".equalsIgnoreCase(action)) {
             Long id = Long.valueOf(req.getParameter("id"));
             answerStr = departmentService.getByID(id);
 
-        } else if (action.equalsIgnoreCase("deleteByID")) {
+        } else if ("deleteByID".equalsIgnoreCase(action)) {
             Long id = Long.valueOf(req.getParameter("id"));
             answerStr = departmentService.deleteByID(id);
         }

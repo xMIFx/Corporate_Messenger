@@ -83,7 +83,6 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
                 con.commit();
                 department.setId(autoIncKeyId);
-
             } catch (SQLException e) {
                 logger.error("Exception when saving department to MySQL: ", e);
                 con.rollback();
@@ -410,7 +409,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                     }
                 }
                 con.commit();
-                con.close();
+
             } catch (SQLException e) {
                 logger.error("Exception when update department id:" + department.getId() + " to MySQL: ", e);
                 con.rollback();

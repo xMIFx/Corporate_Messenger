@@ -43,6 +43,7 @@ public class ConnectionPoolTomcat {
         p.setMinIdle(10);
         p.setLogAbandoned(true);
         p.setRemoveAbandoned(true);
+        p.setDefaultAutoCommit(true);
         p.setJdbcInterceptors(
                 "org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" +
                         "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
