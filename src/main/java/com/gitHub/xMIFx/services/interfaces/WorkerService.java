@@ -21,4 +21,6 @@ public interface WorkerService {
     String getByID(Long id);
 
     String deleteByID(Long id);
+
+    Worker getByLoginPassword(String login, String password);
 }

@@ -29,6 +29,7 @@ import java.util.List;
  */
 @WebServlet("/worker.do")
 public class WorkerController extends HttpServlet {
+
     private static final String PAGE_OK = "pages/workers.jsp";
     private static final WorkerService workerService = new WorkerServiceImpl();
 
@@ -37,51 +38,65 @@ public class WorkerController extends HttpServlet {
         String action = req.getParameter("action");
         System.out.println(action);
         if (action != null) {
-            readAjax(action, req, resp);
+            String answerStr = null;
+            if ("getAll".equalsIgnoreCase(action)) {
+                answerStr = workerService.getAll();
+            } else if (action.startsWith("findByPartOf")) {
+                String value = req.getParameter("valueForSearch");
+                String searchTypeString = req.getParameter("searchType");
+                FinderType finderType = null;
+                if ("name".equals(searchTypeString)) {
+                    finderType = FinderType.NAME;
+                } else if ("login".equals(searchTypeString)) {
+                    finderType = FinderType.LOGIN;
+                } else if ("departmentName".equals(searchTypeString)) {
+                    finderType = FinderType.DEPARTMENT;
+                }
+                answerStr = workerService.find(finderType, value);
+            } else if ("getByID".equalsIgnoreCase(action)) {
+                Long id = Long.valueOf(req.getParameter("id"));
+                answerStr = workerService.getByID(id);
+            }
+            sendAnswer(answerStr, resp);
         } else {
             req.getRequestDispatcher(PAGE_OK).forward(req, resp);
         }
     }
 
-    private void readAjax(String action, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String answerStr = null;
-        if ("getAll".equalsIgnoreCase(action)) {
-            answerStr = workerService.getAll();
-        } else if (action != null && action.startsWith("findByPartOf")) {
-            String value = req.getParameter("valueForSearch");
-            String searchTypeString = req.getParameter("searchType");
-            FinderType finderType = null;
-            if ("name".equals(searchTypeString)) {
-                finderType = FinderType.NAME;
-            } else if ("login".equals(searchTypeString)) {
-                finderType = FinderType.LOGIN;
-            } else if ("departmentName".equals(searchTypeString)) {
-                finderType = FinderType.DEPARTMENT;
-            }
-            answerStr = workerService.find(finderType, value);
-        } else {
+        Long id = Long.valueOf(req.getParameter("id"));
+        String name = req.getParameter("name");
+        String login = req.getParameter("login");
+        String pas = req.getParameter("password");
+        int objVersion = Integer.parseInt(req.getParameter("objVersion"));
+        String depName = req.getParameter("depName");
+        answerStr = workerService.update(id, name, login, pas, objVersion, depName);
+        sendAnswer(answerStr, resp);
+    }
 
-            Long id = Long.valueOf(req.getParameter("id"));
-            String name = req.getParameter("name");
-            String login = req.getParameter("login");
-            String pas = req.getParameter("password");
-            if ("create".equalsIgnoreCase(action)) {
-                answerStr = workerService.create(name, login, pas);
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String answerStr = null;
+        String name = req.getParameter("name");
+        String login = req.getParameter("login");
+        String pas = req.getParameter("password");
+        answerStr = workerService.create(name, login, pas);
+        sendAnswer(answerStr, resp);
+    }
 
-            } else if ("update".equalsIgnoreCase(action)) {
-                int objVersion = Integer.parseInt(req.getParameter("objVersion"));
-                String depName = req.getParameter("depName");
-                answerStr = workerService.update(id, name, login, pas, objVersion, depName);
 
-            } else if ("getByID".equalsIgnoreCase(action)) {
-                answerStr = workerService.getByID(id);
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String answerStr = null;
+        Long id = Long.valueOf(req.getParameter("id"));
+        answerStr = workerService.deleteByID(id);
+        sendAnswer(answerStr, resp);
 
-            } else if ("deleteByID".equalsIgnoreCase(action)) {
-                answerStr = workerService.deleteByID(id);
-            }
+    }
 
-        }
-
+    private void sendAnswer(String answerStr, HttpServletResponse resp) throws IOException {
         if (answerStr == null) {
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {
@@ -89,10 +104,5 @@ public class WorkerController extends HttpServlet {
             resp.setHeader("Cache-Control", "no-cache");
             resp.getWriter().write(answerStr);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(PAGE_OK).forward(req, resp);
     }
 }

@@ -81,6 +81,16 @@ public class DepartmentCollectionDAOImpl implements DepartmentDAO {
     }
 
     @Override
+    public List<Long> getForUpdateByWorkers(List<Worker> workerList) {
+        return null;
+    }
+
+    @Override
+    public List<Department> getForUpdateByID(List<Long> listID) {
+        return null;
+    }
+
+    @Override
     public List<Department> findByName(String name) {
         return null;
     }

@@ -99,6 +99,9 @@ function createDepartmentObject() {
             /*NOP*/
         }
         else {
+            if (this.workers === undefined || this.workers == null) {
+                this.workers = new Array();
+            }
             var exist = false;
             for (var i = 0; i < this.workers.length; i++) {
                 if (this.workers[i].getID() == worker.getID()) {
@@ -117,6 +120,9 @@ function createDepartmentObject() {
             /*NOP*/
         }
         else {
+            if (this.workers === undefined || this.workers == null) {
+                this.workers = new Array();
+            }
             for (var i = 0; i < this.workers.length; i++) {
                 if (this.workers[i].getID() == worker.getID()) {
                     this.workers.splice(i, 1);
@@ -328,10 +334,8 @@ function parseMessages(responseXML) {
             /*NOP*/
         }
         else {
-            var newDepartment = createDepartmentByXML(departmentXML);
-            createNewTableRow(newDepartment);
-            selectedDepartment = null;
-            closeObjectDepartmentForm('objectDepartment');
+            selectedDepartment = createDepartmentByXML(departmentXML);
+            fillObjectForm(selectedDepartment);
             return;
         }
 
@@ -355,6 +359,11 @@ function parseMessages(responseXML) {
         }
 
     }
+}
+
+function openObjectFromForCreate() {
+    openNewObjectForm();
+    selectedDepartment = new createDepartmentObject();
 }
 
 function clearTable(tableForClean) {
@@ -448,15 +457,94 @@ function createUpdateDepartment() {
 }
 
 function sendAjaxFromDepartmentObject(department) {
-    var url = urlForAjax;
+
     if (department.getID() == undefined || department.getID() == null || department.getID() == '') {
-        url = url + "?action=create";
+        createAjaxForCreate(department);
     }
     else {
-        url = url + "?action=update";
+        createAjaxForUpdate(department);
     }
-    url = url + "&department=" + department.createJSON();
-    sendAjax("GET", url);
+}
+
+function createAjaxForCreate(department) {
+    var url = urlForAjax;
+    url = url + "?department=" + department.createJSON();
+    sendAjaxForUpdateCreate("PUT", url)
+}
+
+function createAjaxForUpdate(department) {
+    var url = urlForAjax;
+    url = url + "?department=" + department.createJSON();
+    sendAjaxForUpdateCreate("POST", url)
+}
+
+function sendAjaxForUpdateCreate(type, url) {
+    mXMLHttpRequest.open(type, url, true);
+    mXMLHttpRequest.onreadystatechange = getAnswerFromServerOnCreateUpdate;
+    mXMLHttpRequest.send(null);
+
+}
+
+function getAnswerFromServerOnCreateUpdate() {
+    if (mXMLHttpRequest.readyState == 4) {
+        if (mXMLHttpRequest.status == 200) {
+            parseMessagesFromUpdateCreate(mXMLHttpRequest.responseXML);
+        }
+        else {/*NOP*/
+        }
+    }
+    else {/*NOP*/
+    }
+}
+
+function parseMessagesFromUpdateCreate(responseXML) {
+    initGlobalVariable();
+    if (responseXML == null) {
+        return false;
+    } else {
+        var departments = responseXML.getElementsByTagName("departmentsHolder")[0];
+        if (departments === undefined) {
+            /*NOP*/
+        }
+        else {
+            fillTable(departments);
+            selectedDepartment = null;
+            closeObjectDepartmentForm('objectDepartment');
+            return;
+
+        }
+        var departmentXML = responseXML.getElementsByTagName("department")[0];
+        if (departmentXML === undefined) {
+            /*NOP*/
+        }
+        else {
+            var newDepartment = createDepartmentByXML(departmentXML);
+            createNewTableRow(newDepartment);
+            selectedDepartment = null;
+            closeObjectDepartmentForm('objectDepartment');
+            return;
+        }
+
+        var exceptionXML = responseXML.getElementsByTagName("exceptionForView")[0];
+        if (exceptionXML === undefined) {/*NOP*/
+        }
+        else {
+            var exceptionFromServer = createExceptionByXML(exceptionXML);
+            openExceptionForm(exceptionFromServer.getExceptionMessage());
+            return;
+        }
+        var workers = responseXML.getElementsByTagName("workersHolder")[0];
+        if (workers === undefined) {
+            /*NOP*/
+        }
+        else {
+            clearTable(tableForChooseWorker);
+            fillTableWorkersForAdd(workers);
+            return;
+
+        }
+
+    }
 }
 
 function selectRow(objectForSelect) {
@@ -482,7 +570,7 @@ function selectWorkerRow(objectForSelect) {
 
 function selectWorkerRowForChoose(objectForSelect) {
     if (objectForSelect.classList.contains("selectedWorkerForChoose")) {
-        var worker = creatObjectWorkerFromSelectRow(objectForSelect);
+        var worker = createObjectWorkerFromSelectRow(objectForSelect);
         selectedDepartment.addWorker(worker);
         createNewTableWorkersRow(tableWorker, cloneRowWorker, worker, "worker_");
     }
@@ -492,7 +580,7 @@ function selectWorkerRowForChoose(objectForSelect) {
     }
 }
 
-function creatObjectWorkerFromSelectRow(row) {
+function createObjectWorkerFromSelectRow(row) {
     var newWorker = new createWorkerObject();
     var conditionElement;
     for (var i = 0; i < row.childNodes.length; i++) {
@@ -549,49 +637,7 @@ function startFillObjectForm(selectedElement) {
 
 function sendAjaxForFillObjectForm(department) {
     var url = urlForAjax + "?action=getByID&id=" + department.getID();
-    sendAjaxGettingByID("GET", url);
-}
-
-function sendAjaxGettingByID(type, url) {
-    mXMLHttpRequest.open(type, url, true);
-    mXMLHttpRequest.onreadystatechange = getAnswerFromServerOnID;
-    mXMLHttpRequest.send(null);
-}
-
-function getAnswerFromServerOnID() {
-    if (mXMLHttpRequest.readyState == 4) {
-        if (mXMLHttpRequest.status == 200) {
-            parseWorkerForFillForm(mXMLHttpRequest.responseXML);
-        }
-        else {/*NOP*/
-        }
-    }
-    else {/*NOP*/
-    }
-}
-
-function parseWorkerForFillForm(responseXML) {
-    if (responseXML == null) {
-        return false;
-    } else {
-        var departmentXML = responseXML.getElementsByTagName("department")[0];
-        if (departmentXML === undefined) {
-            /*NOP*/
-        }
-        else {
-            selectedDepartment = createDepartmentByXML(departmentXML);
-            fillObjectForm(selectedDepartment);
-            return;
-        }
-        var exceptionXML = responseXML.getElementsByTagName("exceptionForView")[0];
-        if (exceptionXML === undefined) {/*NOP*/
-        }
-        else {
-            var exceptionFromServer = createExceptionByXML(exceptionXML);
-            openExceptionForm(exceptionFromServer.getExceptionMessage());
-            return;
-        }
-    }
+    sendAjax("GET", url);
 }
 
 function fillObjectForm(department) {
@@ -684,8 +730,8 @@ function deleteDepartment() {
 }
 
 function sendAjaxForDeleteObjectForm(department) {
-    var url = urlForAjax + "?action=deleteByID&id=" + department.getID();
-    sendAjaxDeletingByID("GET", url);
+    var url = urlForAjax + "?id=" + department.getID();
+    sendAjaxDeletingByID("DELETE", url);
 }
 
 function sendAjaxDeletingByID(type, url) {

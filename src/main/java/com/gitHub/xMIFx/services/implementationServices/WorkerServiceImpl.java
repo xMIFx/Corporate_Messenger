@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by Vlad on 11.07.2015.
  */
-public class WorkerServiceImpl implements WorkerService {
+public class WorkerServiceImpl extends MainServiceImpl implements WorkerService {
     private static final Logger logger = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
     private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
     private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();
@@ -140,14 +140,12 @@ public class WorkerServiceImpl implements WorkerService {
         return answer;
     }
 
-    private <T> String getXMLMessage(T value) throws JAXBException {
-        JAXBContext jaxbRootContext = null;
-        StringWriter writer = new StringWriter();
-        jaxbRootContext = JAXBContext.newInstance(value.getClass());
-        Marshaller jaxbMarshaller = jaxbRootContext.createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        jaxbMarshaller.marshal(value, writer);
-        System.out.println(writer.toString());
-        return writer.toString();
+    @Override
+    public Worker getByLoginPassword(String login, String password) {
+        Worker worker = null;
+        if (login != null && password != null) {
+            worker = workerDAO.getByLoginPassword(login, password);
+        } else {/*NOP*/}
+        return worker;
     }
 }

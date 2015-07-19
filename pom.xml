@@ -19,6 +19,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
     </properties>
     <build>
+        <finalName>CorporateMessenger</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

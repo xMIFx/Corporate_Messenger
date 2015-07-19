@@ -16,7 +16,6 @@ import java.io.IOException;
 @WebServlet("/main.do")
 public class MainController  extends HttpServlet{
     private static final String PAGE_OK = "pages/main.jsp";
-    private static final Logger logger = LoggerFactory.getLogger(MainController.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

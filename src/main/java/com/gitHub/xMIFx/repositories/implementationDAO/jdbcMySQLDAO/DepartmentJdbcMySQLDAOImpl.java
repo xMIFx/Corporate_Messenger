@@ -7,10 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Vlad on 29.06.2015.
@@ -423,6 +420,83 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
     }
 
     @Override
+    public List<Long> getForUpdateByWorkers(List<Worker> workerList) {
+        String getByWorkerSql = "SELECT DISTINCT \n" +
+                "dep.id\n" +
+                " FROM corporate_messenger.departments dep\n" +
+                "\tleft join departmentworkers depWork\n" +
+                "\t\tleft join  workers w\n" +
+                "        on depwork.idworker = w.id\n" +
+                "\ton dep.id = depWork.iddepartment\n" +
+                " where depWork.idworker IN (MyParametrID)";
+
+        List<Long> list = new ArrayList<>();
+        getByWorkerSql = getSqlTextForInClouse("MyParametrID", getByWorkerSql, workerList.size());
+        try (Connection con = datasource.getConnection();
+             PreparedStatement st = con.prepareStatement(getByWorkerSql)) {
+            for (int i = 1; i <= workerList.size(); i++) {
+                st.setLong(i, workerList.get(i - 1).getId());
+            }
+
+            try (ResultSet res = st.executeQuery()) {
+                while (res.next()) {
+                    Long id = res.getLong("id");
+                    if (!list.contains(id)) {
+                        list.add(id);
+                    } else {/*NOP*/}
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error("Exception in create department bean when get by workers from MySQL: ", e);
+
+        } catch (SQLException e) {
+            logger.error("Exception when get by worker from MySQL: ", e);
+        }
+
+
+        return list;
+    }
+
+
+    @Override
+    public List<Department> getForUpdateByID(List<Long> listID) {
+        String getByIDSql = "SELECT \n" +
+                "dep.id\n" +
+                ", dep.name\n" +
+                ", dep.objectVersion\n" +
+                ", Count(depWork.idworker) countWorkers\n" +
+                " FROM corporate_messenger.departments dep\n" +
+                "\tleft join departmentworkers depWork\n" +
+                "\ton dep.id = depWork.iddepartment\n" +
+                "WHERE dep.id  in (MyParametrID)" +
+                "  group by dep.id\n" +
+                ", dep.name\n" +
+                ", dep.objectVersion";
+        getByIDSql = getSqlTextForInClouse("MyParametrID", getByIDSql, listID.size());
+        List<Department> departmentList = new ArrayList<>();
+        try (Connection con = datasource.getConnection();
+             PreparedStatement st = con.prepareStatement(getByIDSql)) {
+            for (int i = 1; i <= listID.size(); i++) {
+                st.setLong(i, listID.get(i - 1));
+            }
+            try (ResultSet res = st.executeQuery()) {
+                while (res.next()) {
+                    Department department = new Department(res.getString("name"));
+                    department.setId(res.getLong("id"));
+                    department.setObjectVersion(res.getInt("objectVersion"));
+                    department.setWorkersCount(res.getInt("countWorkers"));
+                    departmentList.add(department);
+                }
+            } catch (SQLException e) {
+                logger.error("Exception when get all department from MySQL: ", e);
+            }
+        } catch (SQLException e) {
+            logger.error("Exception when get all department from MySQL: ", e);
+        }
+        return departmentList;
+    }
+
+    @Override
     public List<Department> findByName(String name) {
         String findByNameSql = "SELECT \n" +
                 "dep.id\n" +
@@ -476,5 +550,19 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
         List<Department> departmentList = new ArrayList<>();
         departmentList.addAll(departmentMap.values());
         return departmentList;
+    }
+
+
+    private String getSqlTextForInClouse(String myParam, String getByWorkerSql, int size) {
+        StringBuilder replaced = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            if (i == size - 1) {
+                replaced.append("?");
+            } else {
+                replaced.append("?, ");
+            }
+        }
+        String newString = getByWorkerSql.replace(myParam, replaced.toString());
+        return newString;
     }
 }

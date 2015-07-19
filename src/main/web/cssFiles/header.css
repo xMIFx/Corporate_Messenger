@@ -46,6 +46,11 @@ div.box_log a {
     transition: 0.2s all ease-in-out;
 }
 
+div.box_log p {
+    display: inline-block;
+    color: #fff;
+}
+
 div.box_log a:hover {
     text-decoration: underline;
     background: #D8B916;

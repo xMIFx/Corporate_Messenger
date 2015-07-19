@@ -49,22 +49,9 @@ public class DepartmentController extends HttpServlet {
                 finderType = FinderType.NAME;
             }
             answerStr = departmentService.find(finderType, value);
-        } else if ("create".equalsIgnoreCase(action)) {
-            String jsonText = req.getParameter("department");
-            answerStr = departmentService.create(jsonText);
-
-        } else if ("update".equalsIgnoreCase(action)) {
-            String jsonText = req.getParameter("department");
-            answerStr = departmentService.update(jsonText);
-
         } else if ("getByID".equalsIgnoreCase(action)) {
             Long id = Long.valueOf(req.getParameter("id"));
             answerStr = departmentService.getByID(id);
-
-        } else if ("deleteByID".equalsIgnoreCase(action)) {
-            Long id = Long.valueOf(req.getParameter("id"));
-            answerStr = departmentService.deleteByID(id);
-
         } else if ("getAllWorkers".equalsIgnoreCase(action)) {
             answerStr = workerService.getAll();
         } else if (action != null && action.startsWith("findWorker")) {
@@ -80,22 +67,41 @@ public class DepartmentController extends HttpServlet {
             }
             answerStr = workerService.find(finderType, value);
         }
-        if (answerStr == null)
-
-        {
-            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-        } else
-
-        {
-            resp.setContentType("text/xml");
-            resp.setHeader("Cache-Control", "no-cache");
-            resp.getWriter().write(answerStr);
-        }
+        sendAnswer(answerStr, resp);
 
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+        String answerStr = null;
+        String jsonText = req.getParameter("department");
+        answerStr = departmentService.update(jsonText);
+        sendAnswer(answerStr, resp);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String answerStr = null;
+        String jsonText = req.getParameter("department");
+        answerStr = departmentService.create(jsonText);
+        sendAnswer(answerStr, resp);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String answerStr = null;
+        Long id = Long.valueOf(req.getParameter("id"));
+        answerStr = departmentService.deleteByID(id);
+        sendAnswer(answerStr, resp);
+    }
+
+    private void sendAnswer(String answerStr, HttpServletResponse resp) throws IOException {
+        if (answerStr == null) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        } else {
+            resp.setContentType("text/xml");
+            resp.setHeader("Cache-Control", "no-cache");
+            resp.getWriter().write(answerStr);
+        }
     }
 }

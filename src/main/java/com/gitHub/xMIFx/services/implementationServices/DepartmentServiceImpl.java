@@ -10,6 +10,7 @@ import com.gitHub.xMIFx.repositories.interfacesDAO.DepartmentDAO;
 import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
 import com.gitHub.xMIFx.services.FinderType;
 import com.gitHub.xMIFx.services.interfaces.DepartmentService;
+import com.gitHub.xMIFx.services.interfaces.MainService;
 import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -33,7 +34,7 @@ import java.util.Map;
 /**
  * Created by Vlad on 11.07.2015.
  */
-public class DepartmentServiceImpl implements DepartmentService {
+public class DepartmentServiceImpl extends MainServiceImpl implements DepartmentService {
     private static final Logger logger = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
     private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
     private static DepartmentDAO departmentDAO = abstractFactoryForDAOf.getDepartmentDAOImpl();
@@ -83,12 +84,20 @@ public class DepartmentServiceImpl implements DepartmentService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Department department = objectMapper.readValue(jsonText, Department.class);
+            List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
             if (departmentDAO.save(department) == null) {
                 ExceptionForView exceptionForView = new ExceptionForView();
                 exceptionForView.setExceptionMessage("Error when saving. Try later.");
                 answer = getXMLMessage(exceptionForView);
             } else {
-                answer = getXMLMessage(department);
+                if (!departmentsID.contains(department.getId())) {
+                    departmentsID.add(department.getId());
+                } else {/*NOP*/}
+                List<Department> departmentList = departmentDAO.getForUpdateByID(departmentsID);
+                DepartmentsHolder departmentsHolder = new DepartmentsHolder();
+                departmentsHolder.setDepartments(departmentList);
+                answer = getXMLMessage(departmentsHolder);
+
             }
         } catch (JAXBException e) {
             logger.error("some jaxB exception: ", e);
@@ -103,34 +112,23 @@ public class DepartmentServiceImpl implements DepartmentService {
         String answer = null;
         ObjectMapper objectMapper = new ObjectMapper();
         System.out.println(jsonText);
-      /*  Map<String, Object> myMap = null;*/
         try {
             Department department = objectMapper.readValue(jsonText, Department.class);
 
-           /* myMap = objectMapper.readValue(jsonText, new TypeReference<HashMap<String, Object>>() {
-            });
-
-            String name = (String) myMap.get("name");
-            Long id = Long.valueOf((String)myMap.get("id"));
-            int objVersion = Integer.valueOf((String)myMap.get("objectVersion"));
-            int countWorkers = Integer.valueOf((String) myMap.get("workersCount"));
-            ArrayNode node = objectMapper.readValue(myMap.get("workers"), ArrayNode.class);
-            String workers =  myMap.get("workers");
-            if (workers != null) {
-                Worker[] workers1 = objectMapper.readValue(
-                        myMap.get("workers"), Worker[].class);
-                System.out.println(workers1.length);
-                System.out.println(workers1[0]);
-            }*/
-
+            List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
+            if (!departmentsID.contains(department.getId())) {
+                departmentsID.add(department.getId());
+            } else {/*NOP*/}
             if (!departmentDAO.update(department)) {
                 ExceptionForView exceptionForView = new ExceptionForView();
                 exceptionForView.setExceptionMessage("Error when saving. Try later.");
-
                 answer = getXMLMessage(exceptionForView);
 
             } else {
-                answer = getXMLMessage(department);
+                List<Department> departmentList = departmentDAO.getForUpdateByID(departmentsID);
+                DepartmentsHolder departmentsHolder = new DepartmentsHolder();
+                departmentsHolder.setDepartments(departmentList);
+                answer = getXMLMessage(departmentsHolder);
             }
 
         } catch (JAXBException e) {
@@ -170,17 +168,5 @@ public class DepartmentServiceImpl implements DepartmentService {
             logger.error("some jaxB exception: ", e);
         }
         return answer;
-    }
-
-
-    private <T> String getXMLMessage(T value) throws JAXBException {
-        JAXBContext jaxbRootContext = null;
-        StringWriter writer = new StringWriter();
-        jaxbRootContext = JAXBContext.newInstance(value.getClass());
-        Marshaller jaxbMarshaller = jaxbRootContext.createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        jaxbMarshaller.marshal(value, writer);
-        System.out.println(writer.toString());
-        return writer.toString();
     }
 }

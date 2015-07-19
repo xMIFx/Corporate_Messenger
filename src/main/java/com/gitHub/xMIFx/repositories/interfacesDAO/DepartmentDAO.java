@@ -27,5 +27,9 @@ public interface DepartmentDAO {
     //update department
     boolean update(Department department);
 
+    List<Long> getForUpdateByWorkers(List<Worker> workerList);
+
+    List<Department> getForUpdateByID(List<Long> listID);
+
     List<Department> findByName(String name);
 }

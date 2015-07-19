@@ -5,6 +5,7 @@
   Time: 15:58
   To change this template use File | Settings | File Templates.
 --%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -18,13 +19,22 @@
 <div class="menu">
     <div class="back"><a href="../main.do">home</a></div>
     <div class="box_log">
-        <a href="javascript:" onclick="openLoginForm()" id="income">Log in</a>
+        <c:if test="${user.id == null}">
+            <c:if test="${wrong}">
+                <p>wrong login or password. Try again!</p>
+            </c:if>
+            <a href="javascript:" onclick="openLoginForm()" id="income">Log in</a>
+        </c:if>
+        <c:if test="${user!= null}">
+            <p>${user.login}</p>
+            <a href="exit.do" class="txt">logOut</a>
+        </c:if>
     </div>
 </div>
 <div class="content" id="content" onclick="removeSelection()">
     <div class="fix" id="fix">
         <div class="button_box">
-            <div class="button_cl " onclick="openNewObjectForm()">create</div>
+            <div class="button_cl " onclick="openObjectFromForCreate()">create</div>
             <div class="button_cl " onclick="openSelectObjectForm()">update</div>
             <div class="button_cl " onclick="deleteObject()">delete</div>
         </div>
@@ -48,7 +58,7 @@
     </table>
 </div>
 <div class="blockingBackground invisible" id="loginBackground">
-    <form method="post" action="/authorization.do">
+    <form method="get" action="/authorization.do">
         <div class="visibleBlock" id="authorization">
             <input type="text" class="objectRow login" placeholder="login" name="login"/>
             <input type="password" class="objectRow password" placeholder="password" name="password"/>

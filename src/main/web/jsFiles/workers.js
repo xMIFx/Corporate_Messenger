@@ -119,7 +119,7 @@ function isNameValid(name) {
             itValid = false;
             writeMessageAboutValidation('length field "name" need to be more 3', "name");
         }
-        else if (!/^[a-zA-Z]+[A-Za-z0-9\s.]*/.test(name)){
+        else if (!/^[a-zA-Z]+[A-Za-z0-9\s.]*/.test(name)) {
             itValid = false;
             writeMessageAboutValidation('field "name" contains some illegal symbols', "name");
         }
@@ -133,7 +133,7 @@ function isLoginValid(login) {
         itValid = false;
         writeMessageAboutValidation('field "login" need to be fill', "login");
     }
-    else if (!/^[a-zA-Z]+[A-Za-z0-9\s.]*/.test(login)){
+    else if (!/^[a-zA-Z]+[A-Za-z0-9\s.]*/.test(login)) {
         itValid = false;
         writeMessageAboutValidation('field "login" contains some illegal symbols', "login");
     }
@@ -156,7 +156,7 @@ function isPasswordValid(pas) {
             itValid = false;
             writeMessageAboutValidation('length field "password" need to be more 3', "password");
         }
-        else if (!/[A-Za-z0-9]*/.test(pas)){
+        else if (!/[A-Za-z0-9]*/.test(pas)) {
             itValid = false;
             writeMessageAboutValidation('field "password" contains some illegal symbols', "password");
         }
@@ -277,10 +277,8 @@ function parseMessages(responseXML) {
             /*NOP*/
         }
         else {
-            var newWorker = createWorkerByXML(workerXML);
-            createNewTableRow(newWorker);
-            selectedWorker = null;
-            closeObjectForm('objectWorker');
+            selectedWorker = createWorkerByXML(workerXML);
+            fillObjectForm(selectedWorker);
             return;
         }
 
@@ -383,7 +381,7 @@ function createUpdateWorker() {
             newWorker.setLogin(conditionElement.value.trim());
         }
         else if (conditionElement.classList.contains("password")) {
-            if (selectedWorker.getPassword() != conditionElement.value) {
+            if (newWorker.getPassword() != conditionElement.value) {
                 newWorker.checkPassword(true);
             }
             else {
@@ -394,12 +392,7 @@ function createUpdateWorker() {
         else if (conditionElement.classList.contains("confirmPassword")) {
             newWorker.setConfirmPassword(conditionElement.value);
         }
-        /*   else if (conditionElement.classList.contains("objectVersion")) {
-         newWorker.setObjectVersion(conditionElement.value);
-         }
-         else if (conditionElement.classList.contains("depName")) {
-         newWorker.setDepartmentName(conditionElement.value);
-         }*/
+
     }
     if (newWorker.objectValidation()) {
         //selectedWorker = null;
@@ -408,15 +401,84 @@ function createUpdateWorker() {
 }
 
 function sendAjaxFromWorkerObject(worker) {
-    var url = urlForAjax;
-    if (worker.getID() == undefined || worker.getID() == null || worker.getID() == '') {
-        url = url + "?action=create";
+    if (worker.getID() === undefined || worker.getID() == null | worker.getID() == '') {
+        sendAjaxForCreateWorker(worker);
+
     }
     else {
-        url = url + "?action=update&id=" + worker.getID() + "&objVersion=" + worker.getObjectVersion() + "&depName=" + worker.getDepartmentName();
+        sendAjaxForUpdateWorker(worker);
     }
-    url = url + "&name=" + worker.getName() + "&login=" + worker.getLogin() + "&password=" + worker.getPassword();
-    sendAjax("GET", url);
+
+}
+
+function sendAjaxForCreateWorker(worker) {
+    var url = urlForAjax + "?name=" + worker.getName() + "&login=" + worker.getLogin() + "&password=" + worker.getPassword();
+    sendAjaxForWorkerChange("PUT", url);
+}
+
+function sendAjaxForUpdateWorker(worker) {
+    var url = urlForAjax;
+    url = url + "?id=" + worker.getID() + "&objVersion=" + worker.getObjectVersion() + "&depName=" + worker.getDepartmentName() +
+    "&name=" + worker.getName() + "&login=" + worker.getLogin() + "&password=" + worker.getPassword();
+     sendAjaxForWorkerChange("POST", url);
+}
+
+function sendAjaxForWorkerChange(type, url) {
+    mXMLHttpRequest.open(type, url, true);
+    mXMLHttpRequest.onreadystatechange = getAnswerFromServerOnCreateUpdate;
+    mXMLHttpRequest.send(null);
+}
+
+function getAnswerFromServerOnCreateUpdate() {
+    if (mXMLHttpRequest.readyState == 4) {
+        if (mXMLHttpRequest.status == 200) {
+            parseMessagesFromUpdateCreate(mXMLHttpRequest.responseXML);
+        }
+        else {/*NOP*/
+        }
+    }
+    else {/*NOP*/
+    }
+}
+
+function parseMessagesFromUpdateCreate(responseXML) {
+    initGlobalVariable();
+    if (responseXML == null) {
+        return false;
+    } else {
+        var workers = responseXML.getElementsByTagName("workersHolder")[0];
+        if (workers === undefined) {
+            /*NOP*/
+        }
+        else {
+            fillTable(workers);
+            selectedWorker = null;
+            closeObjectForm('objectWorker');
+            return;
+
+        }
+        var workerXML = responseXML.getElementsByTagName("worker")[0];
+        if (workerXML === undefined) {
+            /*NOP*/
+        }
+        else {
+            var newWorker = createWorkerByXML(workerXML);
+            createNewTableRow(newWorker);
+            selectedWorker = null;
+            closeObjectForm('objectWorker');
+            return;
+        }
+
+        var exceptionXML = responseXML.getElementsByTagName("exceptionForView")[0];
+        if (exceptionXML === undefined) {/*NOP*/
+        }
+        else {
+            var exceptionFromServer = createExceptionByXML(exceptionXML);
+            openExceptionForm(exceptionFromServer.getExceptionMessage());
+            return;
+        }
+
+    }
 }
 
 function selectRow(objectForSelect) {
@@ -462,49 +524,7 @@ function startFillObjectForm(selectedElement) {
 
 function sendAjaxForFillObjectForm(worker) {
     var url = urlForAjax + "?action=getByID&id=" + worker.getID();
-    sendAjaxGettingByID("GET", url);
-}
-
-function sendAjaxGettingByID(type, url) {
-    mXMLHttpRequest.open(type, url, true);
-    mXMLHttpRequest.onreadystatechange = getAnswerFromServerOnID;
-    mXMLHttpRequest.send(null);
-}
-
-function getAnswerFromServerOnID() {
-    if (mXMLHttpRequest.readyState == 4) {
-        if (mXMLHttpRequest.status == 200) {
-            parseWorkerForFillForm(mXMLHttpRequest.responseXML);
-        }
-        else {/*NOP*/
-        }
-    }
-    else {/*NOP*/
-    }
-}
-
-function parseWorkerForFillForm(responseXML) {
-    if (responseXML == null) {
-        return false;
-    } else {
-        var workerXML = responseXML.getElementsByTagName("worker")[0];
-        if (workerXML === undefined) {
-            /*NOP*/
-        }
-        else {
-            selectedWorker = createWorkerByXML(workerXML);
-            fillObjectForm(selectedWorker);
-            return;
-        }
-        var exceptionXML = responseXML.getElementsByTagName("exceptionForView")[0];
-        if (exceptionXML === undefined) {/*NOP*/
-        }
-        else {
-            var exceptionFromServer = createExceptionByXML(exceptionXML);
-            openExceptionForm(exceptionFromServer.getExceptionMessage());
-            return;
-        }
-    }
+    sendAjax("GET", url);
 }
 
 function fillObjectForm(worker) {
@@ -568,8 +588,8 @@ function deleteWorker() {
 }
 
 function sendAjaxForDeleteObjectForm(worker) {
-    var url = urlForAjax + "?action=deleteByID&id=" + worker.getID();
-    sendAjaxDeletingByID("GET", url);
+    var url = urlForAjax + "?id=" + worker.getID();
+    sendAjaxDeletingByID("DELETE", url);
 }
 
 function sendAjaxDeletingByID(type, url) {
@@ -635,13 +655,13 @@ function closeQuestionWorkerForm() {
     closeQuestionForm();
 }
 
-function search(valueForSearch){
-    if(valueForSearch == null || valueForSearch.trim() == ""){
+function search(valueForSearch) {
+    if (valueForSearch == null || valueForSearch.trim() == "") {
         getAllWorkers();
     }
-    else{
+    else {
         var typeSearch = document.getElementById("searchType").value;
-        sendAjax("GET", urlForAjax + "?action=findByPartOf&searchType="+typeSearch+"&valueForSearch="+valueForSearch);
+        sendAjax("GET", urlForAjax + "?action=findByPartOf&searchType=" + typeSearch + "&valueForSearch=" + valueForSearch);
     }
 
 }

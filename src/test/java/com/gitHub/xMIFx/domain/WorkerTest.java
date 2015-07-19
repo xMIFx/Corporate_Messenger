@@ -3,6 +3,8 @@ package com.gitHub.xMIFx.domain;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 /**
  * Created by Vlad on 06.07.2015.
  */
@@ -16,8 +18,8 @@ public class WorkerTest {
 
         int result = worker.calculateSalary(workingTime, payment);
 
-        Assert.assertEquals(expected, result);
-    }
+        assertThat(result,is(expected));
+      }
 
     @Test(expected = IllegalArgumentException.class)
     public void countSalaryNegativeTestWorkingTimeLessThenZero() {
