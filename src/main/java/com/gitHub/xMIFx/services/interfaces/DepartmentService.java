@@ -5,7 +5,7 @@ package com.gitHub.xMIFx.services.interfaces;
 /**
  * Created by Vlad on 11.07.2015.
  */
-public interface DepartmentService {
+public interface DepartmentService extends MainService{
     String find(FinderType finderType, String searchValue);
 
     String getAll();

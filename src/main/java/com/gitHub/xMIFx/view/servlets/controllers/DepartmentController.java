@@ -29,7 +29,6 @@ public class DepartmentController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        System.out.println(action);
         if (action != null) {
             readAjax(action, req, resp);
         } else {
@@ -38,8 +37,11 @@ public class DepartmentController extends HttpServlet {
     }
 
     private void readAjax(String action, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
-        if ("getAll".equalsIgnoreCase(action)) {
+        if (exceptionFromFilter != null) {
+            answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+        } else if ("getAll".equalsIgnoreCase(action)) {
             answerStr = departmentService.getAll();
         } else if (action != null && action.startsWith("findByPartOf")) {
             String value = req.getParameter("valueForSearch");
@@ -53,7 +55,7 @@ public class DepartmentController extends HttpServlet {
             Long id = Long.valueOf(req.getParameter("id"));
             answerStr = departmentService.getByID(id);
         } else if ("getAllWorkers".equalsIgnoreCase(action)) {
-            answerStr = workerService.getAll();
+            answerStr = workerService.getAllAnswer();
         } else if (action != null && action.startsWith("findWorker")) {
             String value = req.getParameter("valueForSearch");
             String searchTypeString = req.getParameter("searchType");
@@ -73,25 +75,40 @@ public class DepartmentController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
-        String jsonText = req.getParameter("department");
-        answerStr = departmentService.update(jsonText);
+        if (exceptionFromFilter != null) {
+            answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+        } else {
+            String jsonText = req.getParameter("department");
+            answerStr = departmentService.update(jsonText);
+        }
         sendAnswer(answerStr, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
-        String jsonText = req.getParameter("department");
-        answerStr = departmentService.create(jsonText);
+        if (exceptionFromFilter != null) {
+            answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+        } else {
+            String jsonText = req.getParameter("department");
+            answerStr = departmentService.create(jsonText);
+        }
         sendAnswer(answerStr, resp);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
-        Long id = Long.valueOf(req.getParameter("id"));
-        answerStr = departmentService.deleteByID(id);
+        if (exceptionFromFilter != null) {
+            answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+        } else {
+            Long id = Long.valueOf(req.getParameter("id"));
+            answerStr = departmentService.deleteByID(id);
+        }
         sendAnswer(answerStr, resp);
     }
 

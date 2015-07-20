@@ -23,11 +23,13 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
     private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
     private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();
 
+
+
     @Override
     public String find(FinderType finderType, String searchValue) {
         String answer = null;
         if (searchValue == null || "".equals(searchValue.trim())) {
-            answer = getAll();
+            answer = getAllAnswer();
         }
         List<Worker> workerList = null;
         switch (finderType) {
@@ -55,7 +57,7 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
     }
 
     @Override
-    public String getAll() {
+    public String getAllAnswer() {
         String answer = null;
         List<Worker> workerList = workerDAO.getAll();
         WorkersHolder workersHolder = new WorkersHolder();
@@ -124,7 +126,7 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
     }
 
     @Override
-    public String getByID(Long id) {
+    public String getByIDAnswer(Long id) {
         String answer = null;
         Worker worker = workerDAO.getById(id);
         try {
@@ -162,4 +164,14 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
         } else {/*NOP*/}
         return worker;
     }
+
+    @Override
+    public Worker getByID(Long id) {
+        Worker worker = null;
+        if (id != null) {
+            worker  = workerDAO.getById(id);
+        }
+        return worker;
+    }
+
 }

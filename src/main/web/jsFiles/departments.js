@@ -613,8 +613,6 @@ function openSelectObjectForm() {
         openExceptionForm("more then one line is selected!");
     }
     else {
-        var elementForInvisible = document.getElementById('objectsForm');
-        changeVisible(elementForInvisible, true);
         startFillObjectForm(allSelectedElements[0]);
     }
 }
@@ -658,6 +656,8 @@ function fillObjectForm(department) {
     for (var i = 0; i < workerList.length; i++) {
         createNewTableWorkersRow(tableWorker, cloneRowWorker, workerList[i], "worker_");
     }
+    var elementForInvisible = document.getElementById('objectsForm');
+    changeVisible(elementForInvisible, true);
 }
 
 function createNewTableWorkersRow(tableForAdding, cloneRowWorker, worker, beginID) {

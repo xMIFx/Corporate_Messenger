@@ -3,6 +3,7 @@ package com.gitHub.xMIFx.view.servlets.controllers;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
+import com.gitHub.xMIFx.view.servlets.DeterminantOfThePageTo;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,9 +20,6 @@ import java.io.IOException;
 public class AuthorizationController extends HttpServlet {
     private static final String COOKIE_NAME = "user";
     private static final String WRONG_PARAMETERS = "wrong";
-    private static final String PAGE_MAIN = "/main.do";
-    private static final String PAGE_DEPARTMENT = "/department.do";
-    private static final String PAGE_WORKER = "/worker.do";
     private static final String LOGIN = "login";
     private static final String PASSWORD = "password";
     private static final WorkerService workerService = new WorkerServiceImpl();
@@ -31,11 +29,11 @@ public class AuthorizationController extends HttpServlet {
         String enteredUserName = req.getParameter(LOGIN);
         String enteredPassword = req.getParameter(PASSWORD);
         String pageFrom = req.getHeader("referer");
-        String pageTo = getPageTo(pageFrom);
+        String pageTo = DeterminantOfThePageTo.getPageTo(pageFrom);
         Worker worker = workerService.getByLoginPassword(enteredUserName, enteredPassword);
-        System.out.println(worker);
         if (worker == null) {
             req.setAttribute(WRONG_PARAMETERS, true);
+            req.getRequestDispatcher(pageTo).forward(req, resp);
         } else {
             req.setAttribute(WRONG_PARAMETERS, false);
             Cookie userCookie = new Cookie(COOKIE_NAME, worker.getId().toString());
@@ -43,22 +41,11 @@ public class AuthorizationController extends HttpServlet {
             userCookie.setMaxAge(3600);
             resp.addCookie(userCookie);
             req.getSession().setAttribute(COOKIE_NAME, worker);
+            resp.sendRedirect(pageTo);
         }
-        req.getRequestDispatcher(pageTo).forward(req, resp);
+
     }
 
-    private String getPageTo(String pageFrom) {
-        String pageTo = PAGE_MAIN;
-        if (pageFrom == null) {
-            pageTo = PAGE_MAIN;
-        } else if (pageFrom.contains(PAGE_MAIN)) {
-            pageTo = PAGE_MAIN;
-        } else if (pageFrom.contains(PAGE_DEPARTMENT)) {
-            pageTo = PAGE_DEPARTMENT;
-        } else if (pageFrom.contains(PAGE_WORKER)) {
-            pageTo = PAGE_WORKER;
-        }
-        return pageTo;
-    }
+
 }
 

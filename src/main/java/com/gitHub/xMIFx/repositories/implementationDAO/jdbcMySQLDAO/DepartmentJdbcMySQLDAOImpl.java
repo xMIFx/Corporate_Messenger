@@ -98,6 +98,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 ", depWork.idworker \n" +
                 ", w.name workerName\n" +
                 ", w.login\n" +
+                ", w.admin\n" +
                 ", w.objectVersion workerObjVersion\n" +
                 "\n" +
                 " FROM corporate_messenger.departments dep\n" +
@@ -125,6 +126,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                         worker.setName(res.getString("workerName"));
                         worker.setLogin(res.getString("login"));
                         worker.setObjectVersion(res.getInt("workerObjVersion"));
+                        worker.setAdmin(res.getBoolean("admin"));
                         department.addWorker(worker);
                     }
                 }
@@ -148,6 +150,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 ", depWork.idworker \n" +
                 ", w.name workerName\n" +
                 ", w.login\n" +
+                ", w.admin\n" +
                 ", w.objectVersion workerObjVersion\n" +
                 "\n" +
                 " FROM corporate_messenger.departments dep\n" +
@@ -175,6 +178,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                         worker.setName(res.getString("workerName"));
                         worker.setLogin(res.getString("login"));
                         worker.setObjectVersion(res.getInt("workerObjVersion"));
+                        worker.setAdmin(res.getBoolean("admin"));
                         department.addWorker(worker);
                     }
                 }
@@ -198,6 +202,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 ", depWork.idworker \n" +
                 ", w.name workerName\n" +
                 ", w.login\n" +
+                ", w.admin\n" +
                 ", w.objectVersion workerObjVersion\n" +
                 "\n" +
                 " FROM corporate_messenger.departments dep\n" +
@@ -225,6 +230,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                         newWorker.setName(res.getString("workerName"));
                         newWorker.setLogin(res.getString("login"));
                         newWorker.setObjectVersion(res.getInt("workerObjVersion"));
+                        worker.setAdmin(res.getBoolean("admin"));
                         department.addWorker(newWorker);
                     }
                 }
@@ -248,6 +254,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 ", depWork.idworker \n" +
                 ", w.name workerName\n" +
                 ", w.login\n" +
+                ", w.admin\n" +
                 ", w.objectVersion workerObjVersion\n" +
                 "\n" +
                 " FROM corporate_messenger.departments dep\n" +
@@ -279,6 +286,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                     worker.setName(res.getString("workerName"));
                     worker.setLogin(res.getString("login"));
                     worker.setObjectVersion(res.getInt("workerObjVersion"));
+                    worker.setAdmin(res.getBoolean("admin"));
                     department.addWorker(worker);
                 }
             }
@@ -429,7 +437,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 " where depWork.idworker IN (MyParametrID)";
 
         List<Long> list = new ArrayList<>();
-        getByWorkerSql = getSqlTextForInClouse("MyParametrID", getByWorkerSql, workerList.size());
+        getByWorkerSql = getSqlTextForInClause("MyParametrID", getByWorkerSql, workerList.size());
         try (Connection con = datasource.getConnection();
              PreparedStatement st = con.prepareStatement(getByWorkerSql)) {
             for (int i = 1; i <= workerList.size(); i++) {
@@ -470,7 +478,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 "  group by dep.id\n" +
                 ", dep.name\n" +
                 ", dep.objectVersion";
-        getByIDSql = getSqlTextForInClouse("MyParametrID", getByIDSql, listID.size());
+        getByIDSql = getSqlTextForInClause("MyParametrID", getByIDSql, listID.size());
         List<Department> departmentList = new ArrayList<>();
         try (Connection con = datasource.getConnection();
              PreparedStatement st = con.prepareStatement(getByIDSql)) {
@@ -503,6 +511,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 ", depWork.idworker \n" +
                 ", w.name workerName\n" +
                 ", w.login\n" +
+                ", w.admin\n" +
                 ", w.objectVersion workerObjVersion\n" +
                 "\n" +
                 " FROM corporate_messenger.departments dep\n" +
@@ -536,6 +545,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                         worker.setName(res.getString("workerName"));
                         worker.setLogin(res.getString("login"));
                         worker.setObjectVersion(res.getInt("workerObjVersion"));
+                        worker.setAdmin(res.getBoolean("admin"));
                         department.addWorker(worker);
                     }
                 }
@@ -551,7 +561,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
     }
 
 
-    private String getSqlTextForInClouse(String myParam, String getByWorkerSql, int size) {
+    private String getSqlTextForInClause(String myParam, String getByWorkerSql, int size) {
         StringBuilder replaced = new StringBuilder();
         for (int i = 0; i < size; i++) {
             if (i == size - 1) {

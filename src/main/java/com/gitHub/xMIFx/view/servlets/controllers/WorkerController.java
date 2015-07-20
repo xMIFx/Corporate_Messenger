@@ -31,16 +31,19 @@ import java.util.List;
 public class WorkerController extends HttpServlet {
 
     private static final String PAGE_OK = "pages/workers.jsp";
+
     private static final WorkerService workerService = new WorkerServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        System.out.println(action);
+        String exceptionFromFilter = (String) req.getAttribute("Exception");
         if (action != null) {
             String answerStr = null;
-            if ("getAll".equalsIgnoreCase(action)) {
-                answerStr = workerService.getAll();
+            if (exceptionFromFilter != null) {
+                answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+            } else if ("getAll".equalsIgnoreCase(action)) {
+                answerStr = workerService.getAllAnswer();
             } else if (action.startsWith("findByPartOf")) {
                 String value = req.getParameter("valueForSearch");
                 String searchTypeString = req.getParameter("searchType");
@@ -55,7 +58,7 @@ public class WorkerController extends HttpServlet {
                 answerStr = workerService.find(finderType, value);
             } else if ("getByID".equalsIgnoreCase(action)) {
                 Long id = Long.valueOf(req.getParameter("id"));
-                answerStr = workerService.getByID(id);
+                answerStr = workerService.getByIDAnswer(id);
             }
             sendAnswer(answerStr, resp);
         } else {
@@ -65,33 +68,48 @@ public class WorkerController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
-        Long id = Long.valueOf(req.getParameter("id"));
-        String name = req.getParameter("name");
-        String login = req.getParameter("login");
-        String pas = req.getParameter("password");
-        int objVersion = Integer.parseInt(req.getParameter("objVersion"));
-        String depName = req.getParameter("depName");
-        answerStr = workerService.update(id, name, login, pas, objVersion, depName);
+        if (exceptionFromFilter != null) {
+            answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+        } else {
+            Long id = Long.valueOf(req.getParameter("id"));
+            String name = req.getParameter("name");
+            String login = req.getParameter("login");
+            String pas = req.getParameter("password");
+            int objVersion = Integer.parseInt(req.getParameter("objVersion"));
+            String depName = req.getParameter("depName");
+            answerStr = workerService.update(id, name, login, pas, objVersion, depName);
+        }
         sendAnswer(answerStr, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
-        String name = req.getParameter("name");
-        String login = req.getParameter("login");
-        String pas = req.getParameter("password");
-        answerStr = workerService.create(name, login, pas);
+        if (exceptionFromFilter != null) {
+            answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+        } else {
+            String name = req.getParameter("name");
+            String login = req.getParameter("login");
+            String pas = req.getParameter("password");
+            answerStr = workerService.create(name, login, pas);
+        }
         sendAnswer(answerStr, resp);
     }
 
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
-        Long id = Long.valueOf(req.getParameter("id"));
-        answerStr = workerService.deleteByID(id);
+        if (exceptionFromFilter != null) {
+            answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+        } else {
+            Long id = Long.valueOf(req.getParameter("id"));
+            answerStr = workerService.deleteByID(id);
+        }
         sendAnswer(answerStr, resp);
 
     }

@@ -420,7 +420,7 @@ function sendAjaxForUpdateWorker(worker) {
     var url = urlForAjax;
     url = url + "?id=" + worker.getID() + "&objVersion=" + worker.getObjectVersion() + "&depName=" + worker.getDepartmentName() +
     "&name=" + worker.getName() + "&login=" + worker.getLogin() + "&password=" + worker.getPassword();
-     sendAjaxForWorkerChange("POST", url);
+    sendAjaxForWorkerChange("POST", url);
 }
 
 function sendAjaxForWorkerChange(type, url) {
@@ -500,8 +500,6 @@ function openSelectObjectForm() {
         openExceptionForm("more then one line is selected!");
     }
     else {
-        var elementForInvisible = document.getElementById('objectsForm');
-        changeVisible(elementForInvisible, true);
         startFillObjectForm(allSelectedElements[0]);
     }
 }
@@ -534,9 +532,6 @@ function fillObjectForm(worker) {
         conditionElement = elementForFill.childNodes[i];
         if (conditionElement.classList === undefined) {/*NOP*/
         }
-        /* else if (conditionElement.classList.contains("id")) {
-         conditionElement.value = worker.getID();
-         }*/
         else if (conditionElement.classList.contains("name")) {
             conditionElement.value = worker.getName();
         }
@@ -546,12 +541,8 @@ function fillObjectForm(worker) {
         else if (conditionElement.classList.contains("password")) {
             conditionElement.value = worker.getPassword();
         }
-        /* else if (conditionElement.classList.contains("objectVersion")) {
-         conditionElement.value = worker.getObjectVersion();
-         }
-         else if (conditionElement.classList.contains("depName")) {
-         conditionElement.value = worker.getDepartmentName();
-         }*/
+        var elementForInvisible = document.getElementById('objectsForm');
+        changeVisible(elementForInvisible, true);
     }
 }
 

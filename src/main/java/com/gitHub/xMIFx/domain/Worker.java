@@ -15,6 +15,7 @@ public class Worker implements Externalizable {
     private Long id;
     private int objectVersion;
     private String departmentName;
+    private boolean admin;
 
 
     public Worker() {
@@ -153,6 +154,14 @@ public class Worker implements Externalizable {
         this.departmentName = departmentName;
     }
 
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
     public int calculateSalary(int workingTime, int payment) {
         if (workingTime < 0) {
             throw new IllegalArgumentException("working time can't be less 0");
@@ -163,6 +172,8 @@ public class Worker implements Externalizable {
         return workingTime * payment;
 
     }
+
+
 
     @Override
     public String toString() {

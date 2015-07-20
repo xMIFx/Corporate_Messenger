@@ -47,6 +47,8 @@ div.box_log a {
 }
 
 div.box_log p {
+    padding: 5px 10px;
+    margin: 6px 10px;
     display: inline-block;
     color: #fff;
 }

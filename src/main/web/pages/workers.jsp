@@ -27,7 +27,7 @@
         </c:if>
         <c:if test="${user!= null}">
             <p>${user.login}</p>
-            <a href="exit.do" class="txt">logOut</a>
+            <a href="/exit.do" class="txt">logOut</a>
         </c:if>
     </div>
 </div>
