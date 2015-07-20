@@ -3,7 +3,6 @@ package com.gitHub.xMIFx.projectConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,18 +12,22 @@ import java.util.Properties;
  * Created by Vlad on 29.06.2015.
  */
 public class PropertiesForWork {
-    private static final Logger logger = LoggerFactory.getLogger(PropertiesForWork.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesForWork.class.getName());
     private static final PropertiesForWork propertiesForWork = new PropertiesForWork();
     private String pathToRepo;
     private TypeOfDAO currentTypeOfDAO;
     private String pathToWorkers;
     private String pathToDepartments;
+    private String SQLLogin;
+    private String SQLPas;
+    private String SQLUrl;
+
 
     private PropertiesForWork() {
         Properties prop = new Properties();
-       ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        try(InputStream in = loader.getResourceAsStream("config.properties")){
-       // try (InputStream in = new FileInputStream("src/main/resources/config.properties")) {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try (InputStream in = loader.getResourceAsStream("config.properties")) {
+            // try (InputStream in = new FileInputStream("src/main/resources/config.properties")) {
             prop.load(in);
             this.pathToRepo = prop.getProperty("pathToRepositories");
             String DAOType = prop.getProperty("typeOfDAO");
@@ -54,11 +57,14 @@ public class PropertiesForWork {
                     setDefaultValues();
                     break;
             }
+            this.SQLLogin = prop.getProperty("SQLLogin");
+            this.SQLPas = prop.getProperty("SQLPas");
+            this.SQLUrl = prop.getProperty("SQLUrl");
         } catch (FileNotFoundException e) {
-            logger.error("Exception in load properties: no file", e);
+            LOGGER.error("Exception in load properties: no file", e);
             setDefaultValues();
         } catch (IOException e) {
-            logger.error("Exception in load properties: ", e);
+            LOGGER.error("Exception in load properties: ", e);
             setDefaultValues();
         }
 
@@ -88,5 +94,17 @@ public class PropertiesForWork {
 
     public String getPathToDepartments() {
         return pathToDepartments;
+    }
+
+    public String getSQLLogin() {
+        return SQLLogin;
+    }
+
+    public String getSQLPas() {
+        return SQLPas;
+    }
+
+    public String getSQLUrl() {
+        return SQLUrl;
     }
 }

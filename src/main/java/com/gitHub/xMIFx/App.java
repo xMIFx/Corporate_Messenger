@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 public class App {
-    private static final Logger logger = LoggerFactory.getLogger(App.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(App.class.getName());
     private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
     private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();
     private static DepartmentDAO departmentDAO = abstractFactoryForDAOf.getDepartmentDAOImpl();
@@ -35,7 +35,7 @@ public class App {
 
 
     public static void main(String[] args) {
-        logger.info(info);
+        LOGGER.info(info);
         Department nullDepartment = departmentDAO.getByName("with out department");
         if (nullDepartment == null) {
             nullDepartment = new Department("with out department");
@@ -82,11 +82,11 @@ public class App {
                 }
             }
         } catch (IOException e) {
-            logger.error("readLine exception", e);
+            LOGGER.error("readLine exception", e);
         }
 
-        logger.info(workerDAO.getAll().toString());
-        logger.info(departmentDAO.getAll().toString());
+        LOGGER.info(workerDAO.getAll().toString());
+        LOGGER.info(departmentDAO.getAll().toString());
 
     }
 
@@ -166,6 +166,6 @@ public class App {
     }
 
     private static void repeatInfoMessage() {
-        logger.info(info);
+        LOGGER.info(info);
     }
 }

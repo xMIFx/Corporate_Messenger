@@ -11,10 +11,7 @@ import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +19,7 @@ import java.util.List;
  * Created by Vlad on 11.07.2015.
  */
 public class WorkerServiceImpl extends MainServiceImpl implements WorkerService {
-    private static final Logger logger = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
     private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
     private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();
 
@@ -52,7 +49,7 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
         try {
             answer = getXMLMessage(workersHolder);
         } catch (JAXBException e) {
-            logger.error("some jaxB exception: ", e);
+            LOGGER.error("some jaxB exception: ", e);
         }
         return answer;
     }
@@ -66,7 +63,7 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
         try {
             answer = getXMLMessage(workersHolder);
         } catch (JAXBException e) {
-            logger.error("some jaxB exception: ", e);
+            LOGGER.error("some jaxB exception: ", e);
         }
         return answer;
     }
@@ -84,7 +81,7 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
                 answer = getXMLMessage(worker);
             }
         } catch (JAXBException e) {
-            logger.error("some jaxB exception: ", e);
+            LOGGER.error("some jaxB exception: ", e);
         }
         return answer;
     }
@@ -104,7 +101,7 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
                 answer = getXMLMessage(worker);
             }
         } catch (JAXBException e) {
-            logger.error("some jaxB exception: ", e);
+            LOGGER.error("some jaxB exception: ", e);
         }
         return answer;
     }
@@ -116,7 +113,7 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
         try {
             answer = getXMLMessage(worker);
         } catch (JAXBException e) {
-            logger.error("some jaxB exception: ", e);
+            LOGGER.error("some jaxB exception: ", e);
         }
         return answer;
     }
@@ -135,7 +132,7 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
                 answer = getXMLMessage(worker);
             }
         } catch (JAXBException e) {
-            logger.error("some jaxB exception: ", e);
+            LOGGER.error("some jaxB exception: ", e);
         }
         return answer;
     }

@@ -13,8 +13,7 @@ import java.util.*;
  * Created by Vlad on 29.06.2015.
  */
 public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
-    private static final Logger logger = LoggerFactory.getLogger(DepartmentJdbcMySQLDAOImpl.class.getName());
-    private static final String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/testBase1_0?user=root&password=Lytghj12";
+    private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentJdbcMySQLDAOImpl.class.getName());
     private static javax.sql.DataSource datasource;
 
     static {
@@ -81,11 +80,11 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 con.commit();
                 department.setId(autoIncKeyId);
             } catch (SQLException e) {
-                logger.error("Exception when saving department to MySQL: ", e);
+                LOGGER.error("Exception when saving department to MySQL: ", e);
                 con.rollback();
             }
         } catch (SQLException e) {
-            logger.error("Exception when saving department to MySQL: ", e);
+            LOGGER.error("Exception when saving department to MySQL: ", e);
         }
         return department.getId();
     }
@@ -131,10 +130,10 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create department bean when get by id:" + id + " worker from MySQL: ", e);
+            LOGGER.error("Exception in create department bean when get by id:" + id + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get by id:" + id + " worker from MySQL: ", e);
+            LOGGER.error("Exception when get by id:" + id + " worker from MySQL: ", e);
         }
 
         return department;
@@ -181,10 +180,10 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create department bean when get by name:" + name + " worker from MySQL: ", e);
+            LOGGER.error("Exception in create department bean when get by name:" + name + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get by name:" + name + " worker from MySQL: ", e);
+            LOGGER.error("Exception when get by name:" + name + " worker from MySQL: ", e);
         }
 
         return department;
@@ -231,10 +230,10 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create department bean when get by worker:" + worker + " worker from MySQL: ", e);
+            LOGGER.error("Exception in create department bean when get by worker:" + worker + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get by worker:" + worker + " worker from MySQL: ", e);
+            LOGGER.error("Exception when get by worker:" + worker + " worker from MySQL: ", e);
         }
 
         return department;
@@ -284,9 +283,9 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Exception when create department bean get all department from MySQL: ", e);
+            LOGGER.error("Exception when create department bean get all department from MySQL: ", e);
         } catch (SQLException e) {
-            logger.error("Exception when get all department from MySQL: ", e);
+            LOGGER.error("Exception when get all department from MySQL: ", e);
         }
         List<Department> departmentList = new ArrayList<>();
         departmentList.addAll(departmentMap.values());
@@ -318,7 +317,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 departmentList.add(department);
             }
         } catch (SQLException e) {
-            logger.error("Exception when get all department from MySQL: ", e);
+            LOGGER.error("Exception when get all department from MySQL: ", e);
         }
         return departmentList;
     }
@@ -339,7 +338,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 result = true;
             }
         } catch (SQLException e) {
-            logger.error("Exception when remove department id:" + department.getId() + " to MySQL: ", e);
+            LOGGER.error("Exception when remove department id:" + department.getId() + " to MySQL: ", e);
         }
         return result;
     }
@@ -359,7 +358,6 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
         String sqlAddBindingWorkerDepartment = "INSERT INTO corporate_messenger.departmentworkers " +
                 "(idworker, iddepartment) " +
                 "VALUES (?, ?);";
-        System.out.println(department);
         final int batchSize = 1000;
         try (Connection con = datasource.getConnection()) {
             try (PreparedStatement st = con.prepareStatement(sqlUpdate)) {
@@ -409,12 +407,12 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 con.commit();
 
             } catch (SQLException e) {
-                logger.error("Exception when update department id:" + department.getId() + " to MySQL: ", e);
+                LOGGER.error("Exception when update department id:" + department.getId() + " to MySQL: ", e);
                 con.rollback();
                 result = false;
             }
         } catch (SQLException e) {
-            logger.error("Exception when getting connection by department id:" + department.getId() + " to MySQL: ", e);
+            LOGGER.error("Exception when getting connection by department id:" + department.getId() + " to MySQL: ", e);
         }
         return result;
     }
@@ -447,10 +445,10 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create department bean when get by workers from MySQL: ", e);
+            LOGGER.error("Exception in create department bean when get by workers from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get by worker from MySQL: ", e);
+            LOGGER.error("Exception when get by worker from MySQL: ", e);
         }
 
 
@@ -488,10 +486,10 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                     departmentList.add(department);
                 }
             } catch (SQLException e) {
-                logger.error("Exception when get all department from MySQL: ", e);
+                LOGGER.error("Exception when get all department from MySQL: ", e);
             }
         } catch (SQLException e) {
-            logger.error("Exception when get all department from MySQL: ", e);
+            LOGGER.error("Exception when get all department from MySQL: ", e);
         }
         return departmentList;
     }
@@ -543,9 +541,9 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Exception when get all department from MySQL: ", e);
+            LOGGER.error("Exception when get all department from MySQL: ", e);
         } catch (IllegalArgumentException e) {
-            logger.error("Exception when get all department from MySQL: ", e);
+            LOGGER.error("Exception when get all department from MySQL: ", e);
         }
         List<Department> departmentList = new ArrayList<>();
         departmentList.addAll(departmentMap.values());

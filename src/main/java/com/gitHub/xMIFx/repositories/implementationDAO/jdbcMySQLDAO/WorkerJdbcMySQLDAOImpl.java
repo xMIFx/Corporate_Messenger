@@ -17,8 +17,7 @@ import java.util.List;
  * Created by Vlad on 29.06.2015.
  */
 public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
-    private static final Logger logger = LoggerFactory.getLogger(WorkerJdbcMySQLDAOImpl.class.getName());
-    private static final String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/testBase1_0?user=root&password=Lytghj12";
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerJdbcMySQLDAOImpl.class.getName());
     private static DataSource datasource;
 
     static {
@@ -54,7 +53,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             worker.setId(autoIncKeyId);
 
         } catch (SQLException e) {
-            logger.error("Exception when saving worker to MySQL: ", e);
+            LOGGER.error("Exception when saving worker to MySQL: ", e);
         }
         return worker.getId();
     }
@@ -90,10 +89,10 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
                 }
             }
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create worker bean when get by id:" + id + " worker from MySQL: ", e);
+            LOGGER.error("Exception in create worker bean when get by id:" + id + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get by id:" + id + " worker from MySQL: ", e);
+            LOGGER.error("Exception when get by id:" + id + " worker from MySQL: ", e);
         }
 
         return worker;
@@ -131,10 +130,10 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             }
 
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create worker bean when get by name:" + name + " worker from MySQL: ", e);
+            LOGGER.error("Exception in create worker bean when get by name:" + name + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get by name:" + name + " worker from MySQL: ", e);
+            LOGGER.error("Exception when get by name:" + name + " worker from MySQL: ", e);
         }
 
         return worker;
@@ -174,10 +173,10 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             }
 
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create worker bean when get login password worker from MySQL: ", e);
+            LOGGER.error("Exception in create worker bean when get login password worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get login password worker from MySQL: ", e);
+            LOGGER.error("Exception when get login password worker from MySQL: ", e);
         }
 
         return worker;
@@ -213,10 +212,10 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             }
 
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create worker bean when when get all workers from MySQL: ", e);
+            LOGGER.error("Exception in create worker bean when when get all workers from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get all workers from MySQL: ", e);
+            LOGGER.error("Exception when get all workers from MySQL: ", e);
         }
         return workerList;
     }
@@ -253,10 +252,10 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             }
 
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create worker bean when when get by department id: " + department.getId() + " worker from MySQL: ", e);
+            LOGGER.error("Exception in create worker bean when when get by department id: " + department.getId() + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when get by department id: " + department.getId() + " worker from MySQL: ", e);
+            LOGGER.error("Exception when get by department id: " + department.getId() + " worker from MySQL: ", e);
         }
 
         return workerList;
@@ -278,7 +277,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
                 result = true;
             }
         } catch (SQLException e) {
-            logger.error("Exception when remove worker id:" + worker.getId() + " to MySQL: ", e);
+            LOGGER.error("Exception when remove worker id:" + worker.getId() + " to MySQL: ", e);
         }
         return result;
     }
@@ -308,7 +307,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
                 worker.setObjectVersion(nextObjVersion);
             }
         } catch (SQLException e) {
-            logger.error("Exception when update worker id:" + worker.getId() + " to MySQL: ", e);
+            LOGGER.error("Exception when update worker id:" + worker.getId() + " to MySQL: ", e);
         }
         return result;
     }
@@ -346,10 +345,10 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             }
 
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create worker bean when when when search by name:" + name + " worker from MySQL: ", e);
+            LOGGER.error("Exception in create worker bean when when when search by name:" + name + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when search by name: " + name + " worker from MySQL: ", e);
+            LOGGER.error("Exception when search by name: " + name + " worker from MySQL: ", e);
         }
 
         return workerList;
@@ -388,10 +387,10 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             }
 
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create worker bean when when when search by name:" + login + " worker from MySQL: ", e);
+            LOGGER.error("Exception in create worker bean when when when search by name:" + login + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when search by login: " + login + " worker from MySQL: ", e);
+            LOGGER.error("Exception when search by login: " + login + " worker from MySQL: ", e);
         }
 
         return workerList;
@@ -430,10 +429,10 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             }
 
         } catch (IllegalArgumentException e) {
-            logger.error("Exception in create worker bean when when when search by name:" + depName + " worker from MySQL: ", e);
+            LOGGER.error("Exception in create worker bean when when when search by name:" + depName + " worker from MySQL: ", e);
 
         } catch (SQLException e) {
-            logger.error("Exception when search by departmentName: " + depName + " worker from MySQL: ", e);
+            LOGGER.error("Exception when search by departmentName: " + depName + " worker from MySQL: ", e);
         }
 
         return workerList;

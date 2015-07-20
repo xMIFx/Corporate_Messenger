@@ -1,5 +1,6 @@
 package com.gitHub.xMIFx.repositories.implementationDAO.jdbcMySQLDAO;
 
+import com.gitHub.xMIFx.projectConfig.PropertiesForWork;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 
@@ -8,9 +9,13 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
  */
 public final class ConnectionPoolTomcat {
     private static ConnectionPoolTomcat conPool = new ConnectionPoolTomcat();
+
+    private PropertiesForWork propertiesForWork;
     private DataSource datasource;
+
     {
         datasource = new DataSource();
+        propertiesForWork = PropertiesForWork.getPropertiesForWork();
         setPropertiesForDataSource();
     }
 
@@ -24,10 +29,13 @@ public final class ConnectionPoolTomcat {
 
     private void setPropertiesForDataSource() {
         PoolProperties p = new PoolProperties();
-        p.setUrl("jdbc:mysql://127.0.0.1:3306/corporate_messenger");
+        p.setUrl(this.propertiesForWork.getSQLUrl());
+       // p.setUrl("jdbc:mysql://127.0.0.1:3306/corporate_messenger");
         p.setDriverClassName("com.mysql.jdbc.Driver");
-        p.setUsername("root");
-        p.setPassword("Lytghj12");
+       /* p.setUsername("root");
+        p.setPassword("Lytghj12");*/
+         p.setUsername(this.propertiesForWork.getSQLLogin());
+         p.setPassword(this.propertiesForWork.getSQLPas());
         p.setJmxEnabled(true);
         p.setTestWhileIdle(false);
         p.setTestOnBorrow(true);

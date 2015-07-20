@@ -486,7 +486,7 @@ function selectRow(objectForSelect) {
         openSelectObjectForm();
     }
     else {
-        removeSelectionFromAll();
+        removeSelectionFromAll("selected");
         objectForSelect.classList.add("selected");
     }
 }
