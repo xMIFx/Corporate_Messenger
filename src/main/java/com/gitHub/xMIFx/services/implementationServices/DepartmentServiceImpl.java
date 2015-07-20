@@ -69,26 +69,32 @@ public class DepartmentServiceImpl extends MainServiceImpl implements Department
         String answer = null;
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            Department department = objectMapper.readValue(jsonText, Department.class);
-            List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
-            if (departmentDAO.save(department) == null) {
+            try {
+                Department department = objectMapper.readValue(jsonText, Department.class);
+                List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
+                if (departmentDAO.save(department) == null) {
+                    ExceptionForView exceptionForView = new ExceptionForView();
+                    exceptionForView.setExceptionMessage("Error when saving. Try later.");
+                    answer = getXMLMessage(exceptionForView);
+                } else {
+                    if (!departmentsID.contains(department.getId())) {
+                        departmentsID.add(department.getId());
+                    } else {/*NOP*/}
+                    List<Department> departmentList = departmentDAO.getForUpdateByID(departmentsID);
+                    DepartmentsHolder departmentsHolder = new DepartmentsHolder();
+                    departmentsHolder.setDepartments(departmentList);
+                    answer = getXMLMessage(departmentsHolder);
+
+                }
+            } catch (IOException | IllegalArgumentException e) {
+                LOGGER.error("some json parsing exception: ", e);
                 ExceptionForView exceptionForView = new ExceptionForView();
-                exceptionForView.setExceptionMessage("Error when saving. Try later.");
+                exceptionForView.setExceptionMessage("Error in app or you send wrong format. Sorry! Try later.");
                 answer = getXMLMessage(exceptionForView);
-            } else {
-                if (!departmentsID.contains(department.getId())) {
-                    departmentsID.add(department.getId());
-                } else {/*NOP*/}
-                List<Department> departmentList = departmentDAO.getForUpdateByID(departmentsID);
-                DepartmentsHolder departmentsHolder = new DepartmentsHolder();
-                departmentsHolder.setDepartments(departmentList);
-                answer = getXMLMessage(departmentsHolder);
 
             }
         } catch (JAXBException e) {
             LOGGER.error("some jaxB exception: ", e);
-        } catch (IOException e) {
-            LOGGER.error("some json parsing exception: ", e);
         }
         return answer;
     }
@@ -99,28 +105,33 @@ public class DepartmentServiceImpl extends MainServiceImpl implements Department
         ObjectMapper objectMapper = new ObjectMapper();
         LOGGER.info(jsonText);
         try {
-            Department department = objectMapper.readValue(jsonText, Department.class);
+            try {
+                Department department = objectMapper.readValue(jsonText, Department.class);
 
-            List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
-            if (!departmentsID.contains(department.getId())) {
-                departmentsID.add(department.getId());
-            } else {/*NOP*/}
-            if (!departmentDAO.update(department)) {
+                List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
+                if (!departmentsID.contains(department.getId())) {
+                    departmentsID.add(department.getId());
+                } else {/*NOP*/}
+                if (!departmentDAO.update(department)) {
+                    ExceptionForView exceptionForView = new ExceptionForView();
+                    exceptionForView.setExceptionMessage("Error when saving. Try later.");
+                    answer = getXMLMessage(exceptionForView);
+
+                } else {
+                    List<Department> departmentList = departmentDAO.getForUpdateByID(departmentsID);
+                    DepartmentsHolder departmentsHolder = new DepartmentsHolder();
+                    departmentsHolder.setDepartments(departmentList);
+                    answer = getXMLMessage(departmentsHolder);
+                }
+            } catch (IOException | IllegalArgumentException e) {
+                LOGGER.error("some exception when parsing json: ", e);
                 ExceptionForView exceptionForView = new ExceptionForView();
-                exceptionForView.setExceptionMessage("Error when saving. Try later.");
+                exceptionForView.setExceptionMessage("Error in app or you send wrong format. Sorry! Try later.");
                 answer = getXMLMessage(exceptionForView);
-
-            } else {
-                List<Department> departmentList = departmentDAO.getForUpdateByID(departmentsID);
-                DepartmentsHolder departmentsHolder = new DepartmentsHolder();
-                departmentsHolder.setDepartments(departmentList);
-                answer = getXMLMessage(departmentsHolder);
             }
 
         } catch (JAXBException e) {
             LOGGER.error("some jaxB exception: ", e);
-        } catch (IOException e) {
-            LOGGER.error("some exception when parsing json: ", e);
         }
         return answer;
     }

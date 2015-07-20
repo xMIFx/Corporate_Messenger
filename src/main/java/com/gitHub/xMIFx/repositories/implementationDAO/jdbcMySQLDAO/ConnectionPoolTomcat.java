@@ -30,12 +30,12 @@ public final class ConnectionPoolTomcat {
     private void setPropertiesForDataSource() {
         PoolProperties p = new PoolProperties();
         p.setUrl(this.propertiesForWork.getSQLUrl());
-       // p.setUrl("jdbc:mysql://127.0.0.1:3306/corporate_messenger");
+        // p.setUrl("jdbc:mysql://127.0.0.1:3306/corporate_messenger");
         p.setDriverClassName("com.mysql.jdbc.Driver");
        /* p.setUsername("root");
         p.setPassword("Lytghj12");*/
-         p.setUsername(this.propertiesForWork.getSQLLogin());
-         p.setPassword(this.propertiesForWork.getSQLPas());
+        p.setUsername(this.propertiesForWork.getSQLLogin());
+        p.setPassword(this.propertiesForWork.getSQLPas());
         p.setJmxEnabled(true);
         p.setTestWhileIdle(false);
         p.setTestOnBorrow(true);

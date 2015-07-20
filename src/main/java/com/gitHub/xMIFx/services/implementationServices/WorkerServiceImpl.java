@@ -71,34 +71,51 @@ public class WorkerServiceImpl extends MainServiceImpl implements WorkerService 
     @Override
     public String create(String name, String login, String password) {
         String answer = null;
-        Worker worker = new Worker(null, name, login, password);
+
         try {
-            if (workerDAO.save(worker) == null) {
+            try {
+                Worker worker = new Worker(null, name, login, password);
+                if (workerDAO.save(worker) == null) {
+                    ExceptionForView exceptionForView = new ExceptionForView();
+                    exceptionForView.setExceptionMessage("Error when saving. Try later.");
+                    answer = getXMLMessage(exceptionForView);
+                } else {
+                    answer = getXMLMessage(worker);
+                }
+            } catch (IllegalArgumentException e) {
+                LOGGER.error("wrong format in name: " + name + " or login: " + login + " or pas: " + password, e);
                 ExceptionForView exceptionForView = new ExceptionForView();
-                exceptionForView.setExceptionMessage("Error when saving. Try later.");
+                exceptionForView.setExceptionMessage("Wrong format in name or login or password.");
                 answer = getXMLMessage(exceptionForView);
-            } else {
-                answer = getXMLMessage(worker);
             }
         } catch (JAXBException e) {
             LOGGER.error("some jaxB exception: ", e);
         }
+
         return answer;
     }
 
     @Override
     public String update(Long id, String name, String login, String password, int objVersion, String depName) {
         String answer = null;
-        Worker worker = new Worker(id, name, login, password, objVersion, depName);
+
         try {
-            if (!workerDAO.update(worker)) {
+            try {
+                Worker worker = new Worker(id, name, login, password, objVersion, depName);
+                if (!workerDAO.update(worker)) {
+                    ExceptionForView exceptionForView = new ExceptionForView();
+                    exceptionForView.setExceptionMessage("Error when saving. Try later.");
+
+                    answer = getXMLMessage(exceptionForView);
+
+                } else {
+                    answer = getXMLMessage(worker);
+                }
+            } catch (IllegalArgumentException e) {
+                LOGGER.error("wrong format in name: " + name + " or login: " + login + " or pas: " + password, e);
                 ExceptionForView exceptionForView = new ExceptionForView();
-                exceptionForView.setExceptionMessage("Error when saving. Try later.");
-
+                exceptionForView.setExceptionMessage("Wrong format in name or login or password.");
                 answer = getXMLMessage(exceptionForView);
-
-            } else {
-                answer = getXMLMessage(worker);
             }
         } catch (JAXBException e) {
             LOGGER.error("some jaxB exception: ", e);
