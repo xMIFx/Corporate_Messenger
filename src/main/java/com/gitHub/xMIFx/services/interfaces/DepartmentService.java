@@ -1,20 +1,23 @@
 package com.gitHub.xMIFx.services.interfaces;
 
+        import com.gitHub.xMIFx.domain.Department;
         import com.gitHub.xMIFx.services.FinderType;
+
+        import java.util.List;
 
 /**
  * Created by Vlad on 11.07.2015.
  */
-public interface DepartmentService extends MainService{
-    String find(FinderType finderType, String searchValue);
+public interface DepartmentService {
+    List<Department> find(FinderType finderType, String searchValue);
 
-    String getAll();
+    List<Department> getAll();
 
-    String create(String jsonText);
+    List<Department> create(Department department);
 
-    String update(String jsonText);
+    List<Department> update(Department department);
 
-    String getByID(Long id);
+    Department getByID(Long id);
 
-    String deleteByID(Long id);
+    boolean delete(Department department);
 }

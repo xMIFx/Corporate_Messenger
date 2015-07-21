@@ -1,28 +1,13 @@
 package com.gitHub.xMIFx.view.servlets.controllers;
 
-import com.gitHub.xMIFx.domain.Worker;
-import com.gitHub.xMIFx.repositories.abstractFactoryDAO.AbstractFactoryForDAO;
-import com.gitHub.xMIFx.repositories.abstractFactoryDAO.CreatorDAOFactory;
-import com.gitHub.xMIFx.repositories.dto.WorkersHolder;
-import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
 import com.gitHub.xMIFx.services.FinderType;
-import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
-import com.gitHub.xMIFx.services.interfaces.WorkerService;
-import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.List;
 
 /**
  * Created by Vlad on 04.07.2015.
@@ -31,8 +16,8 @@ import java.util.List;
 public class WorkerController extends HttpServlet {
 
     private static final String PAGE_OK = "pages/workers.jsp";
+    private RecipientOfResponseForWorker recipientOfResponseForWorker = new RecipientOfResponseForWorker();
 
-    private static final WorkerService workerService = new WorkerServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -41,9 +26,9 @@ public class WorkerController extends HttpServlet {
         if (action != null) {
             String answerStr = null;
             if (exceptionFromFilter != null) {
-                answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+                answerStr = recipientOfResponseForWorker.getAnswerAboutException(exceptionFromFilter);
             } else if ("getAll".equalsIgnoreCase(action)) {
-                answerStr = workerService.getAllAnswer();
+                answerStr = recipientOfResponseForWorker.getAll();
             } else if (action.startsWith("findByPartOf")) {
                 String value = req.getParameter("valueForSearch");
                 String searchTypeString = req.getParameter("searchType");
@@ -55,10 +40,10 @@ public class WorkerController extends HttpServlet {
                 } else if ("departmentName".equals(searchTypeString)) {
                     finderType = FinderType.DEPARTMENT;
                 }
-                answerStr = workerService.find(finderType, value);
+                answerStr = recipientOfResponseForWorker.find(finderType, value);
             } else if ("getByID".equalsIgnoreCase(action)) {
                 Long id = Long.valueOf(req.getParameter("id"));
-                answerStr = workerService.getByIDAnswer(id);
+                answerStr = recipientOfResponseForWorker.getByID(id);
             }
             sendAnswer(answerStr, resp);
         } else {
@@ -71,7 +56,7 @@ public class WorkerController extends HttpServlet {
         String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
         if (exceptionFromFilter != null) {
-            answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+            answerStr = recipientOfResponseForWorker.getAnswerAboutException(exceptionFromFilter);
         } else {
             Long id = Long.valueOf(req.getParameter("id"));
             String name = req.getParameter("name");
@@ -79,7 +64,7 @@ public class WorkerController extends HttpServlet {
             String pas = req.getParameter("password");
             int objVersion = Integer.parseInt(req.getParameter("objVersion"));
             String depName = req.getParameter("depName");
-            answerStr = workerService.update(id, name, login, pas, objVersion, depName);
+            answerStr = recipientOfResponseForWorker.update(id, name, login, pas, objVersion, depName);
         }
         sendAnswer(answerStr, resp);
     }
@@ -89,12 +74,12 @@ public class WorkerController extends HttpServlet {
         String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
         if (exceptionFromFilter != null) {
-            answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+            answerStr = recipientOfResponseForWorker.getAnswerAboutException(exceptionFromFilter);
         } else {
             String name = req.getParameter("name");
             String login = req.getParameter("login");
             String pas = req.getParameter("password");
-            answerStr = workerService.create(name, login, pas);
+            answerStr = recipientOfResponseForWorker.create(name, login, pas);
         }
         sendAnswer(answerStr, resp);
     }
@@ -105,10 +90,10 @@ public class WorkerController extends HttpServlet {
         String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
         if (exceptionFromFilter != null) {
-            answerStr = workerService.getAnswerAboutException(exceptionFromFilter);
+            answerStr = recipientOfResponseForWorker.getAnswerAboutException(exceptionFromFilter);
         } else {
             Long id = Long.valueOf(req.getParameter("id"));
-            answerStr = workerService.deleteByID(id);
+            answerStr = recipientOfResponseForWorker.deleteByID(id);
         }
         sendAnswer(answerStr, resp);
 
@@ -123,4 +108,5 @@ public class WorkerController extends HttpServlet {
             resp.getWriter().write(answerStr);
         }
     }
+
 }

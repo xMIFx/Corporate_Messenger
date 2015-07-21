@@ -37,7 +37,7 @@ public class AuthorizationController extends HttpServlet {
         } else {
             req.setAttribute(WRONG_PARAMETERS, false);
             Cookie userCookie = new Cookie(COOKIE_NAME, worker.getId().toString());
-            // need to have Worker online List
+            // need to have List Online Workers
             userCookie.setMaxAge(3600);
             resp.addCookie(userCookie);
             req.getSession().setAttribute(COOKIE_NAME, worker);

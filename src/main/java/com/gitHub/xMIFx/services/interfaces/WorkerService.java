@@ -8,19 +8,17 @@ import java.util.List;
 /**
  * Created by Vlad on 10.07.2015.
  */
-public interface WorkerService extends MainService{
+public interface WorkerService {
 
-    String find(FinderType finderType, String searchValue);
+    List<Worker> find(FinderType finderType, String searchValue);
 
-    String getAllAnswer();
+    List<Worker> getAll();
 
-    String create(String name, String login, String password);
+    Long create(Worker worker);
 
-    String update(Long id, String name, String login, String password, int objVersion, String depName);
+    boolean update(Worker worker);
 
-    String getByIDAnswer(Long id);
-
-    String deleteByID(Long id);
+    boolean delete(Worker worker);
 
     Worker getByLoginPassword(String login, String password);
 

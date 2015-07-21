@@ -20,18 +20,18 @@ import java.util.List;
 /**
  * Created by Vlad on 11.07.2015.
  */
-public class DepartmentServiceImpl extends MainServiceImpl implements DepartmentService {
+public class DepartmentServiceImpl implements DepartmentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
     private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
     private static DepartmentDAO departmentDAO = abstractFactoryForDAOf.getDepartmentDAOImpl();
 
     @Override
-    public String find(FinderType finderType, String searchValue) {
-        String answer = null;
-        if (searchValue == null || "".equals(searchValue.trim())) {
-            answer = getAll();
-        }
+    public List<Department> find(FinderType finderType, String searchValue) {
         List<Department> departmentList = null;
+        if (searchValue == null || "".equals(searchValue.trim())) {
+            departmentList = getAll();
+        }
+
         switch (finderType) {
             case NAME:
                 departmentList = departmentDAO.findByName(searchValue);
@@ -40,131 +40,59 @@ public class DepartmentServiceImpl extends MainServiceImpl implements Department
                 departmentList = new ArrayList<>();
                 break;
         }
-        DepartmentsHolder departmentsHolder = new DepartmentsHolder();
-        departmentsHolder.setDepartments(departmentList);
-        try {
-            answer = getXMLMessage(departmentsHolder);
-        } catch (JAXBException e) {
-            LOGGER.error("some jaxB exception: ", e);
-        }
-        return answer;
+
+        return departmentList;
     }
 
     @Override
-    public String getAll() {
-        String answer = null;
+    public List<Department> getAll() {
+
         List<Department> departmentList = departmentDAO.getAllWithoutWorkers();
-        DepartmentsHolder departmentsHolder = new DepartmentsHolder();
-        departmentsHolder.setDepartments(departmentList);
-        try {
-            answer = getXMLMessage(departmentsHolder);
-        } catch (JAXBException e) {
-            LOGGER.error("some jaxB exception: ", e);
-        }
-        return answer;
+        return departmentList;
     }
 
     @Override
-    public String create(String jsonText) {
-        String answer = null;
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            try {
-                Department department = objectMapper.readValue(jsonText, Department.class);
-                List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
-                if (departmentDAO.save(department) == null) {
-                    ExceptionForView exceptionForView = new ExceptionForView();
-                    exceptionForView.setExceptionMessage("Error when saving. Try later.");
-                    answer = getXMLMessage(exceptionForView);
-                } else {
-                    if (!departmentsID.contains(department.getId())) {
-                        departmentsID.add(department.getId());
-                    } else {/*NOP*/}
-                    List<Department> departmentList = departmentDAO.getForUpdateByID(departmentsID);
-                    DepartmentsHolder departmentsHolder = new DepartmentsHolder();
-                    departmentsHolder.setDepartments(departmentList);
-                    answer = getXMLMessage(departmentsHolder);
+    public List<Department> create(Department department) {
+        List<Department> listForReturn = null;
+        List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
+        if (departmentDAO.save(department) == null) {
 
-                }
-            } catch (IOException | IllegalArgumentException e) {
-                LOGGER.error("some json parsing exception: ", e);
-                ExceptionForView exceptionForView = new ExceptionForView();
-                exceptionForView.setExceptionMessage("Error in app or you send wrong format. Sorry! Try later.");
-                answer = getXMLMessage(exceptionForView);
-
-            }
-        } catch (JAXBException e) {
-            LOGGER.error("some jaxB exception: ", e);
+        } else {
+            if (!departmentsID.contains(department.getId())) {
+                departmentsID.add(department.getId());
+            } else {/*NOP*/}
+            listForReturn = departmentDAO.getForUpdateByID(departmentsID);
         }
-        return answer;
+
+        return listForReturn;
     }
 
     @Override
-    public String update(String jsonText) {
-        String answer = null;
-        ObjectMapper objectMapper = new ObjectMapper();
-        LOGGER.info(jsonText);
-        try {
-            try {
-                Department department = objectMapper.readValue(jsonText, Department.class);
-
-                List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
-                if (!departmentsID.contains(department.getId())) {
-                    departmentsID.add(department.getId());
-                } else {/*NOP*/}
-                if (!departmentDAO.update(department)) {
-                    ExceptionForView exceptionForView = new ExceptionForView();
-                    exceptionForView.setExceptionMessage("Error when saving. Try later.");
-                    answer = getXMLMessage(exceptionForView);
-
-                } else {
-                    List<Department> departmentList = departmentDAO.getForUpdateByID(departmentsID);
-                    DepartmentsHolder departmentsHolder = new DepartmentsHolder();
-                    departmentsHolder.setDepartments(departmentList);
-                    answer = getXMLMessage(departmentsHolder);
-                }
-            } catch (IOException | IllegalArgumentException e) {
-                LOGGER.error("some exception when parsing json: ", e);
-                ExceptionForView exceptionForView = new ExceptionForView();
-                exceptionForView.setExceptionMessage("Error in app or you send wrong format. Sorry! Try later.");
-                answer = getXMLMessage(exceptionForView);
-            }
-
-        } catch (JAXBException e) {
-            LOGGER.error("some jaxB exception: ", e);
+    public List update(Department department) {
+        List<Department> listForReturn = null;
+        List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
+        if (!departmentsID.contains(department.getId())) {
+            departmentsID.add(department.getId());
+        } else {/*NOP*/}
+        if (!departmentDAO.update(department)) {
+        } else {
+            listForReturn = departmentDAO.getForUpdateByID(departmentsID);
         }
-        return answer;
+        return listForReturn;
     }
 
     @Override
-    public String getByID(Long id) {
-        String answer = null;
+    public Department getByID(Long id) {
+
         Department department = departmentDAO.getById(id);
-        try {
-            answer = getXMLMessage(department);
-        } catch (JAXBException e) {
-            LOGGER.error("some jaxB exception: ", e);
-        }
-        return answer;
+
+        return department;
     }
 
     @Override
-    public String deleteByID(Long id) {
-        String answer = null;
-        Department department = departmentDAO.getById(id);
-        try {
-            if (!departmentDAO.remove(department)) {
-                ExceptionForView exceptionForView = new ExceptionForView();
-                exceptionForView.setExceptionMessage("Error when delete. Try later.");
-                department = null;
-                answer = getXMLMessage(exceptionForView);
-            } else {
-                answer = getXMLMessage(department);
-            }
-        } catch (JAXBException e) {
-            LOGGER.error("some jaxB exception: ", e);
-        }
-        return answer;
+    public boolean delete(Department department) {
+        return departmentDAO.remove(department);
     }
 
- }
+
+}
