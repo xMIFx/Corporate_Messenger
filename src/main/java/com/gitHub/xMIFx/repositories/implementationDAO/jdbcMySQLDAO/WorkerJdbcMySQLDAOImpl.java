@@ -31,8 +31,8 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             return worker.getId();
         }
         String sqlCreate = "INSERT INTO corporate_messenger.workers " +
-                "(name, login, password, objectVersion, admin) " +
-                "VALUES (?, ?, ?, ?, ?);";
+                "(name, login, password, objectVersion) " +
+                "VALUES (?, ?, ?, ?);";
         Long autoIncKeyId = -1L;
         try (Connection con = datasource.getConnection();
              PreparedStatement st = con.prepareStatement(sqlCreate, Statement.RETURN_GENERATED_KEYS)) {
@@ -40,7 +40,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
             st.setString(2, worker.getLogin());
             st.setString(3, worker.getPassword());
             st.setInt(4, worker.getObjectVersion());
-            st.setBoolean(5, worker.isAdmin());
+           // st.setBoolean(5, worker.isAdmin());
             st.executeUpdate();
             try (ResultSet rs = st.getGeneratedKeys()) {
                 if (rs.next()) {
