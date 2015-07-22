@@ -6,11 +6,18 @@ div.menu {
     background: #3C3232;
     z-index: 3;
 }
+
+div.menu.NoFix{
+    position: relative;
+    height: 40px;
+}
+
 div.back {
     margin: 0px 15px;
     display: inline-block;
     vertical-align: middle;
     cursor: pointer;
+    float: left;
 }
 div.back a{
     padding: 5px 10px;

@@ -54,7 +54,7 @@
             <div class="trg"></div>
         </a>
         </div>
-        <div class="box_m"><a href="#" class="m_menu"
+        <div class="box_m"><a href="pages/messenger.jsp" class="m_menu"
                               onMouseOver="mouseOver('messenger')"
                               onmouseout="mouseOut('messenger')"><span>Messenger</span>
 

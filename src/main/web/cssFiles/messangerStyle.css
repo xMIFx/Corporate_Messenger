@@ -1,0 +1,278 @@
+body {
+    padding: 0px;
+    margin: 0px;
+    font-family: Arial;
+}
+
+a {
+    text-decoration: none;
+}
+
+div.box {
+    white-space: nowrap;
+}
+
+div.box a, div.box input {
+    display: inline-block;
+    *zoom: 1;
+    vertical-align: middle;
+    margin: 5px 10px;
+}
+
+div.box a {
+    color: #000;
+
+}
+
+div.user_box, div.output_box {
+    display: inline-block;
+    vertical-align: top;
+}
+
+div.center {
+    text-align: center;
+    padding: 15px;
+}
+
+div.user_box {
+    width: 245px;
+    float: left;
+    text-align: left;
+}
+
+div.output_box {
+    width: 500px;
+}
+
+div.information_about_chat {
+    width: 245px;
+    display: inline-block;
+    text-align: right;
+    float: right;
+}
+
+ul li {
+    list-style: none;
+}
+
+div.group a {
+    margin-bottom: 9px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+div.group a.gr {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 0px;
+}
+
+div.group ul {
+    padding: 0px;
+}
+
+div.group ul li {
+    padding: 4px 0px;
+}
+
+div.group ul li a:hover {
+    text-decoration: underline;
+}
+
+div.group ul li.offline a {
+    font-size: 14px;
+    font-weight: 300;
+    color: #665;
+    padding: 0px 10px;
+}
+
+div.group ul li.online a {
+    font-size: 14px;
+    font-weight: 300;
+    color: #000;
+    padding: 0px 10px;
+}
+
+div.group ul li a span {
+    width: 8px;
+    height: 8px;
+    border-radius: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: -4px 7px 0px 7px;
+}
+
+div.group ul li.online a {
+    vertical-align: middle;
+}
+
+div.group ul li.online a span {
+    background: green;
+}
+
+div.group ul li.offline a span {
+    background: gray;
+}
+
+div.open {
+    background: url("../images/expand_minus.gif") no-repeat;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -1px;
+}
+
+div.open.closed {
+    background: url("../images/expand_plus.gif") no-repeat;
+}
+
+/*ul.groups {
+    opacity: 1;
+    filter: alpha(opacity=100);
+   -webkit-transform: translateY(0);
+    transform: translateY(0);
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+ul.groups.hide {
+    visibility: hidden;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    webkit-transform: translateY(-100%) scale(0);
+      transform:translateY(-100%)  scaleY(0);
+ }*/
+
+.slide-up, .slide-down {
+    max-height: 0;
+    overflow-y: hidden;
+    -webkit-transition: max-height 0.5s ease-in-out;
+    -moz-transition: max-height 0.5s ease-in-out;
+    -o-transition: max-height 0.5s ease-in-out;
+    transition: max-height 0.5s ease-in-out;
+}
+
+.slide-down {
+    max-height: 10em;
+}
+
+div.MessageClass {
+    text-align: left;
+    padding: 10px;
+    position: relative;
+    display: block;
+}
+
+div.CloneClass {
+     display: none;
+}
+
+div.loading {
+    position: absolute;
+}
+
+div.MessageClass div.loading, div.ResendDelete {
+     display: none;
+}
+
+div.MessageClass.SendingMessage div.loading {
+    display: block;
+}
+
+div.MessageClass.ExceptionMessage div.ResendDelete{
+    display: block;
+}
+
+div.MessageClass p {
+    margin: 0px;
+    padding-bottom: 5px;
+}
+
+div.MessageClass p.MessageText {
+    margin-left: 10px;
+}
+
+div.NewMessage {
+    background: rgba(255, 232, 153, 0.5);
+
+}
+
+div.MyMessage {
+    text-align: right;
+}
+
+p.MessageCount {
+    margin: 0px;
+    display: inline-block;
+    font-size: 13px;
+    vertical-align: middle;
+    margin-bottom: 7px;
+}
+
+.glav {
+    text-align: center;
+    font-weight: 700;
+
+}
+
+li.user_ch:hover {
+    background: #ccc;
+}
+
+li.user_ch.active {
+    background: #ccc;
+}
+
+div.chat_box {
+    height: 500px;
+    overflow-y: scroll;
+}
+input.sendButton{
+    border: 0px;
+    padding: 0px;
+    color: #e94638;
+    text-transform: uppercase;
+    background: none;
+    font-size: 16px;
+    outline: 0px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+}
+textarea#textID{
+    width: 450px;
+    padding: 7px;
+    display: inline-block;
+    resize: none;
+    border: 1px solid #ccc;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: "segoeui";
+    outline: 0px;
+    vertical-align: middle;
+}
+
+div.lastChats{
+    padding-top: 21px;
+    border-top: 1px solid #ccc;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

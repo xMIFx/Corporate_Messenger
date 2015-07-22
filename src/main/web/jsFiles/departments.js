@@ -95,10 +95,7 @@ function createDepartmentObject() {
     }
 
     this.addWorker = function (worker) {
-        if (worker == null) {
-            /*NOP*/
-        }
-        else {
+        if (worker != null) {
             if (this.workers === undefined || this.workers == null) {
                 this.workers = new Array();
             }
@@ -113,13 +110,12 @@ function createDepartmentObject() {
                 this.workers.push(worker);
             }
         }
+        else {/*NOP*/
+        }
     }
 
     this.removeWorker = function (worker) {
-        if (worker == null) {
-            /*NOP*/
-        }
-        else {
+        if (worker != null) {
             if (this.workers === undefined || this.workers == null) {
                 this.workers = new Array();
             }
@@ -129,6 +125,8 @@ function createDepartmentObject() {
                 }
 
             }
+        }
+        else {/*NOP*/
         }
     }
 
@@ -448,7 +446,6 @@ function createUpdateDepartment() {
         else if (conditionElement.classList.contains("name")) {
             newDepartment.setName(conditionElement.value.trim());
         }
-        // need fill workers
     }
     if (newDepartment.objectValidation()) {
         //selectedDepartment = null;
@@ -843,20 +840,8 @@ function deleteRowFromTableWorkers() {
     if (position > 0) {
         idForFind = idForFind.substr(position)
     }
-    /*for (i = 0; i < selectedElement.childNodes.length; i++) {
-     conditionElement = selectedElement.childNodes[i];
 
-     if (conditionElement.classList === undefined) {/!*NOP*!/
-     }
-     else if (conditionElement.classList.contains("workName")) {
-     nameForFind = conditionElement.innerHTML;
-     break;
-     }
-     }*/
     for (var i = 0; i < selectedDepartment.getWorkersList().length; i++) {
-        /*if (selectedDepartment.getWorkersList()[i].getName() == nameForFind) {
-         selectedDepartment.getWorkersList().splice(i, 1);
-         }*/
         if (selectedDepartment.getWorkersList()[i].getID() == idForFind) {
             selectedDepartment.getWorkersList().splice(i, 1);
         }

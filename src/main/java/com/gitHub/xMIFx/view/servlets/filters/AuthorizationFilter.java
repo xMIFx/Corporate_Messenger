@@ -74,7 +74,7 @@ public class AuthorizationFilter implements Filter {
         if (worker == null) {
             if (!checkNoAdminWorkersForRights(req.getMethod(), req.getQueryString())) {
                 req.setAttribute("Exception", "Access denied!");
-            } else if (req.getServletPath().contains("messanger.do")) {
+            } else if (req.getServletPath().contains("messenger.do")) {
                 needToRedirect = true;
 
             } else {/*NOP*/}
