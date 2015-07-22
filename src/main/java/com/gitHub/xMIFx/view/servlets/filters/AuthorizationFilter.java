@@ -62,7 +62,14 @@ public class AuthorizationFilter implements Filter {
         if (worker == null && cookieFromClient != null) {
             worker = workerService.getByID(Long.valueOf(cookieFromClient.getValue()));
             // need to use workers online holder
-            req.getSession().setAttribute(COOKIE_NAME, worker);
+            if (worker == null) {
+                //Clear cookie
+                cookieFromClient.setMaxAge(0);
+                cookieFromClient.setValue(null);
+                resp.addCookie(cookieFromClient);
+            } else {
+                req.getSession().setAttribute(COOKIE_NAME, worker);
+            }
         }
         if (worker == null) {
             if (!checkNoAdminWorkersForRights(req.getMethod(), req.getQueryString())) {
@@ -80,13 +87,10 @@ public class AuthorizationFilter implements Filter {
 
         if (needToRedirect) {
             resp.sendRedirect(DeterminantOfThePageTo.getPageTo(req.getHeader("referer")));
-        } else
-        //  resp.sendRedirect(pageTo); bad variant. No exception message
-        {
+        } else {
+            //  resp.sendRedirect(pageTo); bad variant. No exception message
             filterChain.doFilter(req, resp);
         }
-
-
     }
 
     private boolean checkNoAdminWorkersForRights(String method, String queryString) {
