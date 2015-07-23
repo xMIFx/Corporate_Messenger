@@ -22,15 +22,24 @@ public final class ConverterObjectToStringImpl implements ConverterObjectToStrin
 
     @Override
     public <T> String getMessage(T value, ObjectConvertingType convertingType) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("I'm trying to get string from: ", value);
+        }
         String message = null;
         try {
             switch (convertingType) {
                 case JSON: {
                     message = getJSONMessage(value);
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("It's JSON and string = " + message);
+                    }
                     break;
                 }
                 case XML: {
                     message = getXMLMessage(value);
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("It's XML and string = " + message);
+                    }
                     break;
                 }
             }

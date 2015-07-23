@@ -1,7 +1,7 @@
 package com.gitHub.xMIFx.view.servlets.controllers;
 
 import com.gitHub.xMIFx.domain.Worker;
-import com.gitHub.xMIFx.repositories.dto.WorkersHolder;
+import com.gitHub.xMIFx.repositories.DTO.WorkersHolder;
 import com.gitHub.xMIFx.services.FinderType;
 import com.gitHub.xMIFx.services.ObjectConvertingType;
 import com.gitHub.xMIFx.services.implementationServices.ConverterObjectToStringImpl;

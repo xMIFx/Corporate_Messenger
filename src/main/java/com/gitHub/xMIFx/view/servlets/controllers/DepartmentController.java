@@ -34,7 +34,7 @@ public class DepartmentController extends HttpServlet {
         if (exceptionFromFilter != null) {
             answerStr = recipientOfResponseForDepartment.getAnswerAboutException(exceptionFromFilter);
         } else if ("getAll".equalsIgnoreCase(action)) {
-            answerStr = recipientOfResponseForDepartment.getAll();
+             answerStr = recipientOfResponseForDepartment.getAll();
         } else if (action != null && action.startsWith("findByPartOf")) {
             String value = req.getParameter("valueForSearch");
             String searchTypeString = req.getParameter("searchType");

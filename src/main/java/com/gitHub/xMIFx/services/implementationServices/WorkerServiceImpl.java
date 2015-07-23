@@ -3,15 +3,12 @@ package com.gitHub.xMIFx.services.implementationServices;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.AbstractFactoryForDAO;
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.CreatorDAOFactory;
-import com.gitHub.xMIFx.repositories.dto.WorkersHolder;
-import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
+import com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO;
 import com.gitHub.xMIFx.services.FinderType;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
-import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
 import java.util.List;
 

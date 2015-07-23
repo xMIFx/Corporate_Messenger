@@ -23,24 +23,13 @@ public class Worker implements Externalizable {
     }
 
     public Worker(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("name can't be null");
-        }
-        name = name.trim();
-        if (name.equals("")) {
-            throw new IllegalArgumentException("name can't be empty");
-        }
-        if (name.length() < 3) {
-            throw new IllegalArgumentException("name length can't be < 3");
-        }
-        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
-            throw new IllegalArgumentException("wrong symbols");
-        }
-        this.name = name;
+        setName(name);
     }
 
     public Worker(Long id, String name, String login, String password) {
-        validateAllStringFields(name, login, password);
+        setName(name);
+        setLogin(login);
+        setPassword(password);
         this.name = name;
         this.password = password;
         this.login = login;
@@ -48,7 +37,9 @@ public class Worker implements Externalizable {
     }
 
     public Worker(Long id, String name, String login, String password, int objectVersion, String departmentName) {
-        validateAllStringFields(name, login, password);
+        setName(name);
+        setLogin(login);
+        setPassword(password);
         this.name = name;
         this.password = password;
         this.login = login;
@@ -86,19 +77,7 @@ public class Worker implements Externalizable {
 
     @XmlElement
     public void setPassword(String password) {
-       /* if (password == null) {
-            throw new IllegalArgumentException("password can't be null");
-        }
-        password = password.trim();
-        if (password.equals("")) {
-            throw new IllegalArgumentException("password can't be empty");
-        }
-        if (password.length() < 3) {
-            throw new IllegalArgumentException("password length can't be < 3");
-        }
-        if (!password.matches("[A-Za-z0-9]*")) {
-            throw new IllegalArgumentException("wrong symbols");
-        }*/
+
         this.password = password;
     }
 
@@ -217,23 +196,4 @@ public class Worker implements Externalizable {
         this.password = in.readUTF();*/
     }
 
-    private void validateAllStringFields(String name, String login, String password) {
-        if (name == null || login == null || password == null) {
-            throw new IllegalArgumentException("name/login/password can't be null");
-        }
-        name = name.trim();
-        login = login.trim();
-        password = password.trim();
-        if (name.equals("") || login.equals("") || password.equals("")) {
-            throw new IllegalArgumentException("name/login/password can't be empty");
-        }
-        if (name.length() < 3 || password.length() < 3) {
-            throw new IllegalArgumentException("name/password length can't be < 3");
-        }
-        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")
-                || !password.matches("[A-Za-z0-9]*")
-                || !login.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
-            throw new IllegalArgumentException("wrong symbols");
-        }
-    }
 }

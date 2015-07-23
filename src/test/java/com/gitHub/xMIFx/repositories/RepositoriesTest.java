@@ -2,11 +2,10 @@ package com.gitHub.xMIFx.repositories;
 
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
-import com.gitHub.xMIFx.repositories.implementationDAO.collectionDAO.DepartmentCollectionDAOImpl;
-import com.gitHub.xMIFx.repositories.implementationDAO.collectionDAO.WorkerCollectionDAOImpl;
-import com.gitHub.xMIFx.repositories.interfacesDAO.DepartmentDAO;
-import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
-import org.junit.Assert;
+import com.gitHub.xMIFx.repositories.implementationForDAO.collectionDAO.DepartmentCollectionDAOImpl;
+import com.gitHub.xMIFx.repositories.implementationForDAO.collectionDAO.WorkerCollectionDAOImpl;
+import com.gitHub.xMIFx.repositories.interfacesForDAO.DepartmentDAO;
+import com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

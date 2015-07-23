@@ -3,17 +3,12 @@ package com.gitHub.xMIFx.services.implementationServices;
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.AbstractFactoryForDAO;
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.CreatorDAOFactory;
-import com.gitHub.xMIFx.repositories.dto.DepartmentsHolder;
-import com.gitHub.xMIFx.repositories.interfacesDAO.DepartmentDAO;
+import com.gitHub.xMIFx.repositories.interfacesForDAO.DepartmentDAO;
 import com.gitHub.xMIFx.services.FinderType;
 import com.gitHub.xMIFx.services.interfaces.DepartmentService;
-import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

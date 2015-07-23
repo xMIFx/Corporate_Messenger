@@ -8,8 +8,8 @@ import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.AbstractFactoryForDAO;
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.CreatorDAOFactory;
-import com.gitHub.xMIFx.repositories.interfacesDAO.DepartmentDAO;
-import com.gitHub.xMIFx.repositories.interfacesDAO.WorkerDAO;
+import com.gitHub.xMIFx.repositories.interfacesForDAO.DepartmentDAO;
+import com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

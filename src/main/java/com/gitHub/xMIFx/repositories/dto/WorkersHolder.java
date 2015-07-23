@@ -1,4 +1,4 @@
-package com.gitHub.xMIFx.repositories.dto;
+package com.gitHub.xMIFx.repositories.DTO;
 
 import com.gitHub.xMIFx.domain.Worker;
 
