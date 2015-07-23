@@ -1,11 +1,19 @@
+@font-face{
+    font-family: "segoeu bold";
+    src: url('../fonts/segoeuib.eot');
+    src: url('../fonts/segoeuib.woff')format('woff'),
+    url('../fonts/segoeuib.svg')format('svg'),
+    url('../fonts/segoeuib.ttf')format('ttf');
+}
 body {
     padding: 0px;
     margin: 0px;
-    font-family: Arial;
+    font-family: segoeui;
 }
 
 a {
     text-decoration: none;
+    color: #000;
 }
 
 div.box {
@@ -32,23 +40,28 @@ div.user_box, div.output_box {
 div.center {
     text-align: center;
     padding: 15px;
+    background-color: rgba(199,199,199,0.3);
 }
 
 div.user_box {
-    width: 245px;
+    width: 24%; /*245px;*/
     float: left;
     text-align: left;
+    border-right: 1px solid #808080;
 }
 
 div.output_box {
-    width: 500px;
+    width: 50%;
 }
 
 div.information_about_chat {
-    width: 245px;
+    width: 24%;
     display: inline-block;
     text-align: right;
     float: right;
+    border-left: 1px solid #808080;
+    height: 500px;
+    overflow-y: scroll;
 }
 
 ul li {
@@ -187,14 +200,16 @@ div.MessageClass.ExceptionMessage div.ResendDelete{
 div.MessageClass p {
     margin: 0px;
     padding-bottom: 5px;
+    font-size: 14px;
 }
 
 div.MessageClass p.MessageText {
     margin-left: 10px;
+    font-size: 18px;
 }
 
 div.NewMessage {
-    background: rgba(255, 232, 153, 0.5);
+    background: #ccc;
 
 }
 
@@ -217,11 +232,11 @@ p.MessageCount {
 }
 
 li.user_ch:hover {
-    background: #ccc;
+    background: #D8B916;
 }
 
 li.user_ch.active {
-    background: #ccc;
+    background: #D8B916;
 }
 
 div.chat_box {
@@ -241,11 +256,11 @@ input.sendButton{
     vertical-align: middle;
 }
 textarea#textID{
-    width: 450px;
+    width: 90%;/*450px;*/
     padding: 7px;
     display: inline-block;
     resize: none;
-    border: 1px solid #ccc;
+    border: 1px solid #808080;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;
@@ -258,9 +273,13 @@ textarea#textID{
 
 div.lastChats{
     padding-top: 21px;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #808080;
 }
 
+div.groups{
+    max-height: 400px;
+    overflow-y: scroll;
+}
 
 
 

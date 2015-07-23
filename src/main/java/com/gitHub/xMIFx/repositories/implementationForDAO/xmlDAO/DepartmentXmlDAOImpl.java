@@ -3,7 +3,7 @@ package com.gitHub.xMIFx.repositories.implementationForDAO.xmlDAO;
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.projectConfig.PropertiesForWork;
-import com.gitHub.xMIFx.repositories.DTO.DepartmentsHolder;
+import com.gitHub.xMIFx.repositories.realisationForDTO.DepartmentsHolder;
 import com.gitHub.xMIFx.repositories.interfacesForDAO.DepartmentDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

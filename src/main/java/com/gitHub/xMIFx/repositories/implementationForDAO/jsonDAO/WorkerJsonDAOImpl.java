@@ -3,7 +3,7 @@ package com.gitHub.xMIFx.repositories.implementationForDAO.jsonDAO;
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.projectConfig.PropertiesForWork;
-import com.gitHub.xMIFx.repositories.DTO.WorkersHolder;
+import com.gitHub.xMIFx.repositories.realisationForDTO.WorkersHolder;
 import com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;

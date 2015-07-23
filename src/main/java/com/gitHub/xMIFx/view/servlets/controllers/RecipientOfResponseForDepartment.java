@@ -1,7 +1,7 @@
 package com.gitHub.xMIFx.view.servlets.controllers;
 
 import com.gitHub.xMIFx.domain.Department;
-import com.gitHub.xMIFx.repositories.DTO.DepartmentsHolder;
+import com.gitHub.xMIFx.repositories.realisationForDTO.DepartmentsHolder;
 import com.gitHub.xMIFx.services.FinderType;
 import com.gitHub.xMIFx.services.ObjectConvertingType;
 import com.gitHub.xMIFx.services.implementationServices.ConverterObjectToStringImpl;
@@ -39,27 +39,25 @@ class RecipientOfResponseForDepartment {
 
     String getAll() {
         String answer = null;
-        try {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("I'm try to getting all");
-            }
 
-            List<Department> departmentList = departmentService.getAll();
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("This is what i get: " + departmentList);
-            }
-            DepartmentsHolder departmentsHolder = new DepartmentsHolder();
-            departmentsHolder.setDepartments(departmentList);
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("This is what i set to holder: " + departmentsHolder.getDepartments());
-            }
-            answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder, ObjectConvertingType.XML);
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("This is answer: " + answer);
-            }
-        } catch (Throwable e) {
-            LOGGER.error("WTF", e);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("I'm try to getting all");
         }
+
+        List<Department> departmentList = departmentService.getAll();
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("This is what i get: " + departmentList);
+        }
+        DepartmentsHolder departmentsHolder = new DepartmentsHolder();
+        departmentsHolder.setDepartments(departmentList);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("This is what i set to holder: " + departmentsHolder.getDepartments());
+        }
+        answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder, ObjectConvertingType.XML);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("This is answer: " + answer);
+        }
+
         return answer;
     }
 
