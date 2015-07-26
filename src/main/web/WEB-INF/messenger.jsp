@@ -13,7 +13,7 @@
 <head>
     <meta charset="utf-8">
     <title>Messanger</title>
-    <%--<script src="${pageContext.request.contextPath}/jsFiles/sendMessages.js"></script>--%>
+    <script src="${pageContext.request.contextPath}/jsFiles/messenger.js"></script>
     <script src="${pageContext.request.contextPath}/jsFiles/showHideFunction.js"></script>
     <link href="../cssFiles/header.css" type="text/css" rel="Stylesheet"/>
     <link href="${pageContext.request.contextPath}/cssFiles/messangerStyle.css" rel="stylesheet" type="text/css">
@@ -24,14 +24,14 @@
 <div class="menu NoFix">
     <div class="back"><a href="../main.do">home</a></div>
     <div class="box_log">
-        <c:if test="${user.id == null}">
+        <c:if test="${worker.id == null}">
             <c:if test="${wrong}">
                 <p>wrong login or password. Try again!</p>
             </c:if>
             <a href="javascript:" onclick="openLoginForm()" id="income">Log in</a>
         </c:if>
-        <c:if test="${user!= null}">
-            <p>${user.login}</p>
+        <c:if test="${worker!= null}">
+            <p>${worker.login}</p>
             <a href="/exit.do" class="txt">logOut</a>
         </c:if>
     </div>
@@ -39,49 +39,13 @@
 
 <div class="center">
     <div class="user_box">
-        <div class="groups">
-            <div class="group">
-                <div class="open"></div>
-                <a href="javascript:" class="gr"
-                   onclick="functionAnimatedShowHide('${entry.key.ID}')">name</a>
+        <div class="groups" id="groups">
 
-                <p class="MessageCount">1</p>
-                <ul id="id" class="slide-down">
-
-                    <li id="user_id"
-                        class="online user_ch"><a href="javascript:"
-                                                  onclick="functionChangingChat('${chatUser.cryptUUID}','${chatUser.id}')">
-                        <span></span>user1</a>
-
-                        <p class="MessageCount">1</p>
-                    </li>
-
-                </ul>
-            </div>
-            <div class="group">
-                <div class="open"></div>
-                <a href="javascript:" class="gr"
-                   onclick="functionAnimatedShowHide('Other_chat')">Other chat</a>
-
-                <p class="MessageCount"></p>
-                <ul id="Other_chat" class="slide-down">
-
-                    <li id="bigChat_id"
-                        class="user_ch"><a href="javascript:"
-                                           onclick="functionChangingChatByID('id')">
-                        <span></span>name</a>
-
-                        <p class="MessageCount"></p>
-                    </li>
-
-                </ul>
-            </div>
         </div>
         <div class="lastChats">
             <p>Last chats</p>
 
             <div class="" id="lastChats">
-
                 <li id="lastChat_id"
                     class="user_ch"><a href="javascript:"
                                        onclick="functionChangingChatByID('${lastChat.idChat}')">
@@ -133,5 +97,24 @@
 
     <p class="MessageText"></p>
 </div>
+
+<div class="group CloneClass" id="cloneGroup">
+    <div class="open"></div>
+    <a href="javascript:" class="gr"
+       onclick="functionAnimatedShowHide(this.parentNode.getElementsByTagName('ul')[0].id)"></a>
+
+    <p class="MessageCount"></p>
+    <ul id="id" class="slide-down">
+
+
+    </ul>
+</div>
+<li id="cloneUser"
+    class="offline user_ch CloneClass"><a class="workerFromDepartment" href="javascript:"
+                              onclick="functionChangingChat(this.parentNode.id)">
+    <span></span></a>
+
+    <p class="MessageCount"></p>
+</li>
 </body>
 </html>

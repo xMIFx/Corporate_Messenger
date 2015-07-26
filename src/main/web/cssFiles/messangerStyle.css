@@ -141,22 +141,6 @@ div.open.closed {
     background: url("../images/expand_plus.gif") no-repeat;
 }
 
-/*ul.groups {
-    opacity: 1;
-    filter: alpha(opacity=100);
-   -webkit-transform: translateY(0);
-    transform: translateY(0);
-    -webkit-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
-}
-ul.groups.hide {
-    visibility: hidden;
-    opacity: 0;
-    filter: alpha(opacity=0);
-    webkit-transform: translateY(-100%) scale(0);
-      transform:translateY(-100%)  scaleY(0);
- }*/
-
 .slide-up, .slide-down {
     max-height: 0;
     overflow-y: hidden;
@@ -179,6 +163,9 @@ div.MessageClass {
 
 div.CloneClass {
      display: none;
+}
+li.CloneClass {
+    display: none;
 }
 
 div.loading {

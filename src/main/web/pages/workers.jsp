@@ -19,14 +19,14 @@
 <div class="menu">
     <div class="back"><a href="../main.do">home</a></div>
     <div class="box_log">
-        <c:if test="${user.id == null}">
+        <c:if test="${worker.id == null}">
             <c:if test="${wrong}">
                 <p>wrong login or password. Try again!</p>
             </c:if>
             <a href="javascript:" onclick="openLoginForm()" id="income">Log in</a>
         </c:if>
-        <c:if test="${user!= null}">
-            <p>${user.login}</p>
+        <c:if test="${worker!= null}">
+            <p>${worker.login}</p>
             <a href="/exit.do" class="txt">logOut</a>
         </c:if>
     </div>
