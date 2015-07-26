@@ -3,6 +3,7 @@ package com.gitHub.xMIFx.view.servlets.controllers;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
+import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
 import com.gitHub.xMIFx.view.servlets.DeterminantOfThePageTo;
 
 import javax.servlet.ServletException;
@@ -18,11 +19,12 @@ import java.io.IOException;
  */
 @WebServlet("/authorization.do")
 public class AuthorizationController extends HttpServlet {
-    private static final String COOKIE_NAME = "user";
+    private static final String COOKIE_NAME = "worker";
     private static final String WRONG_PARAMETERS = "wrong";
     private static final String LOGIN = "login";
     private static final String PASSWORD = "password";
     private static final WorkerService workerService = new WorkerServiceImpl();
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,6 +40,7 @@ public class AuthorizationController extends HttpServlet {
             req.setAttribute(WRONG_PARAMETERS, false);
             Cookie userCookie = new Cookie(COOKIE_NAME, worker.getId().toString());
             // need to have List Online Workers
+            OnlineWorkerHolder.getOnlineWorkerHolder().add(worker);
             userCookie.setMaxAge(3600);
             resp.addCookie(userCookie);
             req.getSession().setAttribute(COOKIE_NAME, worker);

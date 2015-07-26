@@ -13,6 +13,8 @@ public interface DepartmentService {
 
     List<Department> getAll();
 
+    List<Department> getAllWithoutWorkers();
+
     List<Department> create(Department department);
 
     List<Department> update(Department department);

@@ -3,8 +3,7 @@ package com.gitHub.xMIFx.view.servlets.controllers;
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.repositories.realisationForDTO.DepartmentsHolder;
 import com.gitHub.xMIFx.services.FinderType;
-import com.gitHub.xMIFx.services.ObjectConvertingType;
-import com.gitHub.xMIFx.services.implementationServices.ConverterObjectToStringImpl;
+import com.gitHub.xMIFx.services.implementationServices.ConverterObjectToStringXML;
 import com.gitHub.xMIFx.services.implementationServices.DepartmentServiceImpl;
 import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.ConverterObjectToString;
@@ -25,7 +24,7 @@ class RecipientOfResponseForDepartment {
     private static final Logger LOGGER = LoggerFactory.getLogger(RecipientOfResponseForDepartment.class.getName());
     private static final DepartmentService departmentService = new DepartmentServiceImpl();
     private static final WorkerService workerService = new WorkerServiceImpl();
-    private static final ConverterObjectToString CONVERTER_OBJECT_TO_STRING = new ConverterObjectToStringImpl();
+    private static final ConverterObjectToString CONVERTER_OBJECT_TO_STRING = new ConverterObjectToStringXML();
 
 
     String find(FinderType finderType, String searchValue) {
@@ -33,31 +32,16 @@ class RecipientOfResponseForDepartment {
         List<Department> departmentList = departmentService.find(finderType, searchValue);
         DepartmentsHolder departmentsHolder = new DepartmentsHolder();
         departmentsHolder.setDepartments(departmentList);
-        answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder, ObjectConvertingType.XML);
+        answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder);
         return answer;
     }
 
     String getAll() {
         String answer = null;
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("I'm try to getting all");
-        }
-
-        List<Department> departmentList = departmentService.getAll();
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("This is what i get: " + departmentList);
-        }
+         List<Department> departmentList = departmentService.getAllWithoutWorkers();
         DepartmentsHolder departmentsHolder = new DepartmentsHolder();
         departmentsHolder.setDepartments(departmentList);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("This is what i set to holder: " + departmentsHolder.getDepartments());
-        }
-        answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder, ObjectConvertingType.XML);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("This is answer: " + answer);
-        }
-
+        answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder);
         return answer;
     }
 
@@ -72,18 +56,18 @@ class RecipientOfResponseForDepartment {
             if (departmentList == null) {
                 ExceptionForView exceptionForView = new ExceptionForView();
                 exceptionForView.setExceptionMessage("Error when saving. Try later.");
-                answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+                answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
             } else {
                 DepartmentsHolder departmentsHolder = new DepartmentsHolder();
                 departmentsHolder.setDepartments(departmentList);
-                answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder, ObjectConvertingType.XML);
+                answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder);
 
             }
         } catch (IOException | IllegalArgumentException e) {
             LOGGER.error("some json parsing exception: ", e);
             ExceptionForView exceptionForView = new ExceptionForView();
             exceptionForView.setExceptionMessage("Error in app or you send wrong format. Sorry! Try later.");
-            answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+            answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
 
         }
 
@@ -103,18 +87,18 @@ class RecipientOfResponseForDepartment {
             if (departmentList == null) {
                 ExceptionForView exceptionForView = new ExceptionForView();
                 exceptionForView.setExceptionMessage("Error when saving. Try later.");
-                answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+                answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
 
             } else {
                 DepartmentsHolder departmentsHolder = new DepartmentsHolder();
                 departmentsHolder.setDepartments(departmentList);
-                answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder, ObjectConvertingType.XML);
+                answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder);
             }
         } catch (IOException | IllegalArgumentException e) {
             LOGGER.error("some exception when parsing json: ", e);
             ExceptionForView exceptionForView = new ExceptionForView();
             exceptionForView.setExceptionMessage("Error in app or you send wrong format. Sorry! Try later.");
-            answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+            answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
         }
 
 
@@ -125,7 +109,7 @@ class RecipientOfResponseForDepartment {
     String getByID(Long id) {
         String answer = null;
         Department department = departmentService.getByID(id);
-        answer = CONVERTER_OBJECT_TO_STRING.getMessage(department, ObjectConvertingType.XML);
+        answer = CONVERTER_OBJECT_TO_STRING.getMessage(department);
         return answer;
     }
 
@@ -137,9 +121,9 @@ class RecipientOfResponseForDepartment {
             ExceptionForView exceptionForView = new ExceptionForView();
             exceptionForView.setExceptionMessage("Error when delete. Try later.");
             department = null;
-            answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+            answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
         } else {
-            answer = CONVERTER_OBJECT_TO_STRING.getMessage(department, ObjectConvertingType.XML);
+            answer = CONVERTER_OBJECT_TO_STRING.getMessage(department);
         }
         return answer;
     }
@@ -148,7 +132,7 @@ class RecipientOfResponseForDepartment {
         String answer = null;
         ExceptionForView exceptionForView = new ExceptionForView();
         exceptionForView.setExceptionMessage(exceptionMessage);
-        answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+        answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
         return answer;
     }
 

@@ -1,6 +1,7 @@
 package com.gitHub.xMIFx.view.servlets.controllers;
 
 import com.gitHub.xMIFx.domain.Worker;
+import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
 import com.gitHub.xMIFx.view.servlets.DeterminantOfThePageTo;
 
 import javax.servlet.ServletException;
@@ -16,7 +17,7 @@ import java.io.IOException;
  */
 @WebServlet("/exit.do")
 public class LogOutController extends HttpServlet {
-    private static final String COOKIE_USER = "user";
+    private static final String COOKIE_USER = "worker";
 
     @Override
 
@@ -37,7 +38,7 @@ public class LogOutController extends HttpServlet {
         }
         Worker worker = (Worker) req.getSession().getAttribute(COOKIE_USER);
         if (worker != null) {
-            //remove From Online holder
+            OnlineWorkerHolder.getOnlineWorkerHolder().remove(worker);
             req.getSession().setAttribute(COOKIE_USER, null);
         }
         String pageFrom = req.getHeader("referer");

@@ -3,6 +3,7 @@ package com.gitHub.xMIFx.view.servlets.filters;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
+import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
 import com.gitHub.xMIFx.view.servlets.DeterminantOfThePageTo;
 
 import javax.servlet.*;
@@ -19,7 +20,7 @@ import java.sql.SQLException;
 @WebFilter("/*")
 public class AuthorizationFilter implements Filter {
     private FilterConfig filterConfig;
-    private static final String COOKIE_NAME = "user";
+    private static final String COOKIE_NAME = "worker";
     private static final WorkerService workerService = new WorkerServiceImpl();
 
 
@@ -61,13 +62,13 @@ public class AuthorizationFilter implements Filter {
         // Session destroyed with attributes, so we need to refresh it
         if (worker == null && cookieFromClient != null) {
             worker = workerService.getByID(Long.valueOf(cookieFromClient.getValue()));
-            // need to use workers online holder
             if (worker == null) {
                 //Clear cookie
                 cookieFromClient.setMaxAge(0);
                 cookieFromClient.setValue(null);
                 resp.addCookie(cookieFromClient);
             } else {
+                OnlineWorkerHolder.getOnlineWorkerHolder().add(worker);
                 req.getSession().setAttribute(COOKIE_NAME, worker);
             }
         }
@@ -88,7 +89,6 @@ public class AuthorizationFilter implements Filter {
         if (needToRedirect) {
             resp.sendRedirect(DeterminantOfThePageTo.getPageTo(req.getHeader("referer")));
         } else {
-            //  resp.sendRedirect(pageTo); bad variant. No exception message
             filterChain.doFilter(req, resp);
         }
     }

@@ -36,13 +36,19 @@ public class DepartmentServiceImpl implements DepartmentService {
                 break;
         }
 
+        return departmentList;    }
+
+    @Override
+    public List<Department> getAllWithoutWorkers() {
+
+        List<Department> departmentList = departmentDAO.getAllWithoutWorkers();
         return departmentList;
     }
 
     @Override
     public List<Department> getAll() {
 
-        List<Department> departmentList = departmentDAO.getAllWithoutWorkers();
+        List<Department> departmentList = departmentDAO.getAll();
         return departmentList;
     }
 

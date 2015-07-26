@@ -3,8 +3,7 @@ package com.gitHub.xMIFx.view.servlets.controllers;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.repositories.realisationForDTO.WorkersHolder;
 import com.gitHub.xMIFx.services.FinderType;
-import com.gitHub.xMIFx.services.ObjectConvertingType;
-import com.gitHub.xMIFx.services.implementationServices.ConverterObjectToStringImpl;
+import com.gitHub.xMIFx.services.implementationServices.ConverterObjectToStringXML;
 import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.ConverterObjectToString;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
@@ -20,7 +19,7 @@ import java.util.List;
 class RecipientOfResponseForWorker {
     static final Logger LOGGER = LoggerFactory.getLogger(RecipientOfResponseForWorker.class.getName());
     private static final WorkerService workerService = new WorkerServiceImpl();
-    private static final ConverterObjectToString CONVERTER_OBJECT_TO_STRING = new ConverterObjectToStringImpl();
+    private static final ConverterObjectToString CONVERTER_OBJECT_TO_STRING = new ConverterObjectToStringXML();
 
      String find(FinderType finderType, String searchValue) {
         String answer = null;
@@ -30,7 +29,7 @@ class RecipientOfResponseForWorker {
         WorkersHolder workersHolder = new WorkersHolder();
         workersHolder.setWorkers(workerList);
 
-        answer =  CONVERTER_OBJECT_TO_STRING.getMessage(workersHolder, ObjectConvertingType.XML);
+        answer =  CONVERTER_OBJECT_TO_STRING.getMessage(workersHolder);
 
         return answer;
     }
@@ -40,7 +39,7 @@ class RecipientOfResponseForWorker {
         List<Worker> workerList = workerService.getAll();
         WorkersHolder workersHolder = new WorkersHolder();
         workersHolder.setWorkers(workerList);
-        answer =  CONVERTER_OBJECT_TO_STRING.getMessage(workersHolder, ObjectConvertingType.XML);
+        answer =  CONVERTER_OBJECT_TO_STRING.getMessage(workersHolder);
         return answer;
     }
 
@@ -52,15 +51,15 @@ class RecipientOfResponseForWorker {
             if (workerService.create(worker) == null) {
                 ExceptionForView exceptionForView = new ExceptionForView();
                 exceptionForView.setExceptionMessage("Error when saving. Try later.");
-                answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+                answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
             } else {
-                answer =  CONVERTER_OBJECT_TO_STRING.getMessage(worker, ObjectConvertingType.XML);
+                answer =  CONVERTER_OBJECT_TO_STRING.getMessage(worker);
             }
         } catch (IllegalArgumentException e) {
             LOGGER.error("wrong format in name: " + name + " or login: " + login + " or pas: " + password, e);
             ExceptionForView exceptionForView = new ExceptionForView();
             exceptionForView.setExceptionMessage("Wrong format in name or login or password.");
-            answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+            answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
         }
 
         return answer;
@@ -74,15 +73,15 @@ class RecipientOfResponseForWorker {
             if (!workerService.update(worker)) {
                 ExceptionForView exceptionForView = new ExceptionForView();
                 exceptionForView.setExceptionMessage("Error when saving. Try later.");
-                answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+                answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
             } else {
-                answer =  CONVERTER_OBJECT_TO_STRING.getMessage(worker, ObjectConvertingType.XML);
+                answer =  CONVERTER_OBJECT_TO_STRING.getMessage(worker);
             }
         } catch (IllegalArgumentException e) {
             LOGGER.error("wrong format in name: " + name + " or login: " + login + " or pas: " + password, e);
             ExceptionForView exceptionForView = new ExceptionForView();
             exceptionForView.setExceptionMessage("Wrong format in name or login or password.");
-            answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+            answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
         }
 
         return answer;
@@ -91,7 +90,7 @@ class RecipientOfResponseForWorker {
      String getByID(Long id) {
         String answer = null;
         Worker worker = workerService.getByID(id);
-        answer =  CONVERTER_OBJECT_TO_STRING.getMessage(worker, ObjectConvertingType.XML);
+        answer =  CONVERTER_OBJECT_TO_STRING.getMessage(worker);
         return answer;
     }
 
@@ -102,9 +101,9 @@ class RecipientOfResponseForWorker {
             ExceptionForView exceptionForView = new ExceptionForView();
             exceptionForView.setExceptionMessage("Error when delete. Try later.");
             worker = null;
-            answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+            answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
         } else {
-            answer =  CONVERTER_OBJECT_TO_STRING.getMessage(worker, ObjectConvertingType.XML);
+            answer =  CONVERTER_OBJECT_TO_STRING.getMessage(worker);
         }
         return answer;
     }
@@ -113,7 +112,7 @@ class RecipientOfResponseForWorker {
         String answer = null;
         ExceptionForView exceptionForView = new ExceptionForView();
         exceptionForView.setExceptionMessage(exceptionMessage);
-        answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView, ObjectConvertingType.XML);
+        answer =  CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
         return answer;
     }
 
