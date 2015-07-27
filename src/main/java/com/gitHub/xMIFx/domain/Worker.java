@@ -1,5 +1,8 @@
 package com.gitHub.xMIFx.domain;
 
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.*;
@@ -8,14 +11,17 @@ import java.io.*;
  * Created by Vlad on 23.06.2015.
  */
 @XmlRootElement
-public class Worker implements Externalizable {
+@Entity
+@Table(name = "workers")
+public class Worker implements Serializable {
     private String name;
     private String password;
     private String login;
     private Long id;
     private int objectVersion;
-    private String departmentName;
     private boolean admin;
+    @Transient
+    private String departmentName;
 
 
     public Worker() {
@@ -53,6 +59,7 @@ public class Worker implements Externalizable {
     }
 
     @XmlElement
+    @Column(name = "name",unique = true, length = 45)
     public void setName(String name) {
         if (name == null) {
             throw new IllegalArgumentException("name can't be null");
@@ -76,6 +83,7 @@ public class Worker implements Externalizable {
     }
 
     @XmlElement
+    @Column(name = "password", length = 45)
     public void setPassword(String password) {
 
         this.password = password;
@@ -86,6 +94,7 @@ public class Worker implements Externalizable {
     }
 
     @XmlElement
+    @Column(name = "login",unique = true, length = 45)
     public void setLogin(String login) {
         if (login == null) {
             throw new IllegalArgumentException("login can't be null");
@@ -105,6 +114,10 @@ public class Worker implements Externalizable {
     }
 
     @XmlElement
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @Type(type = "long")
     public void setId(Long id) {
         if (id == null || id < 0) {
             throw new IllegalArgumentException("id can'be null or <0");
@@ -117,6 +130,7 @@ public class Worker implements Externalizable {
     }
 
     @XmlElement
+    @Column(name = "objectVersion")
     public void setObjectVersion(int objectVersion) {
         if (objectVersion < 0) {
             throw new IllegalArgumentException("objectVersion can't be  <0");
@@ -136,7 +150,8 @@ public class Worker implements Externalizable {
     public boolean isAdmin() {
         return admin;
     }
-
+    @XmlElement
+    @Column(name = "admin")
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
@@ -153,11 +168,10 @@ public class Worker implements Externalizable {
     }
 
 
-
     @Override
     public String toString() {
 
-        return String.format("%d-%s: [%s]", id, name, login);
+        return String.format("%d-%s: [%s - %s]", id, name, login, departmentName);
 
     }
 
@@ -180,20 +194,20 @@ public class Worker implements Externalizable {
         return result;
     }
 
-    @Override
+ /*@Override*/
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeLong(this.id);
         out.writeUTF(this.name);
-        /*out.writeUTF(this.login);
-        out.writeUTF(this.password);*/
+        out.writeUTF(this.login);
+        out.writeUTF(this.password);
     }
 
-    @Override
+    /*@Override*/
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.id = in.readLong();
         this.name = in.readUTF();
-       /* this.login = in.readUTF();
-        this.password = in.readUTF();*/
+        this.login = in.readUTF();
+        this.password = in.readUTF();
     }
 
 }

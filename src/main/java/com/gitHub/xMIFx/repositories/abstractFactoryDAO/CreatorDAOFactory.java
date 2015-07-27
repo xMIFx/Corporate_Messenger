@@ -27,6 +27,9 @@ public abstract class CreatorDAOFactory {
             case JDBCMYSQL:
                 factoryForDAO = new JDBCMySQLAbstractFactoryImpl();
                 break;
+            case HIBERNATE:
+                factoryForDAO = new HibernateAbstractFactoryImpl();
+                break;
             default:
                 factoryForDAO = new CollectionAbstractFactoryImpl();
                 break;

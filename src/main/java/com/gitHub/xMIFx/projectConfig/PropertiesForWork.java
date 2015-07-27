@@ -53,6 +53,9 @@ public class PropertiesForWork {
                 case "JDBCMYSQL":
                     this.currentTypeOfDAO = TypeOfDAO.JDBCMYSQL;
                     break;
+                case "HIBERNATE":
+                    this.currentTypeOfDAO = TypeOfDAO.HIBERNATE;
+                    break;
                 default:
                     setDefaultValues();
                     break;

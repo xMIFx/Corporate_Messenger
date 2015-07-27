@@ -4,6 +4,9 @@ import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 /**
  * Created by Vlad on 25.07.2015.
  */
@@ -22,5 +25,6 @@ public aspect RepoLogger {
     @SuppressAjWarnings({"adviceDidNotMatch"})
     after (): repositoriesMethods(){
         LOGGER.info("after in repo: " + thisJoinPoint.getSignature());
+        LOGGER.info("after in repo: " + Arrays.toString(thisJoinPoint.getArgs()));
     }
 }

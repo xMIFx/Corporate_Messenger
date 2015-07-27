@@ -1,11 +1,15 @@
 package com.gitHub.xMIFx.domain;
 
+
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
+
+import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +17,15 @@ import java.util.List;
  * Created by Vlad on 23.06.2015.
  */
 @XmlRootElement
-public class Department implements Externalizable {
+@Entity
+@Table(name = "departments")
+public class Department implements Serializable {
 
     private String name;
     private Long id;
     private List<Worker> workers;
     private int objectVersion;
+    @Transient
     private int workersCount;
 
     public Department() {
@@ -44,6 +51,7 @@ public class Department implements Externalizable {
     }
 
     @XmlElement
+    @Column(name = "name", unique = true, length = 45)
     public void setName(String name) {
         if (name == null) {
             throw new IllegalArgumentException("name can't be null");
@@ -63,9 +71,12 @@ public class Department implements Externalizable {
     }
 
     @XmlElement
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     public void setId(Long id) {
         if (id == null || id < 0) {
-            throw new IllegalArgumentException("id can'be null or <0");
+            throw new IllegalArgumentException("id can'be null or < 0");
         }
         this.id = id;
     }
@@ -90,6 +101,7 @@ public class Department implements Externalizable {
     }
 
     @XmlElement
+    @Column(name = "objectVersion")
     public void setObjectVersion(int objectVersion) {
         if (objectVersion < 0) {
             throw new IllegalArgumentException("objectVersion can't be  <0");
@@ -103,6 +115,12 @@ public class Department implements Externalizable {
     }
 
     @XmlElement
+    @Cascade(CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
+    @OneToMany
+    @JoinTable(name = "departmentworkers",
+            joinColumns = {@JoinColumn(name = "iddepartment")},
+            inverseJoinColumns = {@JoinColumn(name = "idworker")})
     public void setWorkersCount(int workersCount) {
         if (workersCount < 0) {
             throw new IllegalArgumentException("workersCount can't be <0");
@@ -153,7 +171,7 @@ public class Department implements Externalizable {
         return result;
     }
 
-    @Override
+    /*@Override*/
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeLong(this.id);
         out.writeUTF(this.name);
@@ -167,7 +185,7 @@ public class Department implements Externalizable {
         }
     }
 
-    @Override
+    /*@Override*/
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.id = in.readLong();
         this.name = in.readUTF();
