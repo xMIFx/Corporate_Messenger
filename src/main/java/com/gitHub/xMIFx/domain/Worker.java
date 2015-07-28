@@ -1,5 +1,6 @@
 package com.gitHub.xMIFx.domain;
 
+
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import java.io.*;
  */
 @XmlRootElement
 @Entity
-@Table(name = "workers")
+@Table(name = "workers" /*, catalog = "corporate_messenger"*/)
 public class Worker implements Serializable {
     private String name;
     private String password;
@@ -20,7 +21,6 @@ public class Worker implements Serializable {
     private Long id;
     private int objectVersion;
     private boolean admin;
-    @Transient
     private String departmentName;
 
 
@@ -54,12 +54,12 @@ public class Worker implements Serializable {
         this.departmentName = departmentName;
     }
 
+    @Column(name = "name", unique = true, length = 45)
     public String getName() {
         return name;
     }
 
     @XmlElement
-    @Column(name = "name",unique = true, length = 45)
     public void setName(String name) {
         if (name == null) {
             throw new IllegalArgumentException("name can't be null");
@@ -78,23 +78,23 @@ public class Worker implements Serializable {
         this.name = name;
     }
 
+    @Column(name = "password", length = 45)
     public String getPassword() {
         return password;
     }
 
     @XmlElement
-    @Column(name = "password", length = 45)
     public void setPassword(String password) {
 
         this.password = password;
     }
 
+    @Column(name = "login", unique = true, length = 45)
     public String getLogin() {
         return login;
     }
 
     @XmlElement
-    @Column(name = "login",unique = true, length = 45)
     public void setLogin(String login) {
         if (login == null) {
             throw new IllegalArgumentException("login can't be null");
@@ -109,15 +109,15 @@ public class Worker implements Serializable {
         this.login = login;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    @Type(type = "long")
     public Long getId() {
         return id;
     }
 
     @XmlElement
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Type(type = "long")
     public void setId(Long id) {
         if (id == null || id < 0) {
             throw new IllegalArgumentException("id can'be null or <0");
@@ -125,12 +125,12 @@ public class Worker implements Serializable {
         this.id = id;
     }
 
+    @Column(name = "objectVersion")
     public int getObjectVersion() {
         return objectVersion;
     }
 
     @XmlElement
-    @Column(name = "objectVersion")
     public void setObjectVersion(int objectVersion) {
         if (objectVersion < 0) {
             throw new IllegalArgumentException("objectVersion can't be  <0");
@@ -138,6 +138,7 @@ public class Worker implements Serializable {
         this.objectVersion = objectVersion;
     }
 
+    @Transient
     public String getDepartmentName() {
         return departmentName;
     }
@@ -147,11 +148,12 @@ public class Worker implements Serializable {
         this.departmentName = departmentName;
     }
 
+    @Column(name = "admin")
     public boolean isAdmin() {
         return admin;
     }
+
     @XmlElement
-    @Column(name = "admin")
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
@@ -194,7 +196,7 @@ public class Worker implements Serializable {
         return result;
     }
 
- /*@Override*/
+    /*@Override*/
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeLong(this.id);
         out.writeUTF(this.name);

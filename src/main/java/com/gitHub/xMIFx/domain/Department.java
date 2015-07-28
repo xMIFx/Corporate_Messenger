@@ -25,7 +25,6 @@ public class Department implements Serializable {
     private Long id;
     private List<Worker> workers;
     private int objectVersion;
-    @Transient
     private int workersCount;
 
     public Department() {
@@ -46,12 +45,12 @@ public class Department implements Serializable {
         this.name = name;
     }
 
+    @Column(name = "name", unique = true, length = 45)
     public String getName() {
         return name;
     }
 
     @XmlElement
-    @Column(name = "name", unique = true, length = 45)
     public void setName(String name) {
         if (name == null) {
             throw new IllegalArgumentException("name can't be null");
@@ -66,14 +65,14 @@ public class Department implements Serializable {
         this.name = name;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     public Long getId() {
         return id;
     }
 
     @XmlElement
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     public void setId(Long id) {
         if (id == null || id < 0) {
             throw new IllegalArgumentException("id can'be null or < 0");
@@ -81,6 +80,12 @@ public class Department implements Serializable {
         this.id = id;
     }
 
+    @Cascade(CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
+    @OneToMany
+    @JoinTable(name = "departmentworkers",
+            joinColumns = {@JoinColumn(name = "iddepartment")},
+            inverseJoinColumns = {@JoinColumn(name = "idworker")})
     public List<Worker> getWorkers() {
         if (this.workers == null) {
             this.workers = new ArrayList<Worker>();
@@ -96,12 +101,12 @@ public class Department implements Serializable {
         }
     }
 
+    @Column(name = "objectVersion")
     public int getObjectVersion() {
         return objectVersion;
     }
 
     @XmlElement
-    @Column(name = "objectVersion")
     public void setObjectVersion(int objectVersion) {
         if (objectVersion < 0) {
             throw new IllegalArgumentException("objectVersion can't be  <0");
@@ -110,17 +115,12 @@ public class Department implements Serializable {
         this.objectVersion = objectVersion;
     }
 
+    @Transient
     public int getWorkersCount() {
         return workersCount;
     }
 
     @XmlElement
-    @Cascade(CascadeType.ALL)
-    @Fetch(FetchMode.JOIN)
-    @OneToMany
-    @JoinTable(name = "departmentworkers",
-            joinColumns = {@JoinColumn(name = "iddepartment")},
-            inverseJoinColumns = {@JoinColumn(name = "idworker")})
     public void setWorkersCount(int workersCount) {
         if (workersCount < 0) {
             throw new IllegalArgumentException("workersCount can't be <0");

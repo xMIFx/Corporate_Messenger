@@ -231,7 +231,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
 
     @Override
     public List<Worker> getByDepartment(Department department) {
-        String getByLoginPasSql = "SELECT \n" +
+        String getByDepSql = "SELECT \n" +
                 "w.id\n" +
                 ", w.name\n" +
                 ", w.login\n" +
@@ -247,7 +247,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
                 "where dep.id  = ?";
         List<Worker> workerList = new ArrayList<>();
         try (Connection con = datasource.getConnection();
-             PreparedStatement st = con.prepareStatement(getByLoginPasSql)) {
+             PreparedStatement st = con.prepareStatement(getByDepSql)) {
             st.setLong(1, department.getId());
             try (ResultSet res = st.executeQuery()) {
                 while (res.next()) {
@@ -325,7 +325,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
 
     @Override
     public List<Worker> findByName(String name) {
-        String getByLoginPasSql = "SELECT \n" +
+        String findByNameSql = "SELECT \n" +
                 "w.id\n" +
                 ", w.name\n" +
                 ", w.login\n" +
@@ -342,7 +342,7 @@ public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
         List<Worker> workerList = new ArrayList<>();
         String searchValue = "%" + name + "%";
         try (Connection con = datasource.getConnection();
-             PreparedStatement st = con.prepareStatement(getByLoginPasSql)) {
+             PreparedStatement st = con.prepareStatement(findByNameSql)) {
             st.setString(1, searchValue);
             try (ResultSet res = st.executeQuery()) {
                 while (res.next()) {
