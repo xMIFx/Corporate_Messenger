@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,16 +15,18 @@ import java.util.Enumeration;
 /**
  * Created by Vlad on 28.07.2015.
  */
+@WebListener
 public class StartDestroyContextListener implements ServletContextListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(StartDestroyContextListener.class.getName());
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-
+        LOGGER.info("context init");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        LOGGER.info("context destroy");
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();

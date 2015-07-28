@@ -66,7 +66,7 @@ public class Department implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     public Long getId() {
         return id;
@@ -80,8 +80,8 @@ public class Department implements Serializable {
         this.id = id;
     }
 
-    @Cascade(CascadeType.ALL)
-    @Fetch(FetchMode.JOIN)
+
+    @Fetch(FetchMode.SELECT)
     @OneToMany
     @JoinTable(name = "departmentworkers",
             joinColumns = {@JoinColumn(name = "iddepartment")},
@@ -97,7 +97,7 @@ public class Department implements Serializable {
     public void setWorkers(List<Worker> workers) {
         if (workers != null) {
             this.workers = workers;
-            this.workersCount = workers.size();
+            this.workersCount = this.workers.size();
         }
     }
 

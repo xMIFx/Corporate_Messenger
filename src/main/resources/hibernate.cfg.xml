@@ -19,6 +19,7 @@
         <property name="hibernate.c3p0.timeout">300</property>
         <property name="hibernate.c3p0.max_statements">0</property>
         <property name="hibernate.c3p0.idle_test_period">3000</property>
+        <property name="hibernate.connection.provider_class">org.hibernate.c3p0.internal.C3P0ConnectionProvider</property>
 
        <!-- <mapping package="com.gitHub.xMIFx.domain" />-->
         <mapping class="com.gitHub.xMIFx.domain.Department"/>
