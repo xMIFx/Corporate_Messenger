@@ -201,12 +201,19 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
         try (Session session = sessionFact.openSession()) {
             try {
                 tx = session.beginTransaction();
-                Query query = session.createSQLQuery(sqlDeleteBindingWorker);
-                query.setParameterList("workersIDParameter", workersID);
-                query.executeUpdate();
-                session.update(department);
+                Department depFromBase = session.load(Department.class, department.getId());
+                if (depFromBase.getObjectVersion() != department.getObjectVersion()) {
+                    itsOk = false;
+                } else {
+                    department.setObjectVersion(department.getObjectVersion()+1);
+                    Query query = session.createSQLQuery(sqlDeleteBindingWorker);
+                    query.setParameterList("workersIDParameter", workersID);
+                    query.executeUpdate();
+                    session.merge(department);
+                    itsOk = true;
+                }
                 tx.commit();
-                itsOk = true;
+
             } catch (Throwable e) {
                 itsOk = false;
                 if (tx != null) {
