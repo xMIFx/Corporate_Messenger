@@ -99,8 +99,8 @@ public class Chat {
         return "Chat{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", workers=" + workers +
-                ", messages=" + messages +
+                ", workers=" + workers.toString() +
+                ", messages=" + messages.toString() +
                 ", isThereSomeMoreMessages=" + isThereSomeMoreMessages +
                 '}';
     }

@@ -23,7 +23,7 @@ public class Message {
         this.id = id;
         this.chatID = chatID;
         this.message = message;
-        this.dateMessage = dateMessage;
+        this.dateMessage = new Date(dateMessage.getTime());;
         this.workersTo = workersTo;
     }
 
@@ -33,7 +33,7 @@ public class Message {
         this.chatID = chatID;
         this.workerFrom = workerFrom;
         this.message = message;
-        this.dateMessage = dateMessage;
+        this.dateMessage = new Date(dateMessage.getTime());;
         this.workersTo = new HashSet<>();
     }
 
@@ -41,7 +41,7 @@ public class Message {
         this.chatID = chatID;
         this.workerFrom = workerFrom;
         this.message = message;
-        this.dateMessage = dateMessage;
+        this.dateMessage = new Date(dateMessage.getTime());;
         this.workersTo = new HashSet<>();
     }
 
@@ -78,11 +78,11 @@ public class Message {
     }
 
     public Date getDateMessage() {
-        return dateMessage;
+        return  new Date(dateMessage.getTime());
     }
 
     public void setDateMessage(Date dateMessage) {
-        this.dateMessage = dateMessage;
+        this.dateMessage = new Date(dateMessage.getTime());
     }
 
     public Set<WorkerTo> getWorkersTo() {
@@ -95,7 +95,7 @@ public class Message {
 
     public void addWorkerTo(Worker worker, boolean isNewMassage, boolean isDeleted) {
 
-        if (worker.getId() != workerFrom.getId()) {
+        if (worker.getId().equals(workerFrom.getId())) {
             workersTo.add(new WorkerTo(worker, isNewMassage, isDeleted));
         }
     }

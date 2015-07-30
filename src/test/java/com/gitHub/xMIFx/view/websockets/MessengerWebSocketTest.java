@@ -6,6 +6,7 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -18,14 +19,13 @@ public class MessengerWebSocketTest {
     @Test
     public void readJsonForChat() {
         String msg = "{\"messages\":[],\"workers\":[{\"id\":1,\"name\":\"From\",\"login\":\"From\"},{\"id\":2,\"name\":\"To\"}]}";
+        int exp = 2;
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Chat chat = objectMapper.readValue(msg, Chat.class);
-            System.out.println(chat);
-            JsonFactory factory = objectMapper.getJsonFactory();
-            JsonParser parser = factory.createJsonParser(msg);
-            JsonNode actualObj = objectMapper.readTree(parser);
-            System.out.println(actualObj);
+            int result = chat.getWorkers().size();
+            assertThat(result, is(exp));
+
         } catch (Throwable e) {
             e.printStackTrace();
         }

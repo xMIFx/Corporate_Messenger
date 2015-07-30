@@ -59,13 +59,8 @@ public class MessengerWebSocket {
     @OnMessage
     public void echoTextMessage(Session session, String msg) {
         LOGGER.info(msg);
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            Chat chat = objectMapper.readValue(msg, Chat.class);
-            LOGGER.info("chat: ", chat);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        sendMessage(session, answerGetter.parseMessageFromJson(msg));
+
 
       /*  parseMessageFromJson(session, msg);*/
 

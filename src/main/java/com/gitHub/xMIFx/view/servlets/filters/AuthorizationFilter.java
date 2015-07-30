@@ -51,7 +51,7 @@ public class AuthorizationFilter implements Filter {
         // don't match cookie and session attribute
         if (cookieFromClient != null
                 && worker != null
-                && (worker.getId() != Long.valueOf(cookieFromClient.getValue()))) {
+                && (worker.getId().equals(Long.valueOf(cookieFromClient.getValue())))) {
             cookieFromClient.setMaxAge(0);
             cookieFromClient.setValue(null);
             resp.addCookie(cookieFromClient);

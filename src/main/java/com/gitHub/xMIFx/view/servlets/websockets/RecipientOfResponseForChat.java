@@ -1,6 +1,8 @@
 package com.gitHub.xMIFx.view.servlets.websockets;
 
+import com.gitHub.xMIFx.domain.Chat;
 import com.gitHub.xMIFx.domain.Department;
+import com.gitHub.xMIFx.domain.Message;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.repositories.realisationForDTO.DepartmentsHolder;
 import com.gitHub.xMIFx.services.implementationServices.ConverterObjectToStringJSON;
@@ -11,13 +13,11 @@ import com.gitHub.xMIFx.services.interfaces.DepartmentService;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import com.gitHub.xMIFx.view.DTOForView.OnlineWorker;
 import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Vlad on 24.07.2015.
@@ -27,15 +27,6 @@ class RecipientOfResponseForChat {
     private static final DepartmentService departmentService = new DepartmentServiceImpl();
     private static final WorkerService workerService = new WorkerServiceImpl();
     private static final ConverterObjectToString CONVERTER_OBJECT_TO_STRING = new ConverterObjectToStringJSON();
-
-    String getAllDepartmentWithWorkers() {
-        String answer = null;
-        List<Department> departmentList = departmentService.getAll();
-        DepartmentsHolder departmentsHolder = new DepartmentsHolder();
-        departmentsHolder.setDepartments(departmentList);
-        answer = CONVERTER_OBJECT_TO_STRING.getMessage(departmentsHolder);
-        return answer;
-    }
 
     String getAnswerAboutOnlineUser(Worker worker, boolean online) {
         OnlineWorker onlineWorker = new OnlineWorker(online, worker);
@@ -55,7 +46,7 @@ class RecipientOfResponseForChat {
         Map<String, DepartmentForView> departmentForViewMap = new HashMap<>();
 
         for (Worker worker : workerList) {
-            if (worker.getId() == currentWorkerID) {
+            if (worker.getId().equals(currentWorkerID)) {
                 continue;
             }
             OnlineWorker onlineWorker = new OnlineWorker();
@@ -84,7 +75,39 @@ class RecipientOfResponseForChat {
         return answer;
     }
 
-    class DepartmentForView {
+    String parseMessageFromJson(String jsonStr) {
+        String answer = null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            if (jsonStr.contains("chatID")) {
+                Message message = objectMapper.readValue(jsonStr, Message.class);
+            } else if (jsonStr.contains("messages")) {
+                Chat chat = objectMapper.readValue(jsonStr, Chat.class);
+                if (chat.getId()!= null){
+                    answer = getAnswerAboutChatByID(chat.getId());
+                }
+                else {
+                    answer = getAnswerAboutChatBetweenTwoWorkers(chat.getWorkers());
+                }
+            }
+            else {
+                /*NOP*/
+            }
+        } catch (Throwable e) {
+            LOGGER.error("error parse json", e);
+        }
+        return answer;
+    }
+
+    private String getAnswerAboutChatBetweenTwoWorkers(Set<Worker> workers) {
+        return null;
+    }
+
+    private String getAnswerAboutChatByID(Long id) {
+        return null;
+    }
+
+    static class DepartmentForView {
         private Department department;
         private int countNewMessages;
         private List<OnlineWorker> workers;
@@ -128,7 +151,7 @@ class RecipientOfResponseForChat {
     }
 
 
-    class HolderForDepartmentView {
+    static class HolderForDepartmentView {
         private List<DepartmentForView> departments;
 
         public HolderForDepartmentView(List<DepartmentForView> departments) {
