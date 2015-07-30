@@ -24,5 +24,7 @@
        <!-- <mapping package="com.gitHub.xMIFx.domain" />-->
         <mapping class="com.gitHub.xMIFx.domain.Department"/>
         <mapping class="com.gitHub.xMIFx.domain.Worker"/>
+        <mapping class="com.gitHub.xMIFx.domain.Chat"/>
+        <mapping class="com.gitHub.xMIFx.domain.Message"/>
     </session-factory>
 </hibernate-configuration>

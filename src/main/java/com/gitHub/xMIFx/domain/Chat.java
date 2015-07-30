@@ -1,12 +1,15 @@
 package com.gitHub.xMIFx.domain;
 
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by Vlad on 26.07.2015.
  */
+@Entity
+@Table(name = "chat")
 public class Chat {
     private Long id;
     private String name;
@@ -26,6 +29,9 @@ public class Chat {
         this.messages = new HashSet<>();
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -34,6 +40,7 @@ public class Chat {
         this.id = id;
     }
 
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -42,6 +49,10 @@ public class Chat {
         this.name = name;
     }
 
+    @ManyToMany
+    @JoinTable(name = "chatworkers",
+            joinColumns = {@JoinColumn(name = "idChat")},
+            inverseJoinColumns = {@JoinColumn(name = "idWorker")})
     public Set<Worker> getWorkers() {
         return workers;
     }
@@ -50,6 +61,9 @@ public class Chat {
         this.workers = workers;
     }
 
+
+    @OneToMany
+    @JoinColumn(name = "idChat")
     public Set<Message> getMessages() {
         return messages;
     }
@@ -58,6 +72,7 @@ public class Chat {
         this.messages = messages;
     }
 
+    @Transient
     public boolean isThereSomeMoreMessages() {
         return isThereSomeMoreMessages;
     }

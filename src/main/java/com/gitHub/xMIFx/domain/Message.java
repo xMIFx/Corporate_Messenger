@@ -1,14 +1,19 @@
 package com.gitHub.xMIFx.domain;
 
+import org.omg.CORBA.LongHolder;
+
+import javax.persistence.*;
 import java.util.*;
 
 /**
  * Created by Vlad on 26.07.2015.
  */
+@Entity
+@Table(name = "message")
 public class Message {
 
-    private int id;
-    private int chatID;
+    private Long id;
+    private Long chatID;
     private Worker workerFrom;
     private String message;
     private Date dateMessage;
@@ -19,48 +24,56 @@ public class Message {
         this.workersTo = new HashSet<>();
     }
 
-    public Message(int id, int chatID, String message, Date dateMessage, Set<WorkerTo> workersTo) {
+    public Message(Long id, Long chatID, String message, Date dateMessage, Set<WorkerTo> workersTo) {
         this.id = id;
         this.chatID = chatID;
         this.message = message;
-        this.dateMessage = new Date(dateMessage.getTime());;
+        this.dateMessage = new Date(dateMessage.getTime());
+        ;
         this.workersTo = workersTo;
     }
 
 
-    public Message(int id, int chatID, Worker workerFrom, String message, Date dateMessage) {
+    public Message(Long id, Long chatID, Worker workerFrom, String message, Date dateMessage) {
         this.id = id;
         this.chatID = chatID;
         this.workerFrom = workerFrom;
         this.message = message;
-        this.dateMessage = new Date(dateMessage.getTime());;
+        this.dateMessage = new Date(dateMessage.getTime());
+        ;
         this.workersTo = new HashSet<>();
     }
 
-    public Message(int chatID, Worker workerFrom, String message, Date dateMessage) {
+    public Message(Long chatID, Worker workerFrom, String message, Date dateMessage) {
         this.chatID = chatID;
         this.workerFrom = workerFrom;
         this.message = message;
-        this.dateMessage = new Date(dateMessage.getTime());;
+        this.dateMessage = new Date(dateMessage.getTime());
+        ;
         this.workersTo = new HashSet<>();
     }
 
-    public int getId() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getChatID() {
+    @Column(name = "idChat")
+    public Long getChatID() {
         return chatID;
     }
 
-    public void setChatID(int chatID) {
+    public void setChatID(Long chatID) {
         this.chatID = chatID;
     }
 
+    @ManyToOne
     public Worker getWorkerFrom() {
         return workerFrom;
     }
@@ -69,6 +82,7 @@ public class Message {
         this.workerFrom = workerFrom;
     }
 
+    @Column(name = "message")
     public String getMessage() {
         return message;
     }
@@ -77,14 +91,21 @@ public class Message {
         this.message = message;
     }
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dateMessage")
     public Date getDateMessage() {
-        return  new Date(dateMessage.getTime());
+        return new Date(dateMessage.getTime());
     }
 
     public void setDateMessage(Date dateMessage) {
         this.dateMessage = new Date(dateMessage.getTime());
     }
 
+    @Transient
+   /* @ManyToMany
+    @JoinTable(name = "messagetoworker",
+            joinColumns = {@JoinColumn(name = "idMessage")},
+            inverseJoinColumns = {@JoinColumn(name = "idWorkerTo")})*/
     public Set<WorkerTo> getWorkersTo() {
         return workersTo;
     }
@@ -107,13 +128,13 @@ public class Message {
 
         Message message = (Message) o;
 
-        return id == message.id;
+        return !(id != null ? !id.equals(message.id) : message.id != null);
 
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override
@@ -127,6 +148,8 @@ public class Message {
                 ", workersTo=" + workersTo +
                 '}';
     }
+
+
 
     private static class WorkerTo {
         private Worker workerTo;
