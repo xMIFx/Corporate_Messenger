@@ -143,12 +143,12 @@ public class DepartmentJsonDAOImpl implements DepartmentDAO {
     }
 
     @Override
-    public List<Long> getForUpdateByWorkers(List<Worker> workerList) {
+    public List<Long> getByWorkers(List<Worker> workerList) {
         return null;
     }
 
     @Override
-    public List<Department> getForUpdateByID(List<Long> listID) {
+    public List<Department> getByListIDs(List<Long> listID) {
         return null;
     }
 

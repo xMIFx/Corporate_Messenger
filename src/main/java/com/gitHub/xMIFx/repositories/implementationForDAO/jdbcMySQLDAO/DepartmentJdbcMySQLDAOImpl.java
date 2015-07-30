@@ -426,7 +426,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
     }
 
     @Override
-    public List<Long> getForUpdateByWorkers(List<Worker> workerList) {
+    public List<Long> getByWorkers(List<Worker> workerList) {
         String getByWorkerSql = "SELECT DISTINCT \n" +
                 "dep.id\n" +
                 " FROM corporate_messenger.departments dep\n" +
@@ -465,7 +465,7 @@ public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
 
 
     @Override
-    public List<Department> getForUpdateByID(List<Long> listID) {
+    public List<Department> getByListIDs(List<Long> listID) {
         String getByIDSql = "SELECT \n" +
                 "dep.id\n" +
                 ", dep.name\n" +

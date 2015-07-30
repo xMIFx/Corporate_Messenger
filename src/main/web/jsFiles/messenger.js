@@ -34,7 +34,7 @@ window.onunload = closeIt;
 // Objects begin
 
 function createChatObject() {
-    this.type = "chat";
+    //this.type = "chat";
     this.id;
     this.name;
     this.messages = [];

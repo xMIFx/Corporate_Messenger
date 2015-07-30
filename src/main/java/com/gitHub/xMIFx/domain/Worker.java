@@ -13,7 +13,7 @@ import java.io.*;
  */
 @XmlRootElement
 @Entity
-@Table(name = "workers" /*, catalog = "corporate_messenger"*/)
+@Table(name = "workers")
 public class Worker implements Serializable {
     private String name;
     private String password;
@@ -36,9 +36,6 @@ public class Worker implements Serializable {
         setName(name);
         setLogin(login);
         setPassword(password);
-        this.name = name;
-        this.password = password;
-        this.login = login;
         this.id = id;
     }
 
@@ -46,22 +43,19 @@ public class Worker implements Serializable {
         setName(name);
         setLogin(login);
         setPassword(password);
-        this.name = name;
-        this.password = password;
-        this.login = login;
         this.id = id;
         this.objectVersion = objectVersion;
         this.departmentName = departmentName;
     }
 
-    @Column(name = "name", unique = true, length = 45)
+    @Column(name = "name", unique = true, nullable = false, length = 45)
     public String getName() {
         return name;
     }
 
     @XmlElement
     public void setName(String name) {
-        if (name == null) {
+      /*  if (name == null) {
             throw new IllegalArgumentException("name can't be null");
         }
         name = name.trim();
@@ -73,12 +67,12 @@ public class Worker implements Serializable {
         }
         if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
             throw new IllegalArgumentException("wrong symbols");
-        }
+        }*/
 
         this.name = name;
     }
 
-    @Column(name = "password", length = 45)
+    @Column(name = "password", nullable = false, length = 45)
     public String getPassword() {
         return password;
     }
@@ -89,14 +83,14 @@ public class Worker implements Serializable {
         this.password = password;
     }
 
-    @Column(name = "login", unique = true, length = 45)
+    @Column(name = "login", nullable = false, unique = true, length = 45)
     public String getLogin() {
         return login;
     }
 
     @XmlElement
     public void setLogin(String login) {
-        if (login == null) {
+       /* if (login == null) {
             throw new IllegalArgumentException("login can't be null");
         }
         login = login.trim();
@@ -105,7 +99,7 @@ public class Worker implements Serializable {
         }
         if (!login.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
             throw new IllegalArgumentException("wrong symbols");
-        }
+        }*/
         this.login = login;
     }
 
@@ -125,6 +119,7 @@ public class Worker implements Serializable {
         this.id = id;
     }
 
+    @Version
     @Column(name = "objectVersion")
     public int getObjectVersion() {
         return objectVersion;

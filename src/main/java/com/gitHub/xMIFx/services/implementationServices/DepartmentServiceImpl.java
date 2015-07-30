@@ -55,14 +55,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<Department> create(Department department) {
         List<Department> listForReturn = null;
-        List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
+        List<Long> departmentsID = departmentDAO.getByWorkers(department.getWorkers());
         if (departmentDAO.save(department) == null) {
 
         } else {
             if (!departmentsID.contains(department.getId())) {
                 departmentsID.add(department.getId());
             } else {/*NOP*/}
-            listForReturn = departmentDAO.getForUpdateByID(departmentsID);
+            listForReturn = departmentDAO.getByListIDs(departmentsID);
         }
 
         return listForReturn;
@@ -71,13 +71,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List update(Department department) {
         List<Department> listForReturn = null;
-        List<Long> departmentsID = departmentDAO.getForUpdateByWorkers(department.getWorkers());
+        List<Long> departmentsID = departmentDAO.getByWorkers(department.getWorkers());
         if (!departmentsID.contains(department.getId())) {
             departmentsID.add(department.getId());
         } else {/*NOP*/}
         if (!departmentDAO.update(department)) {
         } else {
-            listForReturn = departmentDAO.getForUpdateByID(departmentsID);
+            listForReturn = departmentDAO.getByListIDs(departmentsID);
         }
         return listForReturn;
     }

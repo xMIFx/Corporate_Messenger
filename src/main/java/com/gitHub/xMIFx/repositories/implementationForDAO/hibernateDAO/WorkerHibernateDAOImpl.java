@@ -5,10 +5,7 @@ import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO;
 
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.BooleanType;
 import org.hibernate.type.IntegerType;
@@ -307,6 +304,7 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
             try {
                 tx = session.beginTransaction();
                 session.update(worker);
+               // session.replicate(worker, ReplicationMode.LATEST_VERSION);
                 tx.commit();
                 itsOk = true;
             } catch (Throwable e) {

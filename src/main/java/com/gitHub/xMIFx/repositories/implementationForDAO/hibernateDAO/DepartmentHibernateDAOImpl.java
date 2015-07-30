@@ -226,7 +226,7 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     }
 
     @Override
-    public List<Long> getForUpdateByWorkers(List<Worker> workerList) {
+    public List<Long> getByWorkers(List<Worker> workerList) {
         String sqlQuery = "select dep.id from Department dep  " +
                 "join dep.workers as worker " +
                 "where worker.id in (:workersParameter)";
@@ -254,7 +254,7 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     }
 
     @Override
-    public List<Department> getForUpdateByID(List<Long> listID) {
+    public List<Department> getByListIDs(List<Long> listID) {
         List<Department> departmentList = null;
         Transaction tx = null;
         try (Session session = sessionFact.openSession()) {

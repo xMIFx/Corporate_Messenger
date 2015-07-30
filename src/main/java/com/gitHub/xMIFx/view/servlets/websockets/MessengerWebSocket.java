@@ -63,7 +63,7 @@ public class MessengerWebSocket {
         try {
             Chat chat = objectMapper.readValue(msg, Chat.class);
             LOGGER.info("chat: ", chat);
-        } catch (IOException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
 
