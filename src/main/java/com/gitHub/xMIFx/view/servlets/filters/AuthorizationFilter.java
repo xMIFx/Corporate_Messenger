@@ -51,7 +51,7 @@ public class AuthorizationFilter implements Filter {
         // don't match cookie and session attribute
         if (cookieFromClient != null
                 && worker != null
-                && (worker.getId().equals(Long.valueOf(cookieFromClient.getValue())))) {
+                && (!worker.getId().equals(Long.valueOf(cookieFromClient.getValue())))) {
             cookieFromClient.setMaxAge(0);
             cookieFromClient.setValue(null);
             resp.addCookie(cookieFromClient);
@@ -59,8 +59,11 @@ public class AuthorizationFilter implements Filter {
             req.getSession().setAttribute(COOKIE_NAME, worker);
         }
 
+        if (cookieFromClient!=null)
+
         // Session destroyed with attributes, so we need to refresh it
-        if (worker == null && cookieFromClient != null) {
+        if (worker == null && cookieFromClient!= null  ) {
+
             worker = workerService.getByID(Long.valueOf(cookieFromClient.getValue()));
             if (worker == null) {
                 //Clear cookie

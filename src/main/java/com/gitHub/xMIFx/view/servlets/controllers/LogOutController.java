@@ -22,7 +22,6 @@ public class LogOutController extends HttpServlet {
     @Override
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         Cookie userCookie = null;
         Cookie[] cookies = req.getCookies();
         for (Cookie cookie : cookies) {

@@ -1,8 +1,13 @@
 package com.gitHub.xMIFx.domain;
 
-import org.omg.CORBA.LongHolder;
+
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -74,6 +79,7 @@ public class Message {
     }
 
     @ManyToOne
+    @JoinColumn(name = "idWorkerFrom")
     public Worker getWorkerFrom() {
         return workerFrom;
     }
@@ -82,7 +88,8 @@ public class Message {
         this.workerFrom = workerFrom;
     }
 
-    @Column(name = "message")
+    @Lob
+    @Column(name = "message", columnDefinition="MEDIUMTEXT")
     public String getMessage() {
         return message;
     }
@@ -101,11 +108,15 @@ public class Message {
         this.dateMessage = new Date(dateMessage.getTime());
     }
 
-    @Transient
-   /* @ManyToMany
+   /* @Transient*/
+    /*@Embedded*/
+    /*@ManyToMany*/
+    @ElementCollection
+    @Cascade(CascadeType.ALL)
     @JoinTable(name = "messagetoworker",
-            joinColumns = {@JoinColumn(name = "idMessage")},
-            inverseJoinColumns = {@JoinColumn(name = "idWorkerTo")})*/
+            joinColumns = {@JoinColumn(name = "idMessage")}/*,
+            inverseJoinColumns = {@JoinColumn(name = "idWorkerTo")}*/)
+
     public Set<WorkerTo> getWorkersTo() {
         return workersTo;
     }
@@ -150,18 +161,24 @@ public class Message {
     }
 
 
-
-    private static class WorkerTo {
+    @Embeddable
+   // @Entity
+    @Table(name = "messagetoworker")
+    private static class WorkerTo implements Serializable{
         private Worker workerTo;
         private boolean itNewMessage;
         private boolean itDeleted;
+
+        public WorkerTo() {
+        }
 
         public WorkerTo(Worker workerTo, boolean itNewMessage, boolean itDeleted) {
             this.workerTo = workerTo;
             this.itNewMessage = itNewMessage;
             this.itDeleted = itDeleted;
         }
-
+        @ManyToOne
+        @JoinColumn(name = "idWorkerTo")
         public Worker getUserTo() {
             return workerTo;
         }
@@ -170,6 +187,7 @@ public class Message {
             this.workerTo = userTo;
         }
 
+        @Column(name = "newMessage")
         public boolean isItNewMessage() {
             return itNewMessage;
         }
@@ -178,6 +196,7 @@ public class Message {
             this.itNewMessage = itNewMessage;
         }
 
+        @Column(name = "markForDelete")
         public boolean isItDeleted() {
             return itDeleted;
         }
