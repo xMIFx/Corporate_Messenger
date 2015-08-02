@@ -9,7 +9,6 @@ public class OnlineWorker {
 
     private boolean online;
     private Worker worker;
-    private int countNewMessages;
     public OnlineWorker() {
 
     }
@@ -35,11 +34,4 @@ public class OnlineWorker {
         this.worker = worker;
     }
 
-    public int getCountNewMessages() {
-        return countNewMessages;
-    }
-
-    public void setCountNewMessages(int countNewMessages) {
-        this.countNewMessages = countNewMessages;
-    }
 }

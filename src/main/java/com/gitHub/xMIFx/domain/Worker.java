@@ -1,6 +1,7 @@
 package com.gitHub.xMIFx.domain;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -55,17 +56,14 @@ public class Worker implements Serializable {
 
     @XmlElement
     public void setName(String name) {
-      /*  if (name == null) {
+      /*  name = StringUtils.trim(name);
+        if (StringUtils.isEmpty(name)) {
             throw new IllegalArgumentException("name can't be null");
-        }
-        name = name.trim();
-        if (name.equals("")) {
-            throw new IllegalArgumentException("name can't be empty");
         }
         if (name.length() < 3) {
             throw new IllegalArgumentException("name length can't be < 3");
         }
-        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
+        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]{3,45}$*")) {
             throw new IllegalArgumentException("wrong symbols");
         }*/
 
@@ -90,14 +88,11 @@ public class Worker implements Serializable {
 
     @XmlElement
     public void setLogin(String login) {
-       /* if (login == null) {
+        /*login = StringUtils.trim(login);
+        if (StringUtils.isEmpty(login)) {
             throw new IllegalArgumentException("login can't be null");
         }
-        login = login.trim();
-        if (login.equals("")) {
-            throw new IllegalArgumentException("login can't be empty");
-        }
-        if (!login.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
+        if (!login.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]{3,45}$*")) {
             throw new IllegalArgumentException("wrong symbols");
         }*/
         this.login = login;

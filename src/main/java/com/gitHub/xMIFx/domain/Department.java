@@ -1,6 +1,7 @@
 package com.gitHub.xMIFx.domain;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
 
@@ -28,21 +29,12 @@ public class Department implements Serializable {
     private int workersCount;
 
     public Department() {
-
+        this.workers = new ArrayList<>();
     }
 
     public Department(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("name can't be null");
-        }
-        name = name.trim();
-        if (name.equals("")) {
-            throw new IllegalArgumentException("name can't be empty");
-        }
-        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
-            throw new IllegalArgumentException("wrong symbols");
-        }
-        this.name = name;
+        setName(name);
+        this.workers = new ArrayList<>();
     }
 
     @Column(name = "name", unique = true, length = 45)
@@ -52,14 +44,12 @@ public class Department implements Serializable {
 
     @XmlElement
     public void setName(String name) {
-        if (name == null) {
+        //use some library
+        name = StringUtils.trim(name);
+        if (StringUtils.isEmpty(name)) {
             throw new IllegalArgumentException("name can't be null");
         }
-        name = name.trim();
-        if (name.equals("")) {
-            throw new IllegalArgumentException("name can't be empty");
-        }
-        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]*")) {
+        if (!name.matches("^[a-zA-Z]+[A-Za-z0-9\\s\\.]{1,45}$")) {
             throw new IllegalArgumentException("wrong symbols");
         }
         this.name = name;
@@ -87,9 +77,6 @@ public class Department implements Serializable {
             joinColumns = {@JoinColumn(name = "iddepartment")},
             inverseJoinColumns = {@JoinColumn(name = "idworker")})
     public List<Worker> getWorkers() {
-        if (this.workers == null) {
-            this.workers = new ArrayList<Worker>();
-        }
         return workers;
     }
 
@@ -129,20 +116,15 @@ public class Department implements Serializable {
     }
 
     public void addWorker(Worker worker) {
-        if (this.workers == null) {
-            this.workers = new ArrayList<Worker>();
-        }
         this.workers.add(worker);
         this.workersCount = workers.size();
     }
 
     public void removeWorker(Worker worker) {
-        if (this.workers == null || !this.workers.contains(worker)) {/*NOP*/} else {
+        if (this.workers.contains(worker)) {
             this.workers.remove(worker);
             this.workersCount = workers.size();
         }
-
-
     }
 
     @Override

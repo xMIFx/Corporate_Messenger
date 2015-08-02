@@ -25,6 +25,7 @@
         <websocket.version>1.1</websocket.version>
         <aspectj.version>1.8.5</aspectj.version>
         <hibernate.version>5.0.0.CR2</hibernate.version>
+        <apacheLang3.version>3.0</apacheLang3.version>
 
     </properties>
     <build>
@@ -171,5 +172,11 @@
             <artifactId>hibernate-c3p0</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apacheLang3.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

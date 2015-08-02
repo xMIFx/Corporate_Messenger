@@ -1,0 +1,26 @@
+package com.gitHub.xMIFx.repositories.interfacesForDAO;
+
+import com.gitHub.xMIFx.domain.Chat;
+import com.gitHub.xMIFx.domain.Message;
+import com.gitHub.xMIFx.domain.Worker;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by Vlad on 31.07.2015.
+ */
+public interface ChatDAO {
+
+    Long saveNewChat(Chat chat);
+    Chat getChatByID(Long chatID, Worker worker);
+    List<Worker> getWorkersFromChat(Long chatID);
+    Chat getChatBetweenWorkers(Worker workerFrom, Worker workerTo);
+    List<Chat> getLastChatsByWorkerID(Long id);
+    List<Chat> getAllBigChatsByWorker(Worker worker);
+    Chat getMoreMessagesInChat(Long chatID, int countMessageAlreadyInChat, Date minDateInChat, int howMuchNeed, Worker worker);
+    Long saveMessage(Message mes);
+    Map<Chat,Integer> getCountNewMassagesForWorker(Worker worker);
+
+}

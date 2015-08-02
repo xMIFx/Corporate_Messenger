@@ -59,20 +59,12 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     @Override
     public Department getById(Long id) {
         Department dep = null;
-        Transaction tx = null;
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                dep = (Department) session.createCriteria(Department.class)
-                        .add(Restrictions.like("id", id))
-                        .uniqueResult();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            dep = (Department) session.createCriteria(Department.class)
+                    .add(Restrictions.eq("id", id))
+                    .uniqueResult();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         return dep;
     }
@@ -80,20 +72,13 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     @Override
     public Department getByName(String name) {
         Department dep = null;
-        Transaction tx = null;
+
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                dep = (Department) session.createCriteria(Department.class)
-                        .add(Restrictions.like("name", name))
-                        .uniqueResult();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            dep = (Department) session.createCriteria(Department.class)
+                    .add(Restrictions.eq("name", name))
+                    .uniqueResult();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         return dep;
     }
@@ -101,21 +86,14 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     @Override
     public Department getByWorker(Worker worker) {
         Department department = null;
-        Transaction tx = null;
+
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                department = (Department) session.createCriteria(Department.class)
-                        .createAlias("workers", "workers", JoinType.LEFT_OUTER_JOIN)
-                        .add(Restrictions.ge("id", worker.getId()))
-                        .uniqueResult();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            department = (Department) session.createCriteria(Department.class)
+                    .createAlias("workers", "workers", JoinType.LEFT_OUTER_JOIN)
+                    .add(Restrictions.eq("id", worker.getId()))
+                    .uniqueResult();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         return department;
     }
@@ -123,18 +101,12 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     @Override
     public List<Department> getAll() {
         List<Department> departmentList = null;
-        Transaction tx = null;
+
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                departmentList = (List<Department>) session.createCriteria(Department.class).list();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            departmentList = (List<Department>) session.createCriteria(Department.class).list();
+
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         if (departmentList == null) {
             departmentList = new ArrayList<>();
@@ -146,18 +118,11 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     @Override
     public List<Department> getAllWithoutWorkers() {
         List<Department> departmentList = null;
-        Transaction tx = null;
-        try (Session session = sessionFact.openSession();) {
-            try {
-                tx = session.beginTransaction();
-                departmentList = (List<Department>) session.createCriteria(Department.class).list();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+
+        try (Session session = sessionFact.openSession()) {
+            departmentList = (List<Department>) session.createCriteria(Department.class).list();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         if (departmentList == null) {
             departmentList = new ArrayList<>();
@@ -167,9 +132,9 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
 
     @Override
     public boolean remove(Department department) {
-        boolean itsOk = true;
+
         if (department.getId() == null) {
-            itsOk = false;
+            return false;
         }
         Transaction tx = null;
         try (Session session = sessionFact.openSession()) {
@@ -177,23 +142,23 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
                 tx = session.beginTransaction();
                 session.delete(department);
                 tx.commit();
-                itsOk = true;
+
             } catch (Throwable e) {
-                itsOk = false;
                 if (tx != null) {
                     tx.rollback();
                 }
                 LOGGER.error("Some SQL exception", e);
+                return false;
             }
         }
-        return itsOk;
+        return true;
     }
 
     @Override
     public boolean update(Department department) {
-        boolean itsOk = true;
+
         if (department.getId() == null) {
-            itsOk = false;
+            return false;
         }
         String sqlDeleteBindingWorker = "DELETE FROM corporate_messenger.departmentworkers WHERE idworker IN (:workersIDParameter);";
         List<Long> workersID = department.getWorkers().stream().map(Worker::getId).collect(Collectors.toList());
@@ -203,48 +168,42 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
                 tx = session.beginTransaction();
                 Department depFromBase = session.load(Department.class, department.getId());
                 if (depFromBase.getObjectVersion() != department.getObjectVersion()) {
-                    itsOk = false;
+                    return false;
                 } else {
-                    department.setObjectVersion(department.getObjectVersion()+1);
+                    department.setObjectVersion(department.getObjectVersion() + 1);
                     Query query = session.createSQLQuery(sqlDeleteBindingWorker);
                     query.setParameterList("workersIDParameter", workersID);
                     query.executeUpdate();
                     session.merge(department);
-                    itsOk = true;
                 }
                 tx.commit();
 
             } catch (Throwable e) {
-                itsOk = false;
+
                 if (tx != null) {
                     tx.rollback();
                 }
                 LOGGER.error("Some SQL exception", e);
+                return false;
             }
         }
-        return itsOk;
+        return true;
     }
 
     @Override
     public List<Long> getByWorkers(List<Worker> workerList) {
-        String sqlQuery = "select dep.id from Department dep  " +
+        String hqlQuery = "select dep.id from Department dep  " +
                 "join dep.workers as worker " +
                 "where worker.id in (:workersParameter)";
 
         List<Long> workersId = workerList.stream().map(Worker::getId).collect(Collectors.toList());
         List<Long> departmentsID = null;
-        Transaction tx = null;
+
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                departmentsID = (List<Long>) session.createQuery(sqlQuery).setParameterList("workersParameter", workersId).list();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            departmentsID = (List<Long>) session.createQuery(hqlQuery)
+                    .setParameterList("workersParameter", workersId).list();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         if (departmentsID == null) {
             departmentsID = new ArrayList<>();
@@ -256,20 +215,13 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     @Override
     public List<Department> getByListIDs(List<Long> listID) {
         List<Department> departmentList = null;
-        Transaction tx = null;
+
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                departmentList = session.createCriteria(Department.class)
-                        .add(Restrictions.in("id", listID))
-                        .list();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            departmentList = session.createCriteria(Department.class)
+                    .add(Restrictions.in("id", listID))
+                    .list();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         if (departmentList == null) {
             departmentList = new ArrayList<>();
@@ -282,20 +234,13 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
 
         String searchValue = "%" + name + "%";
         List<Department> departmentList = null;
-        Transaction tx = null;
+
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                departmentList = session.createCriteria(Department.class)
-                        .add(Restrictions.like("name", searchValue))
-                        .list();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            departmentList = session.createCriteria(Department.class)
+                    .add(Restrictions.like("name", searchValue))
+                    .list();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         if (departmentList == null) {
             departmentList = new ArrayList<>();

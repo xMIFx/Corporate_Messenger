@@ -15,7 +15,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "message")
-public class Message {
+public class Message  implements Serializable{
 
     private Long id;
     private Long chatID;
@@ -23,21 +23,12 @@ public class Message {
     private String message;
     private Date dateMessage;
     private Set<WorkerTo> workersTo;
+    private String uuidFromBrowser;
 
 
     public Message() {
         this.workersTo = new HashSet<>();
     }
-
-    public Message(Long id, Long chatID, String message, Date dateMessage, Set<WorkerTo> workersTo) {
-        this.id = id;
-        this.chatID = chatID;
-        this.message = message;
-        this.dateMessage = new Date(dateMessage.getTime());
-        ;
-        this.workersTo = workersTo;
-    }
-
 
     public Message(Long id, Long chatID, Worker workerFrom, String message, Date dateMessage) {
         this.id = id;
@@ -45,7 +36,6 @@ public class Message {
         this.workerFrom = workerFrom;
         this.message = message;
         this.dateMessage = new Date(dateMessage.getTime());
-        ;
         this.workersTo = new HashSet<>();
     }
 
@@ -54,13 +44,12 @@ public class Message {
         this.workerFrom = workerFrom;
         this.message = message;
         this.dateMessage = new Date(dateMessage.getTime());
-        ;
         this.workersTo = new HashSet<>();
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "idMessage")
     public Long getId() {
         return id;
     }
@@ -111,11 +100,10 @@ public class Message {
    /* @Transient*/
     /*@Embedded*/
     /*@ManyToMany*/
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)
     @JoinTable(name = "messagetoworker",
-            joinColumns = {@JoinColumn(name = "idMessage")}/*,
-            inverseJoinColumns = {@JoinColumn(name = "idWorkerTo")}*/)
+            joinColumns = {@JoinColumn(name = "idMessage")})
 
     public Set<WorkerTo> getWorkersTo() {
         return workersTo;
@@ -127,9 +115,27 @@ public class Message {
 
     public void addWorkerTo(Worker worker, boolean isNewMassage, boolean isDeleted) {
 
-        if (worker.getId().equals(workerFrom.getId())) {
+        if (!worker.getId().equals(workerFrom.getId())) {
             workersTo.add(new WorkerTo(worker, isNewMassage, isDeleted));
         }
+    }
+
+
+    @Column(name = "UUIDFromBrowser", nullable = false, length = 36)
+    public String getUuidFromBrowser() {
+        return uuidFromBrowser;
+    }
+
+    public void setUuidFromBrowser(String uuidFromBrowser) {
+        this.uuidFromBrowser = uuidFromBrowser;
+    }
+
+    public List<Worker> takeWorkerForMessage(){
+        List<Worker> workerList = new ArrayList<>();
+        for (WorkerTo workerTo: workersTo){
+            workerList.add(workerTo.getWorkerTo());
+        }
+        return workerList;
     }
 
     @Override
@@ -162,7 +168,6 @@ public class Message {
 
 
     @Embeddable
-   // @Entity
     @Table(name = "messagetoworker")
     private static class WorkerTo implements Serializable{
         private Worker workerTo;
@@ -179,12 +184,12 @@ public class Message {
         }
         @ManyToOne
         @JoinColumn(name = "idWorkerTo")
-        public Worker getUserTo() {
+        public Worker getWorkerTo() {
             return workerTo;
         }
 
-        public void setUserTo(Worker userTo) {
-            this.workerTo = userTo;
+        public void setWorkerTo(Worker workerTo) {
+            this.workerTo = workerTo;
         }
 
         @Column(name = "newMessage")

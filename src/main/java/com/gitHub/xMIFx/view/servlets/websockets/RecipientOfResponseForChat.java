@@ -5,13 +5,16 @@ import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Message;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.repositories.realisationForDTO.DepartmentsHolder;
+import com.gitHub.xMIFx.services.implementationServices.ChatServiceImpl;
 import com.gitHub.xMIFx.services.implementationServices.ConverterObjectToStringJSON;
 import com.gitHub.xMIFx.services.implementationServices.DepartmentServiceImpl;
 import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
+import com.gitHub.xMIFx.services.interfaces.ChatService;
 import com.gitHub.xMIFx.services.interfaces.ConverterObjectToString;
 import com.gitHub.xMIFx.services.interfaces.DepartmentService;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import com.gitHub.xMIFx.view.DTOForView.OnlineWorker;
+import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
 import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -24,7 +27,7 @@ import java.util.*;
  */
 class RecipientOfResponseForChat {
     private static final Logger LOGGER = LoggerFactory.getLogger(RecipientOfResponseForChat.class.getName());
-    private static final DepartmentService departmentService = new DepartmentServiceImpl();
+    private static final ChatService chatService = new ChatServiceImpl();
     private static final WorkerService workerService = new WorkerServiceImpl();
     private static final ConverterObjectToString CONVERTER_OBJECT_TO_STRING = new ConverterObjectToStringJSON();
 
@@ -56,7 +59,6 @@ class RecipientOfResponseForChat {
             } else {
                 onlineWorker.setOnline(false);
             }
-            onlineWorker.setCountNewMessages(1);
             DepartmentForView departmentForView;
             if (departmentForViewMap.containsKey(worker.getDepartmentName())) {
                 departmentForView = departmentForViewMap.get(worker.getDepartmentName());
@@ -65,7 +67,6 @@ class RecipientOfResponseForChat {
                 departmentForView = new DepartmentForView(new Department(worker.getDepartmentName()));
                 departmentForViewMap.put(worker.getDepartmentName(), departmentForView);
             }
-            departmentForView.addNewMessages(onlineWorker.getCountNewMessages());
             departmentForView.addWorker(onlineWorker);
         }
         List<DepartmentForView> departments = new ArrayList<>();
@@ -75,41 +76,60 @@ class RecipientOfResponseForChat {
         return answer;
     }
 
-    String parseMessageFromJson(String jsonStr) {
+    String getInformationAboutNewMessages(Long currentWorkerID) {
+        Worker currentWorker = new Worker();
+        currentWorker.setId(currentWorkerID);
+        Map<Chat, Integer> countNewMassagesForWorker = chatService.getCountNewMassagesForWorker(currentWorker);
+        List<ChatForView> listChatsForView = new ArrayList<>();
+        for (Map.Entry<Chat, Integer> pair : countNewMassagesForWorker.entrySet()) {
+            listChatsForView.add(new ChatForView(pair.getKey(), pair.getValue()));
+        }
+        String answer = CONVERTER_OBJECT_TO_STRING.getMessage(new HolderForChatView(listChatsForView));
+        return answer;
+    }
+
+
+    String getAnswerAboutNewMessage(Message message) {
         String answer = null;
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            if (jsonStr.contains("chatID")) {
-                Message message = objectMapper.readValue(jsonStr, Message.class);
-            } else if (jsonStr.contains("messages")) {
-                Chat chat = objectMapper.readValue(jsonStr, Chat.class);
-                if (chat.getId()!= null){
-                    answer = getAnswerAboutChatByID(chat.getId());
-                }
-                else {
-                    answer = getAnswerAboutChatBetweenTwoWorkers(chat.getWorkers());
-                }
-            }
-            else {
-                /*NOP*/
-            }
-        } catch (Throwable e) {
-            LOGGER.error("error parse json", e);
+        Long id = chatService.saveMessage(message);
+        if (id != null) {
+            message.setId(id);
+            answer = CONVERTER_OBJECT_TO_STRING.getMessage(message);
         }
         return answer;
     }
 
-    private String getAnswerAboutChatBetweenTwoWorkers(Set<Worker> workers) {
+    String getAnswerAboutChatBetweenTwoWorkers(Set<Worker> workers) {
+        Worker workerFrom = null;
+        Worker workerTo = null;
+        for (Worker worker : workers) {
+            if (workerFrom == null) {
+                workerFrom = worker;
+            } else {
+
+                workerTo = worker;
+            }
+        }
+        String answer = null;
+        Chat chatForReturn = chatService.getChatBetweenWorkers(workerFrom, workerTo);
+        if (chatForReturn == null) {
+            ExceptionForView exceptionForView = new ExceptionForView();
+            exceptionForView.setExceptionMessage("Error when getting chat. Try later.");
+            answer = CONVERTER_OBJECT_TO_STRING.getMessage(exceptionForView);
+        } else {
+            answer = CONVERTER_OBJECT_TO_STRING.getMessage(chatForReturn);
+        }
+
+        return answer;
+    }
+
+
+    String getAnswerAboutChatByID(Long id) {
         return null;
     }
 
-    private String getAnswerAboutChatByID(Long id) {
-        return null;
-    }
-
-    static class DepartmentForView {
+    static final class DepartmentForView {
         private Department department;
-        private int countNewMessages;
         private List<OnlineWorker> workers;
 
         public DepartmentForView(Department department) {
@@ -136,22 +156,9 @@ class RecipientOfResponseForChat {
         public void addWorker(OnlineWorker worker) {
             this.workers.add(worker);
         }
-
-        public int getCountNewMessages() {
-            return countNewMessages;
-        }
-
-        public void setCountNewMessages(int countNewMessages) {
-            this.countNewMessages = countNewMessages;
-        }
-
-        public void addNewMessages(int countNewMessages) {
-            this.countNewMessages = this.countNewMessages + countNewMessages;
-        }
     }
 
-
-    static class HolderForDepartmentView {
+    static final class HolderForDepartmentView {
         private List<DepartmentForView> departments;
 
         public HolderForDepartmentView(List<DepartmentForView> departments) {
@@ -162,4 +169,55 @@ class RecipientOfResponseForChat {
             return departments;
         }
     }
+
+    static final class HolderForChatView {
+        List<ChatForView> chatsNewMessages;
+
+        public HolderForChatView() {
+        }
+
+        public HolderForChatView(List<ChatForView> chatsNewMessages) {
+            this.chatsNewMessages = chatsNewMessages;
+        }
+
+        public List<ChatForView> getChatsNewMessages() {
+            return chatsNewMessages;
+        }
+
+        public void setChatsNewMessages(List<ChatForView> chatsNewMessages) {
+            this.chatsNewMessages = chatsNewMessages;
+        }
+    }
+
+    static final class ChatForView {
+        Chat chat;
+        Integer countNewMess;
+
+        public ChatForView() {
+        }
+
+        public ChatForView(Chat chat, Integer countNewMess) {
+            this.chat = chat;
+            this.countNewMess = countNewMess;
+        }
+
+        public Chat getChat() {
+            return chat;
+        }
+
+        public void setChat(Chat chat) {
+            this.chat = chat;
+        }
+
+        public Integer getCountNewMess() {
+            return countNewMess;
+        }
+
+        public void setCountNewMess(Integer countNewMess) {
+            this.countNewMess = countNewMess;
+        }
+    }
+
+
+
 }

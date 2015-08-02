@@ -1,9 +1,8 @@
 package com.gitHub.xMIFx.view.servlets.websockets;
 
 import com.gitHub.xMIFx.domain.Chat;
+import com.gitHub.xMIFx.domain.Message;
 import com.gitHub.xMIFx.domain.Worker;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +10,6 @@ import org.slf4j.LoggerFactory;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,9 +33,10 @@ public class MessengerWebSocket {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("WebSocket is open");
         }
-        //need remove current worker. later
-        sendMessage(session, answerGetter.getFirstMessage((Long) config.getUserProperties().get(COOKIE_FOR_WEBSOCKET)));
-       /* sendMessageAboutCountNewMessages(session);*/
+
+        sendMessageTo(session, answerGetter.getFirstMessage((Long) config.getUserProperties().get(COOKIE_FOR_WEBSOCKET)));
+        sendMessageTo(session, answerGetter.getInformationAboutNewMessages((Long) config.getUserProperties().get(COOKIE_FOR_WEBSOCKET)));
+
     }
 
     @OnClose
@@ -59,30 +56,24 @@ public class MessengerWebSocket {
     @OnMessage
     public void echoTextMessage(Session session, String msg) {
         LOGGER.info(msg);
-        sendMessage(session, answerGetter.parseMessageFromJson(msg));
-
-
-      /*  parseMessageFromJson(session, msg);*/
+        parseMessageFromJson(session, msg);
 
     }
 
-    public void sendMessage(Session session, String jsonStr) {
+    public void sendMessageTo(Session session, String jsonStr) {
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Send json to websocket:  " + jsonStr);
         }
         try {
-            for (Map.Entry<Long, Session> pair : usersWebSocketSession.entrySet()) {
-                pair.getValue().getBasicRemote().sendText(jsonStr);
-            }
+            session.getBasicRemote().sendText(jsonStr);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void createSendMessageAboutOnline(Worker worker, boolean online) {
-        String json = null;
-        json = answerGetter.getAnswerAboutOnlineUser(worker, online);
+        String json = answerGetter.getAnswerAboutOnlineUser(worker, online);
         for (Map.Entry<Long, Session> pair : usersWebSocketSession.entrySet()) {
             try {
                 pair.getValue().getBasicRemote().sendText(json);
@@ -91,6 +82,40 @@ public class MessengerWebSocket {
             }
         }
 
+    }
+
+    void parseMessageFromJson(Session session, String jsonStr) {
+        String answer = null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            if (jsonStr.contains("chatID")) {
+                Message message = objectMapper.readValue(jsonStr, Message.class);
+                answer = answerGetter.getAnswerAboutNewMessage(message);
+                if (answer == null) {
+                    answer = jsonStr;
+                } else {
+                    for (Worker worker : message.takeWorkerForMessage()) {
+                        if (usersWebSocketSession.containsKey(worker.getId())) {
+                            sendMessageTo(usersWebSocketSession.get(worker.getId()), answer);
+                        }
+
+                    }
+
+                }
+            } else if (jsonStr.contains("messages")) {
+                Chat chat = objectMapper.readValue(jsonStr, Chat.class);
+                if (chat.getId() != null) {
+                    answer = answerGetter.getAnswerAboutChatByID(chat.getId());
+                } else {
+                    answer = answerGetter.getAnswerAboutChatBetweenTwoWorkers(chat.getWorkers());
+                }
+            } else {
+                /*NOP*/
+            }
+        } catch (Throwable e) {
+            LOGGER.error("error parse json", e);
+        }
+        sendMessageTo(session, answer);
     }
 
 }

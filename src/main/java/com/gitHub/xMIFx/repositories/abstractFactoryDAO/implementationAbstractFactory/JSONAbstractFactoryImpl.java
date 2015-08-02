@@ -3,6 +3,7 @@ package com.gitHub.xMIFx.repositories.abstractFactoryDAO.implementationAbstractF
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.AbstractFactoryForDAO;
 import com.gitHub.xMIFx.repositories.implementationForDAO.jsonDAO.DepartmentJsonDAOImpl;
 import com.gitHub.xMIFx.repositories.implementationForDAO.jsonDAO.WorkerJsonDAOImpl;
+import com.gitHub.xMIFx.repositories.interfacesForDAO.ChatDAO;
 import com.gitHub.xMIFx.repositories.interfacesForDAO.DepartmentDAO;
 import com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO;
 
@@ -18,5 +19,10 @@ public class JSONAbstractFactoryImpl implements AbstractFactoryForDAO {
     @Override
     public DepartmentDAO getDepartmentDAOImpl() {
         return new DepartmentJsonDAOImpl();
+    }
+
+    @Override
+    public ChatDAO getChatDAOImpl() {
+        return null;
     }
 }

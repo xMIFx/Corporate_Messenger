@@ -12,9 +12,30 @@ var informationAboutMessagesInChat = {
     howMuchScrollWas: 0,
     minDateInChat: new Date()
 }
+var UUIDGenerator = createUUID();
 var currentChat;
 var cookieValueWorker = getCookie('worker');
 var wsUri = "ws://" + document.location.host + document.location.pathname + "/chat";
+
+
+function createUUID() {
+    var self = {};
+    var lut = [];
+    for (var i = 0; i < 256; i++) {
+        lut[i] = (i < 16 ? '0' : '') + (i).toString(16);
+    }
+    self.generate = function () {
+        var d0 = Math.random() * 0xffffffff | 0;
+        var d1 = Math.random() * 0xffffffff | 0;
+        var d2 = Math.random() * 0xffffffff | 0;
+        var d3 = Math.random() * 0xffffffff | 0;
+        return lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff] + '-' +
+            lut[d1 & 0xff] + lut[d1 >> 8 & 0xff] + '-' + lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] + '-' +
+            lut[d2 & 0x3f | 0x80] + lut[d2 >> 8 & 0xff] + '-' + lut[d2 >> 16 & 0xff] + lut[d2 >> 24 & 0xff] +
+            lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
+    }
+    return self;
+}
 
 websocket = new WebSocket(wsUri);
 websocket.onopen = function (evt) {
@@ -41,7 +62,7 @@ function createChatObject() {
     this.workers = [];
 
     this.setId = function (chatID) {
-        this.id = id;
+        this.id = chatID;
     }
     this.getID = function () {
         return this.id;
@@ -69,9 +90,31 @@ function createChatObject() {
     this.getMessages = function () {
         return this.messages;
     }
+
     this.addWorker = function (worker) {
         this.workers.push(worker);
     }
+    this.getWorkers = function () {
+        return this.workers;
+    }
+}
+
+function createChatObjectFromJson(chatJson) {
+    var chat = new createChatObject();
+    chat.setId(chatJson.id);
+    chat.setName(chatJson.name);
+    for (var i = 0; i < chatJson.workers.length; i++) {
+        if (chatJson.workers.length = 2) {
+            if (chatJson.workers[i].id !== cookieValueWorker) {
+                chat.setName(chatJson.workers[i].name);
+            }
+        }
+        chat.addWorker(createWorkerFromJson(chatJson.workers[i]));
+    }
+    for (var j = 0; j < chatJson.messages.length; j++) {
+        chat.addMessage(createMessageObjectFromJson(chatJson.messages[j]));
+    }
+    return chat;
 }
 
 function createWorkerObject() {
@@ -99,8 +142,16 @@ function createWorkerObject() {
     }
 }
 
-function createWorkerToObject(workerTo, itNewMessage, itDeleted) {
-    this.workerTo = workerTo;
+function createWorkerFromJson(workerJson) {
+    var worker = new createWorkerObject();
+    worker.setID(workerJson.id);
+    worker.setName(workerJson.name);
+    worker.setLogin(workerJson.login);
+    return worker;
+}
+
+function createWorkerToObject(worker, itNewMessage, itDeleted) {
+    this.workerTo = worker;
     this.itNewMessage = itNewMessage;
     this.itDeleted = itDeleted;
 }
@@ -111,6 +162,7 @@ function createMessageObject() {
     this.workerFrom;
     this.message;
     this.dateMessage;
+    this.uuidFromBrowser;
     this.workersTo = [];
 
     this.setID = function (id) {
@@ -140,21 +192,69 @@ function createMessageObject() {
     this.getMessage = function () {
         return this.message;
     }
+
     this.setDateMessage = function (dateMessage) {
         this.dateMessage = dateMessage;
     }
     this.getDateMessage = function () {
         return this.dateMessage;
     }
-    this.addWorkersTo = function (worker) {
-        this.workersTo.push(new createWorkerToObject(worker, true, false));
-    }
-    this.addWorkersTo = function (worker, itNewMessage, itDeleted) {
-        this.workersTo.push(new createWorkerToObject(worker, itNewMessage, itDeleted));
+
+    this.addWorkersTo = function (workerTo) {
+        this.workersTo.push(workerTo);
     }
     this.getWorkersTo = function () {
         return this.workersTo;
     }
+
+    this.setUuidFromBrowser = function (UUIDFromBrowser) {
+        this.uuidFromBrowser = UUIDFromBrowser;
+    }
+    this.generateUuidFromBrowser = function () {
+        this.uuidFromBrowser = UUIDGenerator.generate();
+    }
+    this.getUuidFromBrowser = function () {
+        return this.uuidFromBrowser;
+    }
+
+    this.isItNewMessage = function () {
+        var itIsNew = false;
+        for (var i = 0; i < this.workersTo.length; i++) {
+            if (this.workersTo[i].itNewMessage) {
+                itIsNew = true;
+                break;
+            }
+        }
+        return itIsNew;
+    }
+    this.getWorkersWhichDontRead = function () {
+        var workers = [];
+        for (var i = 0; i < this.workersTo.length; i++) {
+            if (this.workersTo[i].itNewMessage
+                && this.workersTo[i].workerTo.getID() != cookieValueWorker) {
+                workers.push(this.workersTo[i].workerTo);
+            }
+        }
+        return workers;
+    }
+
+}
+
+function createMessageObjectFromJson(messageJson) {
+    var message = new createMessageObject();
+    message.setID(messageJson.id);
+    message.setChatID(messageJson.chatID);
+    message.setMessage(messageJson.message);
+    message.setWorkerFrom(createWorkerFromJson(messageJson.workerFrom));
+    message.setDateMessage(new Date(messageJson.dateMessage));
+    message.setUuidFromBrowser(messageJson.UUUIDFromBrowser);
+    for (var i = 0; i < messageJson.workersTo.length; i++) {
+        var worker = createWorkerFromJson(messageJson.workersTo[i].workerTo);
+        var workerTo = new createWorkerToObject(worker, messageJson.workersTo[i].itNewMessage, messageJson.workersTo[i].itDeleted);
+        message.addWorkersTo(workerTo);
+    }
+
+    return message;
 }
 
 //Object the end
@@ -216,13 +316,30 @@ function writeToScreen(message) {
 }
 
 function parseJsonStr(str) {
+    if (output === undefined) {
+        setOutput();
+    }
     var json = JSON.parse(str);
     console.log(json);
     if (json.departments !== undefined) {
         fillAllDepartments(json.departments);
     }
+    else if (json.chatsNewMessages !== undefined) {
+        setNewMessagesForChats(json.chatsNewMessages);
+    }
     else if (json.online !== undefined) {
         changeOnlineStatus(json);
+    }
+    else if (json.messages !== undefined) {
+        var chat = createChatObjectFromJson(json);
+        changeChat(chat);
+    }
+    else if(json.uuidFromBrowser !== undefined){
+        var message = createMessageObjectFromJson(json);
+        writeMessageToScreen(message);
+        if(cookieValueWorker!=message.getWorkerFrom().getID()){
+            addNewMessage();
+        }
     }
 }
 
@@ -236,8 +353,6 @@ function fillAllDepartments(departments) {
         newGroup.classList.remove("CloneClass");
         newGroup.id = "departmentId_" + (i + 1);
         newGroup.getElementsByClassName("gr")[0].innerHTML = departments[i].department.name;
-        newGroup.getElementsByClassName("MessageCount")[0].innerHTML = departments[i].countNewMessages;
-
 
         var workers = departments[i].workers;
         var ulForAppend = newGroup.getElementsByTagName("ul")[0];
@@ -247,7 +362,7 @@ function fillAllDepartments(departments) {
             newWorker.classList.remove("CloneClass");
             newWorker.id = "worker_" + workers[j].worker.id;
             newWorker.getElementsByClassName("workerFromDepartment")[0].innerHTML = "<span></span>" + workers[j].worker.name;
-            newWorker.getElementsByClassName("MessageCount")[0].innerHTML = workers[j].countNewMessages;
+
             if (workers[j].online) {
                 if (newWorker.classList.contains("offline")) {
                     newWorker.classList.remove("offline");
@@ -270,6 +385,42 @@ function fillAllDepartments(departments) {
 
         }
         parentForAdding.appendChild(newGroup);
+    }
+}
+
+function setNewMessagesForChats(chatsMap) {
+    for (var i = 0; i < chatsMap.length; i++) {
+        var idForChange = 'chat_' + chatsMap[i].chat.id;
+        if (document.getElementById(idForChange) == null) {
+            idForChange = 'worker_' + chatsMap[i].chat.workers[0].id;
+        }
+        writeToScreenAboutCountNewMess(idForChange, parseInt(chatsMap[i].countNewMess));
+    }
+}
+
+function writeToScreenAboutCountNewMess(idForWrite, countNewMes) {
+    if (document.getElementById(idForWrite) != null) {
+        var elements = document.getElementById(idForWrite).childNodes, el, i = 0;
+        while (el = elements[i++]) {
+            if (el.classList === undefined) {
+                continue;
+            }
+            if (el.classList.contains("MessageCount")) {
+                el.innerHTML = (el.innerHTML === undefined || el.innerHTML == null || el.innerHTML == '') ? countNewMes : parseInt(el.innerHTML, 10) + countNewMes;
+                break;
+            }
+        }
+        var parentsBrothers = document.getElementById(idForWrite).parentNode.parentNode.childNodes, element, j = 0;
+        while (element = parentsBrothers[j++]) {
+            if (element.classList === undefined) {
+                continue;
+            }
+            if (element.classList.contains("MessageCount")) {
+                element.innerHTML = (element.innerHTML === undefined || element.innerHTML == null || element.innerHTML == '') ? countNewMes : parseInt(element.innerHTML, 10) + countNewMes;
+                break;
+            }
+
+        }
     }
 }
 
@@ -319,4 +470,196 @@ function functionChangingChat(idUserTo) {
     chat.addWorker(workerTo);
     doSend(JSON.stringify(chat));
 
+}
+
+function changeChat(chat) {
+    currentChat = chat;
+    informationAboutMessagesInChat.thereAreAnyMessages = chat.thereSomeMoreMessages;
+    var itsPreviousMessage = false;
+    var messages = chat.getMessages();
+    if (output.id != 'usersChat_' + chat.getID()) {
+        removeChildrenRecursively(output);
+        removeChildrenRecursively(document.getElementById('information_about_chat'));
+        output.id = 'usersChat_' + chat.getID();
+        setInformationAboutChat(chat.getWorkers());
+        messages.sort(function (a, b) {
+            return a.dateMessage.getTime() - b.dateMessage.getTime();
+        });
+    }
+    else {
+        messages.sort(function (a, b) {
+            return b.dateMessage.getTime() - a.dateMessage.getTime();
+        });
+        itsPreviousMessage = true;
+    }
+    for (var i = 0; i < messages.length; i++) {
+        writeMessageToScreen(messages[i], itsPreviousMessage, true);
+    }
+}
+
+function removeChildrenRecursively(node) {
+    if (!node) return;
+    while (node.hasChildNodes()) {
+        removeChildrenRecursively(node.firstChild);
+        node.removeChild(node.firstChild);
+    }
+}
+
+function setInformationAboutChat(informationWorkers) {
+    for (var i = 0; i < informationWorkers.length; i++) {
+        /*if (valueIdForCheck == null && informationWorkers[i].id != cookieValue) {
+         valueIdForCheck = "lastUser_" + json.userList[i].id;
+         userTo = json.userList[i];
+         chatName = json.userList[i].name;
+         }*/
+        var pre = document.createElement("p");
+        pre.innerHTML = informationWorkers[i].name;
+        pre.id = 'chatsUsers_' + informationWorkers.id;
+        document.getElementById('information_about_chat').appendChild(pre);
+    }
+}
+
+function writeMessageToScreen(message, beggining, fromServer) {
+    if (output === undefined) {
+        setOutput();
+    }
+    var sendingMessage = document.getElementById("message_" + message.getUuidFromBrowser());
+    if (sendingMessage == null
+        && document.getElementById("message_" + message.getUuidFromBrowser() + "_" + message.getID()) == null) {
+        var newMessage = cloneMassage.cloneNode(true);
+        newMessage.classList.remove("CloneClass");
+        if (!fromServer) {
+            newMessage.classList.add('SendingMessage');
+            newMessage.id = "message_" + message.getUuidFromBrowser();
+        }
+        else {
+            newMessage.id = "message_" + message.getUuidFromBrowser() + "_" + message.getID();
+        }
+
+        if (message.isItNewMessage()) {
+            newMessage.classList.add('NewMessage');
+        }
+
+        if (message.getWorkerFrom().getID() == cookieValueWorker) {
+            newMessage.classList.add('MyMessage');
+        }
+        var options = {
+            weekday: "long", year: "numeric", month: "short", hour12: false,
+            day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit"
+        };
+        var elements = newMessage.childNodes, el, i = 0;
+        var workersWhichDontRead = message.getWorkersWhichDontRead();
+
+        while (el = elements[i++]) {
+            if (el.classList === undefined) {
+                continue;
+            }
+            var text = null;
+
+            if (el.classList.contains('WhoWright')) {
+                text = message.getWorkerFrom().getName() + " " + (message.getDateMessage()).toLocaleTimeString(navigator.language, options);
+            }
+            else if (el.classList.contains('WhoDontRead')
+                && workersWhichDontRead.length > 0) {
+                text = "Doesn't read: " + workersWhichDontRead[0].getLogin();
+                for (var j = 1; j < workersWhichDontRead.length; j++) {
+                    text = text + "; " + workersWhichDontRead[j].getLogin();
+
+                }
+            }
+            if (el.classList.contains('MessageText')) {
+                text = message.getMessage();
+            }
+            if (text != null) {
+                el.innerHTML = text;
+            }
+        }
+        if (beggining) {
+            output.insertBefore(newMessage, output.firstChild)
+        }
+        else {
+            output.appendChild(newMessage);
+            output.scrollTop = output.scrollHeight;
+        }
+        if (informationAboutMessagesInChat.minDateInChat > message.getDateMessage()) {
+            informationAboutMessagesInChat.minDateInChat = message.getDateMessage();
+        }
+        informationAboutMessagesInChat.numbersMessagesInChat++;
+    }
+    else if (sendingMessage != null && fromServer) {
+        if (sendingMessage.classList.contains("SendingMessage")) {
+            sendingMessage.classList.remove("SendingMessage");
+        }
+        if (message.isExceptionWhenSending() && !sendingMessage.classList.contains("ExceptionMessage")) {
+            sendingMessage.classList.add("ExceptionMessage");
+        }
+        else {
+            sendingMessage.id = sendingMessage.id + "_" + message.getID();
+            if (sendingMessage.classList.contains("ExceptionMessage")) {
+                sendingMessage.classList.remove("ExceptionMessage");
+            }
+            if (informationAboutMessagesInChat.minDateInChat > message.getDateMessage()) {
+                informationAboutMessagesInChat.minDateInChat = message.getDateMessage();
+            }
+            informationAboutMessagesInChat.numbersMessagesInChat++;
+            /*message.removeFromLocalStorage();*/
+        }
+    }
+}
+
+function send_message() {
+    if (output.id != 'usersChat_0') {
+        var currentWorker;
+        var mes = new createMessageObject();
+        console.log(currentChat);
+        for (var i = 0; i < currentChat.getWorkers().length; i++) {
+            console.log(currentChat.getWorkers()[i]);
+            if (currentChat.getWorkers()[i].getID() == cookieValueWorker) {
+                currentWorker = currentChat.getWorkers()[i];
+            }
+            else {
+                mes.addWorkersTo(new createWorkerToObject(currentChat.getWorkers()[i], true, false));
+            }
+        }
+        mes.setChatID(currentChat.getID());
+        mes.generateUuidFromBrowser();
+        mes.setDateMessage(new Date());
+        mes.setMessage(document.getElementById('textID').value);
+        mes.setWorkerFrom(currentWorker);
+        console.log(mes);
+        var jsonStr = JSON.stringify(mes);
+        /* mes.addToLocalStorage();*/
+        writeMessageToScreen(mes);
+        doSend(jsonStr);
+    }
+}
+
+
+function functionOnScrollChat(div) {
+    var scrolled = div.scrollTop;
+    //when scrolled =0. then need more messages
+    if (scrolled == 0 && informationAboutMessagesInChat.thereAreAnyMessages) {
+        informationAboutMessagesInChat.howMuchScrollWas++;
+        if (informationAboutMessagesInChat.howMuchScrollWas > 2 && informationAboutMessagesInChat.howMuchScrollWas < 5) {
+            informationAboutMessagesInChat.howMuchMessagesWeNeedAfterScroll = 25;
+        }
+        else if (informationAboutMessagesInChat.howMuchScrollWas >= 5 && informationAboutMessagesInChat.howMuchScrollWas < 8) {
+            informationAboutMessagesInChat.howMuchMessagesWeNeedAfterScroll = 35;
+        }
+        else if (informationAboutMessagesInChat.howMuchScrollWas >= 8) {
+            informationAboutMessagesInChat.howMuchMessagesWeNeedAfterScroll = 50;
+        }
+        var json = JSON.stringify({
+                "type": "MoreMessages",
+                "operation": "gettingMoreMessageinChat",
+                "chatID": parseInt(output.id.substring(output.id.indexOf("_") + 1, output.id.length), 10),
+                "userFrom": cookieValue,
+                "numberMessagesAlreadyInChat": informationAboutMessagesInChat.numbersMessagesInChat,
+                "minDateInChat": informationAboutMessagesInChat.minDateInChat.getTime(),
+                "howMuchWeNeed": informationAboutMessagesInChat.howMuchMessagesWeNeedAfterScroll
+            }
+        );
+        doSend(json);
+
+    }
 }

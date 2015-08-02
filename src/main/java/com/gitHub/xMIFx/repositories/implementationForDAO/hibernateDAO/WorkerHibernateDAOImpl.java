@@ -66,30 +66,14 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
                 "\t on depwork.iddepartment = dep.id\n" +
                 "on w.id = depwork.idworker\n" +
                 "where w.id  = :idParameter";
+
         Worker worker = null;
-        Transaction tx = null;
         try (Session session = sessionFact.openSession()) {
-            tx = session.beginTransaction();
-            try {
-
-
-                Query query = session.createSQLQuery(getByIDSql).addScalar("id", new LongType())
-                        .addScalar("name", new StringType())
-                        .addScalar("login", new StringType())
-                        .addScalar("password", new StringType())
-                        .addScalar("objectVersion", new IntegerType())
-                        .addScalar("admin", new BooleanType())
-                        .addScalar("departmentName", new StringType());
-                ;
-                query.setLong("idParameter", id);
-                worker = (Worker) query.setResultTransformer(Transformers.aliasToBean(Worker.class)).uniqueResult();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            Query query = getSQLQueryWithScalarForWorker(session, getByIDSql);
+            query.setLong("idParameter", id);
+            worker = (Worker) query.uniqueResult();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         return worker;
     }
@@ -110,27 +94,14 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
                 "\t on depwork.iddepartment = dep.id\n" +
                 "on w.id = depwork.idworker\n" +
                 "where w.name  = :nameParameter";
+
         Worker worker = null;
-        Transaction tx = null;
         try (Session session = sessionFact.openSession()) {
-            tx = session.beginTransaction();
-            try {
-                Query query = session.createSQLQuery(getByNameSql).addScalar("id", new LongType())
-                        .addScalar("name", new StringType())
-                        .addScalar("login", new StringType())
-                        .addScalar("password", new StringType())
-                        .addScalar("objectVersion", new IntegerType())
-                        .addScalar("admin", new BooleanType())
-                        .addScalar("departmentName", new StringType());
-                query.setString("nameParameter", name);
-                worker = (Worker) query.setResultTransformer(Transformers.aliasToBean(Worker.class)).uniqueResult();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            Query query = getSQLQueryWithScalarForWorker(session, getByNameSql);
+            query.setString("nameParameter", name);
+            worker = (Worker) query.uniqueResult();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         return worker;
     }
@@ -152,29 +123,18 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
                 "on w.id = depwork.idworker\n" +
                 "where w.login  = :loginParameter" +
                 " and w.password = :passParameter";
+
         Worker worker = null;
-        Transaction tx = null;
+
         try (Session session = sessionFact.openSession()) {
-            tx = session.beginTransaction();
-            try {
-                Query query = session.createSQLQuery(getByLoginPasSql).addScalar("id", new LongType())
-                        .addScalar("name", new StringType())
-                        .addScalar("login", new StringType())
-                        .addScalar("password", new StringType())
-                        .addScalar("objectVersion", new IntegerType())
-                        .addScalar("admin", new BooleanType())
-                        .addScalar("departmentName", new StringType());
-                query.setString("loginParameter", login);
-                query.setString("passParameter", pass);
-                worker = (Worker) query.setResultTransformer(Transformers.aliasToBean(Worker.class)).uniqueResult();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            Query query = getSQLQueryWithScalarForWorker(session, getByLoginPasSql);
+            query.setString("loginParameter", login);
+            query.setString("passParameter", pass);
+            worker = (Worker) query.uniqueResult();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
+
         return worker;
     }
 
@@ -193,29 +153,13 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
                 "\tleft join corporate_messenger.departments dep\n" +
                 "\t on depwork.iddepartment = dep.id\n" +
                 "on w.id = depwork.idworker";
-        List<Worker> workerList = null;
-        Transaction tx = null;
-        try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                Query query = session.createSQLQuery(getAllSql)
-                        .addScalar("id", new LongType())
-                        .addScalar("name", new StringType())
-                        .addScalar("login", new StringType())
-                        .addScalar("password", new StringType())
-                        .addScalar("objectVersion", new IntegerType())
-                        .addScalar("admin", new BooleanType())
-                        .addScalar("departmentName", new StringType());
 
-                query.setResultTransformer(Transformers.aliasToBean(Worker.class));
-                workerList = (List<Worker>) query.list();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+        List<Worker> workerList = null;
+        try (Session session = sessionFact.openSession()) {
+            Query query = getSQLQueryWithScalarForWorker(session, getAllSql);
+            workerList = (List<Worker>) query.list();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         if (workerList == null) {
             workerList = new ArrayList<>();
@@ -239,30 +183,16 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
                 "\t on depwork.iddepartment = dep.id\n" +
                 "on w.id = depwork.idworker\n" +
                 "where dep.id  = :idDepartmentParameter";
+
         List<Worker> workerList = null;
-        Transaction tx = null;
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                Query query = session.createSQLQuery(getByDepSql)
-                        .addScalar("id", new LongType())
-                        .addScalar("name", new StringType())
-                        .addScalar("login", new StringType())
-                        .addScalar("password", new StringType())
-                        .addScalar("objectVersion", new IntegerType())
-                        .addScalar("admin", new BooleanType())
-                        .addScalar("departmentName", new StringType());
-                query.setLong("idDepartmentParameter", department.getId());
-                query.setResultTransformer(Transformers.aliasToBean(Worker.class));
-                workerList = (List<Worker>) query.list();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            Query query = getSQLQueryWithScalarForWorker(session, getByDepSql);
+            query.setLong("idDepartmentParameter", department.getId());
+            workerList = (List<Worker>) query.list();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
+
         if (workerList == null) {
             workerList = new ArrayList<>();
         }
@@ -271,9 +201,9 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
 
     @Override
     public boolean remove(Worker worker) {
-        boolean itsOk = true;
+
         if (worker.getId() == null) {
-            itsOk = false;
+            return false;
         }
         Transaction tx = null;
         try (Session session = sessionFact.openSession()) {
@@ -281,41 +211,38 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
                 tx = session.beginTransaction();
                 session.delete(worker);
                 tx.commit();
-                itsOk = true;
             } catch (Throwable e) {
-                itsOk = false;
                 if (tx != null) {
                     tx.rollback();
                 }
                 LOGGER.error("Some SQL exception", e);
+                return false;
             }
         }
-        return itsOk;
+        return true;
     }
 
     @Override
     public boolean update(Worker worker) {
-        boolean itsOk = true;
+
         if (worker.getId() == null) {
-            itsOk = false;
+            return false;
         }
         Transaction tx = null;
         try (Session session = sessionFact.openSession()) {
             try {
                 tx = session.beginTransaction();
                 session.update(worker);
-               // session.replicate(worker, ReplicationMode.LATEST_VERSION);
                 tx.commit();
-                itsOk = true;
             } catch (Throwable e) {
-                itsOk = false;
                 if (tx != null) {
                     tx.rollback();
                 }
                 LOGGER.error("Some SQL exception", e);
+                return false;
             }
         }
-        return itsOk;
+        return true;
     }
 
     @Override
@@ -334,30 +261,15 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
                 "\t on depwork.iddepartment = dep.id\n" +
                 "on w.id = depwork.idworker\n" +
                 "where w.name  LIKE :nameParameter";
+
         List<Worker> workerList = null;
-        Transaction tx = null;
         String searchValue = "%" + name + "%";
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                Query query = session.createSQLQuery(findByNameSql)
-                        .addScalar("id", new LongType())
-                        .addScalar("name", new StringType())
-                        .addScalar("login", new StringType())
-                        .addScalar("password", new StringType())
-                        .addScalar("objectVersion", new IntegerType())
-                        .addScalar("admin", new BooleanType())
-                        .addScalar("departmentName", new StringType());
-                query.setString("nameParameter", searchValue);
-                query.setResultTransformer(Transformers.aliasToBean(Worker.class));
-                workerList = (List<Worker>) query.list();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            Query query = getSQLQueryWithScalarForWorker(session, findByNameSql);
+            query.setString("nameParameter", searchValue);
+            workerList = (List<Worker>) query.list();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
         if (workerList == null) {
             workerList = new ArrayList<>();
@@ -381,31 +293,17 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
                 "\t on depwork.iddepartment = dep.id\n" +
                 "on w.id = depwork.idworker\n" +
                 "where w.login  LIKE :loginParameter";
+
         List<Worker> workerList = null;
-        Transaction tx = null;
         String searchValue = "%" + login + "%";
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                Query query = session.createSQLQuery(findByLoginSql)
-                        .addScalar("id", new LongType())
-                        .addScalar("name", new StringType())
-                        .addScalar("login", new StringType())
-                        .addScalar("password", new StringType())
-                        .addScalar("objectVersion", new IntegerType())
-                        .addScalar("admin", new BooleanType())
-                        .addScalar("departmentName", new StringType());
-                query.setString("loginParameter", searchValue);
-                query.setResultTransformer(Transformers.aliasToBean(Worker.class));
-                workerList = (List<Worker>) query.list();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            Query query = getSQLQueryWithScalarForWorker(session, findByLoginSql);
+            query.setString("loginParameter", searchValue);
+            workerList = (List<Worker>) query.list();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
+
         if (workerList == null) {
             workerList = new ArrayList<>();
         }
@@ -429,33 +327,32 @@ public class WorkerHibernateDAOImpl implements WorkerDAO {
                 "on w.id = depwork.idworker\n" +
                 "where  IFNULL(dep.name, \"Without department\")  LIKE :depNameParameter";
         List<Worker> workerList = null;
-        Transaction tx = null;
         String searchValue = "%" + depName + "%";
         try (Session session = sessionFact.openSession()) {
-            try {
-                tx = session.beginTransaction();
-                Query query = session.createSQLQuery(findByDepNameSql)
-                        .addScalar("id", new LongType())
-                        .addScalar("name", new StringType())
-                        .addScalar("login", new StringType())
-                        .addScalar("password", new StringType())
-                        .addScalar("objectVersion", new IntegerType())
-                        .addScalar("admin", new BooleanType())
-                        .addScalar("departmentName", new StringType());
-                query.setString("depNameParameter", searchValue);
-                query.setResultTransformer(Transformers.aliasToBean(Worker.class));
-                workerList = (List<Worker>) query.list();
-                tx.commit();
-            } catch (Throwable e) {
-                if (tx != null) {
-                    tx.rollback();
-                }
-                LOGGER.error("Some SQL exception", e);
-            }
+            Query query = getSQLQueryWithScalarForWorker(session, findByDepNameSql);
+            query.setString("depNameParameter", searchValue);
+            workerList = (List<Worker>) query.list();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
         }
+
         if (workerList == null) {
             workerList = new ArrayList<>();
         }
+
         return workerList;
+    }
+
+    private Query getSQLQueryWithScalarForWorker(Session session, String sql) {
+        Query query = session.createSQLQuery(sql)
+                .addScalar("id", new LongType())
+                .addScalar("name", new StringType())
+                .addScalar("login", new StringType())
+                .addScalar("password", new StringType())
+                .addScalar("objectVersion", new IntegerType())
+                .addScalar("admin", new BooleanType())
+                .addScalar("departmentName", new StringType());
+        query.setResultTransformer(Transformers.aliasToBean(Worker.class));
+        return query;
     }
 }

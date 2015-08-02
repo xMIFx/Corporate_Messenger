@@ -2,6 +2,7 @@ package com.gitHub.xMIFx.domain;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "chat")
-public class Chat {
+public class Chat implements Serializable {
     private Long id;
     private String name;
     private Set<Worker> workers;
@@ -31,7 +32,7 @@ public class Chat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "idChat")
     public Long getId() {
         return id;
     }
@@ -49,7 +50,7 @@ public class Chat {
         this.name = name;
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "chatworkers",
             joinColumns = {@JoinColumn(name = "idChat")},
             inverseJoinColumns = {@JoinColumn(name = "idWorker")})
@@ -62,7 +63,7 @@ public class Chat {
     }
 
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "idChat")
     public Set<Message> getMessages() {
         return messages;

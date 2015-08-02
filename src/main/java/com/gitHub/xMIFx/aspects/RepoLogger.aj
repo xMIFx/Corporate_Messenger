@@ -15,7 +15,8 @@ public aspect RepoLogger {
 
     pointcut repositoriesMethods():
             (execution(public !static * com.gitHub.xMIFx.repositories.interfacesForDAO.DepartmentDAO.*(..))
-            ||execution(public !static * com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO.*(..)));
+            ||execution(public !static * com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO.*(..))
+                    ||execution(public !static * com.gitHub.xMIFx.repositories.interfacesForDAO.ChatDAO.*(..)));
 
     @SuppressAjWarnings({"adviceDidNotMatch"})
     before (): repositoriesMethods(){
