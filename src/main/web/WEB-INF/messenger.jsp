@@ -82,7 +82,7 @@
 
         </div>
         <div style="text-align: center;">
-            <form action="">
+            <form action="" onmouseover="readNewMessages()">
                 <textarea rows="5" id="textID" name="message" value="Hello WebSocket!" type="text"></textarea>
                 <input class="sendButton" onclick="send_message()" value="Send" type="button">
             </form>

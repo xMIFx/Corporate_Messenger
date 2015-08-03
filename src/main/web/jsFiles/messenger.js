@@ -117,7 +117,7 @@ function createChatObjectFromJson(chatJson) {
     return chat;
 }
 
-function createWorkerObject() {
+function createWorkerObjectForChat() {
     this.id;
     this.name;
     this.login;
@@ -132,7 +132,7 @@ function createWorkerObject() {
         this.name = name;
     }
     this.getName = function () {
-        return this.id;
+        return this.name;
     }
     this.setLogin = function (login) {
         this.login = login;
@@ -143,7 +143,7 @@ function createWorkerObject() {
 }
 
 function createWorkerFromJson(workerJson) {
-    var worker = new createWorkerObject();
+    var worker = new createWorkerObjectForChat();
     worker.setID(workerJson.id);
     worker.setName(workerJson.name);
     worker.setLogin(workerJson.login);
@@ -247,7 +247,7 @@ function createMessageObjectFromJson(messageJson) {
     message.setMessage(messageJson.message);
     message.setWorkerFrom(createWorkerFromJson(messageJson.workerFrom));
     message.setDateMessage(new Date(messageJson.dateMessage));
-    message.setUuidFromBrowser(messageJson.UUUIDFromBrowser);
+    message.setUuidFromBrowser(messageJson.uuidFromBrowser);
     for (var i = 0; i < messageJson.workersTo.length; i++) {
         var worker = createWorkerFromJson(messageJson.workersTo[i].workerTo);
         var workerTo = new createWorkerToObject(worker, messageJson.workersTo[i].itNewMessage, messageJson.workersTo[i].itDeleted);
@@ -334,11 +334,13 @@ function parseJsonStr(str) {
         var chat = createChatObjectFromJson(json);
         changeChat(chat);
     }
-    else if(json.uuidFromBrowser !== undefined){
+    else if (json.uuidFromBrowser !== undefined) {
         var message = createMessageObjectFromJson(json);
-        writeMessageToScreen(message);
-        if(cookieValueWorker!=message.getWorkerFrom().getID()){
-            addNewMessage();
+        if (currentChat != null && currentChat.getID() == message.getChatID()) {
+            writeMessageToScreen(message);
+        }
+        if (cookieValueWorker != message.getWorkerFrom().getID()) {
+            addNewMessage(message);
         }
     }
 }
@@ -462,9 +464,9 @@ function functionChangingChat(idUserTo) {
         document.getElementById(idUserTo).classList.add('active');
     }
     var chat = new createChatObject();
-    var workerFrom = new createWorkerObject();
+    var workerFrom = new createWorkerObjectForChat();
     workerFrom.setID(parseInt(cookieValueWorker, 10));
-    var workerTo = new createWorkerObject();
+    var workerTo = new createWorkerObjectForChat();
     workerTo.setID(parseInt(idUserTo.substr((idUserTo.indexOf('_') + 1)), 10));
     chat.addWorker(workerFrom);
     chat.addWorker(workerTo);
@@ -523,32 +525,53 @@ function writeMessageToScreen(message, beggining, fromServer) {
     if (output === undefined) {
         setOutput();
     }
-    var sendingMessage = document.getElementById("message_" + message.getUuidFromBrowser());
-    if (sendingMessage == null
-        && document.getElementById("message_" + message.getUuidFromBrowser() + "_" + message.getID()) == null) {
-        var newMessage = cloneMassage.cloneNode(true);
-        newMessage.classList.remove("CloneClass");
+    var itsNewMessage = false;
+    var messageToScreen = document.getElementById("message_" + message.getUuidFromBrowser());
+    if (messageToScreen == null) {
+        messageToScreen = document.getElementById("message_" + message.getUuidFromBrowser() + "_" + message.getID());
+    }
+    if (messageToScreen == null) {
+        messageToScreen = cloneMassage.cloneNode(true);
+        itsNewMessage = true;
+    }
+    //Something can change (newMessge and worker which don't read
+    if (message.isItNewMessage()) {
+        messageToScreen.classList.add('NewMessage');
+    }
+
+
+    var workersWhichDontRead = message.getWorkersWhichDontRead();
+
+    var elementsForChange = messageToScreen.getElementsByClassName('WhoDontRead');
+    var textForDontRead = "";
+    if (workersWhichDontRead.length > 0) {
+        textForDontRead = "Doesn't read: " + workersWhichDontRead[0].getLogin();
+        for (var k = 1; k < workersWhichDontRead.length; k++) {
+            textForDontRead = textForDontRead + "; " + workersWhichDontRead[k].getLogin();
+        }
+    }
+    elementsForChange.innerHTML = textForDontRead;
+
+    if (itsNewMessage) {
+        messageToScreen.classList.remove("CloneClass");
         if (!fromServer) {
-            newMessage.classList.add('SendingMessage');
-            newMessage.id = "message_" + message.getUuidFromBrowser();
+            messageToScreen.classList.add('SendingMessage');
+            messageToScreen.id = "message_" + message.getUuidFromBrowser();
         }
         else {
-            newMessage.id = "message_" + message.getUuidFromBrowser() + "_" + message.getID();
-        }
-
-        if (message.isItNewMessage()) {
-            newMessage.classList.add('NewMessage');
+            messageToScreen.id = "message_" + message.getUuidFromBrowser() + "_" + message.getID();
         }
 
         if (message.getWorkerFrom().getID() == cookieValueWorker) {
-            newMessage.classList.add('MyMessage');
+            messageToScreen.classList.add('MyMessage');
         }
+
         var options = {
             weekday: "long", year: "numeric", month: "short", hour12: false,
             day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit"
         };
-        var elements = newMessage.childNodes, el, i = 0;
-        var workersWhichDontRead = message.getWorkersWhichDontRead();
+        var elements = messageToScreen.childNodes, el, i = 0;
+
 
         while (el = elements[i++]) {
             if (el.classList === undefined) {
@@ -559,15 +582,7 @@ function writeMessageToScreen(message, beggining, fromServer) {
             if (el.classList.contains('WhoWright')) {
                 text = message.getWorkerFrom().getName() + " " + (message.getDateMessage()).toLocaleTimeString(navigator.language, options);
             }
-            else if (el.classList.contains('WhoDontRead')
-                && workersWhichDontRead.length > 0) {
-                text = "Doesn't read: " + workersWhichDontRead[0].getLogin();
-                for (var j = 1; j < workersWhichDontRead.length; j++) {
-                    text = text + "; " + workersWhichDontRead[j].getLogin();
-
-                }
-            }
-            if (el.classList.contains('MessageText')) {
+            else if (el.classList.contains('MessageText')) {
                 text = message.getMessage();
             }
             if (text != null) {
@@ -575,35 +590,36 @@ function writeMessageToScreen(message, beggining, fromServer) {
             }
         }
         if (beggining) {
-            output.insertBefore(newMessage, output.firstChild)
+            output.insertBefore(messageToScreen, output.firstChild)
         }
         else {
-            output.appendChild(newMessage);
+            output.appendChild(messageToScreen);
             output.scrollTop = output.scrollHeight;
         }
         if (informationAboutMessagesInChat.minDateInChat > message.getDateMessage()) {
             informationAboutMessagesInChat.minDateInChat = message.getDateMessage();
         }
         informationAboutMessagesInChat.numbersMessagesInChat++;
+
     }
-    else if (sendingMessage != null && fromServer) {
-        if (sendingMessage.classList.contains("SendingMessage")) {
-            sendingMessage.classList.remove("SendingMessage");
+    else if (messageToScreen != null && fromServer) {
+        if (messageToScreen.classList.contains("SendingMessage")) {
+            messageToScreen.classList.remove("SendingMessage");
         }
-        if (message.isExceptionWhenSending() && !sendingMessage.classList.contains("ExceptionMessage")) {
-            sendingMessage.classList.add("ExceptionMessage");
+        /* if (message.isExceptionWhenSending() && !messageToScreen.classList.contains("ExceptionMessage")) {
+         messageToScreen.classList.add("ExceptionMessage");
+         }
+         else {*/
+        messageToScreen.id = messageToScreen.id + "_" + message.getID();
+        if (messageToScreen.classList.contains("ExceptionMessage")) {
+            messageToScreen.classList.remove("ExceptionMessage");
         }
-        else {
-            sendingMessage.id = sendingMessage.id + "_" + message.getID();
-            if (sendingMessage.classList.contains("ExceptionMessage")) {
-                sendingMessage.classList.remove("ExceptionMessage");
-            }
-            if (informationAboutMessagesInChat.minDateInChat > message.getDateMessage()) {
-                informationAboutMessagesInChat.minDateInChat = message.getDateMessage();
-            }
-            informationAboutMessagesInChat.numbersMessagesInChat++;
-            /*message.removeFromLocalStorage();*/
+        if (informationAboutMessagesInChat.minDateInChat > message.getDateMessage()) {
+            informationAboutMessagesInChat.minDateInChat = message.getDateMessage();
         }
+        informationAboutMessagesInChat.numbersMessagesInChat++;
+        /*message.removeFromLocalStorage();*/
+        /*}*/
     }
 }
 
@@ -662,4 +678,64 @@ function functionOnScrollChat(div) {
         doSend(json);
 
     }
+}
+
+function addNewMessage(message) {
+    var idForChangeCountNewMEssage;
+    if (message.getWorkersTo().length = 2) {
+        idForChangeCountNewMEssage = 'worker_' + message.getWorkerFrom().getID();
+    }
+    else {
+        idForChangeCountNewMEssage = 'chat_' + message.getID();
+    }
+    writeToScreenAboutCountNewMess(idForChangeCountNewMEssage, 1);
+}
+
+function readNewMessages() {
+    if (output === undefined || output.id == 'usersChat_0') {
+        return;
+    }
+    var elements = document.getElementsByClassName('NewMessage');
+    for (var i = 0; i < elements.length; i++) {
+        if (elements[i].classList.contains('MyMessage')) {
+            continue;
+        }
+        if (checkIfElementInDivScope(output, elements[i])) {
+            sendAboutReading(elements[i]);
+        }
+    }
+}
+
+function checkIfElementInDivScope(whereCheck, el) {
+    var itIs = false;
+    var scrollTop = whereCheck.scrollTop;
+    var windowHeight = whereCheck.offsetHeight;
+    var elementOffset = el.offsetTop;
+    var elementHeight = el.offsetHeight;
+    if (scrollTop <= (elementOffset - elementHeight) && (elementOffset - elementHeight <= (scrollTop + windowHeight))) {
+        itIs = true;
+    }
+    return itIs;
+}
+
+function sendAboutReading(elem){
+    var currentWorker;
+    var mes = new createMessageObject();
+    console.log(elem);
+    for (var i = 0; i < currentChat.getWorkers().length; i++) {
+        if (currentChat.getWorkers()[i].getID() != cookieValueWorker) {
+            currentWorker = currentChat.getWorkers()[i];
+        }
+        else {
+            mes.addWorkersTo(new createWorkerToObject(currentChat.getWorkers()[i], false, false));
+        }
+    }
+    mes.setChatID(currentChat.getID());
+    mes.generateUuidFromBrowser();
+    mes.setDateMessage(new Date());
+    mes.setMessage(document.getElementById('textID').value);
+    mes.setWorkerFrom(currentWorker);
+    console.log(mes);
+    var jsonStr = JSON.stringify(mes);
+    //doSend(jsonStr);
 }
