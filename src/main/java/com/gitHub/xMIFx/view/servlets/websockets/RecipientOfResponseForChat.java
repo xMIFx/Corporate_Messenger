@@ -99,6 +99,15 @@ class RecipientOfResponseForChat {
         return answer;
     }
 
+    String getAnswerAboutReadedMessage(Message message) {
+        Message answerMessage = chatService.markMessageAsReadDeleted(message);
+        String answer = CONVERTER_OBJECT_TO_STRING.getMessage(answerMessage);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(answer);
+        }
+        return answer;
+    }
+
     String getAnswerAboutChatBetweenTwoWorkers(Set<Worker> workers) {
         Worker workerFrom = null;
         Worker workerTo = null;
@@ -217,7 +226,6 @@ class RecipientOfResponseForChat {
             this.countNewMess = countNewMess;
         }
     }
-
 
 
 }

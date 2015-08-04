@@ -62,7 +62,7 @@
     <div class="information_about_chat" id="information_about_chat">
         <p>information about current chat</p>
     </div>
-    <div id="output_box" class="output_box" onload="initOutput()">
+    <div id="output_box" class="output_box" onload="initOutput()"  onmouseover="readNewMessages()">
         <div class="chat_box" id="usersChat_0" onscroll="functionOnScrollChat(this)">
             <div class="MessageClass NewMessage">
                 <p class="WhoWright">Admin среда, 13 мая 2015 г., 17:54:02</p>

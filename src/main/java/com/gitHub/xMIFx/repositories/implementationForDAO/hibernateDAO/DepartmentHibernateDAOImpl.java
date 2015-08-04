@@ -16,7 +16,10 @@ import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,9 +27,15 @@ import java.util.stream.Collectors;
 /**
  * Created by Vlad on 27.07.2015.
  */
+@Repository("DepartmentHibernateDAO")
 public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerHibernateDAOImpl.class.getName());
-    private static SessionFactory sessionFact = HibernateUtil.getSessionFactory();
+    @Resource
+    private SessionFactory sessionFact;
+
+    public void setSessionFact(SessionFactory sessionFact) {
+        this.sessionFact = sessionFact;
+    }
 
     @Override
     public Long save(Department department) {

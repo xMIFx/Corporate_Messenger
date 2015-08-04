@@ -138,6 +138,29 @@ public class Message  implements Serializable{
         return workerList;
     }
 
+    public  boolean isNewForWorker (Worker worker){
+       boolean isNew = false;
+        for (WorkerTo workerTo: workersTo){
+            if (workerTo.workerTo.getId().equals(worker.getId())){
+                isNew = workerTo.isItNewMessage();
+                break;
+            }
+        }
+        return isNew;
+    }
+
+    public  boolean isDeleteForWorker (Worker worker){
+        boolean isDelete = false;
+        for (WorkerTo workerTo: workersTo){
+            if (workerTo.workerTo.getId().equals(worker.getId())){
+                isDelete = workerTo.isItDeleted();
+                break;
+            }
+        }
+        return isDelete;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

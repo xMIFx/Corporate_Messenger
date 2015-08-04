@@ -15,10 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.Transient;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Vlad on 31.07.2015.
@@ -52,13 +49,25 @@ public class ChatHibernateDAOImpl implements ChatDAO {
 
 
     @Override
-    public Chat getChatByID(Long chatID, Worker worker) {
-        return null;
+    public Chat getChatById(Long chatID) {
+        Chat chat = null;
+        try (Session session = sessionFact.openSession()) {
+            chat = session.get(Chat.class, chatID);
+        }
+        return chat;
     }
 
     @Override
     public List<Worker> getWorkersFromChat(Long chatID) {
-        return null;
+        List<Worker> workerList = null;
+        try (Session session = sessionFact.openSession()) {
+           Chat chat = session.get(Chat.class, chatID);
+            workerList = new ArrayList<>(chat.getWorkers());
+        }
+        if (workerList==null){
+            workerList = new ArrayList<>();
+        }
+        return workerList;
     }
 
     @Override
@@ -146,6 +155,40 @@ public class ChatHibernateDAOImpl implements ChatDAO {
             }
         }
         return idForReturn;
+    }
+
+    @Override
+    public Message readDeleteByWorkerToInMessage(Message mes) {
+        if (mes.getId() == null){
+            return null;
+        }
+        String sqlUpdate = "UPDATE corporate_messenger.messagetoworker SET newMessage = :newMessageParam, markForDelete = :deleteMessageParam " +
+                "WHERE idMessage = :idMessageParam and idWorkerTo = :workerIdParam ;";
+        Transaction tx = null;
+        Message savedMessage = null;
+        try (Session session = sessionFact.openSession()){
+            tx = session.beginTransaction();
+            savedMessage = session.get(Message.class, mes.getId());
+            for (Worker worker: mes.takeWorkerForMessage()) {
+                Query query = session.createSQLQuery(sqlUpdate);
+                query.setParameter("newMessageParam", mes.isNewForWorker(worker));
+                query.setParameter("deleteMessageParam", mes.isDeleteForWorker(worker));
+                query.setParameter("idMessageParam", mes.getId());
+                query.setParameter("workerIdParam",worker.getId());
+                query.executeUpdate();
+            }
+            session.flush();
+            session.refresh(savedMessage);
+            tx.commit();
+            LOGGER.info("message ",savedMessage);
+        }
+        catch (Throwable e){
+            LOGGER.error("Some sql excaption: ", e);
+            if (tx!=null){
+                tx.rollback();
+            }
+        }
+        return savedMessage;
     }
 
     @Override

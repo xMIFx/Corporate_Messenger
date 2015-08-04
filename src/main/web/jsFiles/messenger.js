@@ -336,12 +336,13 @@ function parseJsonStr(str) {
     }
     else if (json.uuidFromBrowser !== undefined) {
         var message = createMessageObjectFromJson(json);
-        if (currentChat != null && currentChat.getID() == message.getChatID()) {
-            writeMessageToScreen(message);
-        }
         if (cookieValueWorker != message.getWorkerFrom().getID()) {
             addNewMessage(message);
         }
+        if (currentChat != null && currentChat.getID() == message.getChatID()) {
+            writeMessageToScreen(message);
+        }
+
     }
 }
 
@@ -538,11 +539,14 @@ function writeMessageToScreen(message, beggining, fromServer) {
     if (message.isItNewMessage()) {
         messageToScreen.classList.add('NewMessage');
     }
+    else if (messageToScreen.classList.contains('NewMessage')) {
+        messageToScreen.classList.remove('NewMessage');
+    }
 
 
     var workersWhichDontRead = message.getWorkersWhichDontRead();
 
-    var elementsForChange = messageToScreen.getElementsByClassName('WhoDontRead');
+    var elementForChange = messageToScreen.getElementsByClassName('WhoDontRead')[0];
     var textForDontRead = "";
     if (workersWhichDontRead.length > 0) {
         textForDontRead = "Doesn't read: " + workersWhichDontRead[0].getLogin();
@@ -550,7 +554,7 @@ function writeMessageToScreen(message, beggining, fromServer) {
             textForDontRead = textForDontRead + "; " + workersWhichDontRead[k].getLogin();
         }
     }
-    elementsForChange.innerHTML = textForDontRead;
+    elementForChange.innerHTML = textForDontRead;
 
     if (itsNewMessage) {
         messageToScreen.classList.remove("CloneClass");
@@ -682,13 +686,24 @@ function functionOnScrollChat(div) {
 
 function addNewMessage(message) {
     var idForChangeCountNewMEssage;
-    if (message.getWorkersTo().length = 2) {
+    if (message.getWorkersTo().length == 1) {
         idForChangeCountNewMEssage = 'worker_' + message.getWorkerFrom().getID();
     }
     else {
         idForChangeCountNewMEssage = 'chat_' + message.getID();
     }
-    writeToScreenAboutCountNewMess(idForChangeCountNewMEssage, 1);
+    var howMuchNewMessage = 0;
+    var elementForCheck = document.getElementById("message_" + message.getUuidFromBrowser() + "_" + message.getID());
+    if (elementForCheck !== undefined
+        && message.getWorkerFrom().getID() != cookieValueWorker
+        && !message.isItNewMessage()
+        && elementForCheck.classList.contains("NewMessage")) {
+        howMuchNewMessage = -1;
+    }
+    else if (elementForCheck === undefined) {
+        howMuchNewMessage = 1;
+    }
+    writeToScreenAboutCountNewMess(idForChangeCountNewMEssage, howMuchNewMessage);
 }
 
 function readNewMessages() {
@@ -718,24 +733,18 @@ function checkIfElementInDivScope(whereCheck, el) {
     return itIs;
 }
 
-function sendAboutReading(elem){
+function sendAboutReading(elem) {
     var currentWorker;
     var mes = new createMessageObject();
+    var id = elem.id.substring(elem.id.lastIndexOf("_") + 1, elem.id.length);
     console.log(elem);
     for (var i = 0; i < currentChat.getWorkers().length; i++) {
-        if (currentChat.getWorkers()[i].getID() != cookieValueWorker) {
-            currentWorker = currentChat.getWorkers()[i];
-        }
-        else {
+        if (currentChat.getWorkers()[i].getID() == cookieValueWorker) {
             mes.addWorkersTo(new createWorkerToObject(currentChat.getWorkers()[i], false, false));
         }
     }
+    mes.setID(id);
     mes.setChatID(currentChat.getID());
-    mes.generateUuidFromBrowser();
-    mes.setDateMessage(new Date());
-    mes.setMessage(document.getElementById('textID').value);
-    mes.setWorkerFrom(currentWorker);
-    console.log(mes);
     var jsonStr = JSON.stringify(mes);
-    //doSend(jsonStr);
+    doSend(jsonStr);
 }

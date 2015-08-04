@@ -12,6 +12,7 @@ import com.gitHub.xMIFx.services.interfaces.ChatService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,5 +36,20 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Long saveMessage(Message message) {
         return chatDAO.saveMessage(message);
+    }
+
+    @Override
+    public Message markMessageAsReadDeleted(Message message) {
+        return chatDAO.readDeleteByWorkerToInMessage(message);
+    }
+
+    @Override
+    public Chat getChatById(Long id) {
+        return chatDAO.getChatById(id);
+    }
+
+    @Override
+    public List<Worker> getWorkersFromChat(Long id) {
+        return chatDAO.getWorkersFromChat(id);
     }
 }
