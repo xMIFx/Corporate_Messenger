@@ -1,7 +1,10 @@
 package com.gitHub.xMIFx.view.servlets.controllers;
 
 import com.gitHub.xMIFx.services.FinderType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,12 +15,17 @@ import java.io.IOException;
 /**
  * Created by Vlad on 04.07.2015.
  */
+@Controller
 @WebServlet("/worker.do")
 public class WorkerController extends HttpServlet {
 
     private static final String PAGE_OK = "pages/workers.jsp";
-    private RecipientOfResponseForWorker recipientOfResponseForWorker = new RecipientOfResponseForWorker();
+    @Resource(name = "recipientOfResponseForWorker")
+    private RecipientOfResponseForWorker recipientOfResponseForWorker;
 
+    public void setRecipientOfResponseForWorker(RecipientOfResponseForWorker recipientOfResponseForWorker) {
+        this.recipientOfResponseForWorker = recipientOfResponseForWorker;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -27,14 +27,14 @@ import java.util.stream.Collectors;
 /**
  * Created by Vlad on 27.07.2015.
  */
-@Repository("DepartmentHibernateDAO")
+@Repository
 public class DepartmentHibernateDAOImpl implements DepartmentDAO {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerHibernateDAOImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentHibernateDAOImpl.class.getName());
     @Resource
     private SessionFactory sessionFact;
 
     public void setSessionFact(SessionFactory sessionFact) {
-        this.sessionFact = sessionFact;
+               this.sessionFact = sessionFact;
     }
 
     @Override

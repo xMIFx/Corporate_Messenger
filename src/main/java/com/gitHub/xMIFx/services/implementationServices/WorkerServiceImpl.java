@@ -8,18 +8,28 @@ import com.gitHub.xMIFx.services.FinderType;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import javax.annotation.Resources;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Vlad on 11.07.2015.
  */
+@Service
 public class WorkerServiceImpl implements WorkerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
-    private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
-    private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();
+    /*private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
+    private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();*/
+ @Autowired
+    private WorkerDAO workerDAO;
 
+    public void setWorkerDAO(WorkerDAO workerDAO) {
+        this.workerDAO = workerDAO;
+    }
 
     @Override
     public List<Worker> find(FinderType finderType, String searchValue) {

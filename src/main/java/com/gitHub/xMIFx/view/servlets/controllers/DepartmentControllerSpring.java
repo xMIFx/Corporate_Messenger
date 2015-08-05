@@ -1,6 +1,9 @@
 package com.gitHub.xMIFx.view.servlets.controllers;
 
 import com.gitHub.xMIFx.services.FinderType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,13 +15,14 @@ import java.io.IOException;
 /**
  * Created by Vlad on 11.07.2015.
  */
-@WebServlet("/departments.do")
-public class DepartmentController extends HttpServlet {
+@Controller
+public class DepartmentControllerSpring {
     private static final String PAGE_OK = "pages/departments.jsp";
     private RecipientOfResponseForDepartment recipientOfResponseForDepartment = new RecipientOfResponseForDepartment();
     private RecipientOfResponseForWorker recipientOfResponseForWorker = new RecipientOfResponseForWorker();
 
-    @Override
+
+    @RequestMapping(value = "department.do", method = RequestMethod.GET)
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         if (action != null) {
@@ -65,7 +69,7 @@ public class DepartmentController extends HttpServlet {
 
     }
 
-    @Override
+    @RequestMapping(value = "department.do", method = RequestMethod.POST)
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
@@ -78,7 +82,7 @@ public class DepartmentController extends HttpServlet {
         sendAnswer(answerStr, resp);
     }
 
-    @Override
+    @RequestMapping(value = "department.do", method = RequestMethod.PUT)
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
@@ -91,7 +95,7 @@ public class DepartmentController extends HttpServlet {
         sendAnswer(answerStr, resp);
     }
 
-    @Override
+    @RequestMapping(value = "department.do", method = RequestMethod.DELETE)
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
