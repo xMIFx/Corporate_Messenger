@@ -3,6 +3,8 @@ package com.gitHub.xMIFx.view.servlets.controllers;
 import com.gitHub.xMIFx.services.FinderType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -16,18 +18,18 @@ import java.io.IOException;
  * Created by Vlad on 04.07.2015.
  */
 @Controller
-@WebServlet("/worker.do")
-public class WorkerController extends HttpServlet {
+/*@WebServlet("/worker.do")*/
+public class WorkerController /*extends HttpServlet*/ {
 
     private static final String PAGE_OK = "pages/workers.jsp";
-    @Resource(name = "recipientOfResponseForWorker")
-    private RecipientOfResponseForWorker recipientOfResponseForWorker;
+    /*@Resource(name = "recipientOfResponseForWorker")*/
+    private RecipientOfResponseForWorker recipientOfResponseForWorker = new RecipientOfResponseForWorker();
 
-    public void setRecipientOfResponseForWorker(RecipientOfResponseForWorker recipientOfResponseForWorker) {
+   /* public void setRecipientOfResponseForWorker(RecipientOfResponseForWorker recipientOfResponseForWorker) {
         this.recipientOfResponseForWorker = recipientOfResponseForWorker;
-    }
+    }*/
 
-    @Override
+    @RequestMapping(value = "worker.do", method = RequestMethod.GET)
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         String exceptionFromFilter = (String) req.getAttribute("Exception");
@@ -59,7 +61,7 @@ public class WorkerController extends HttpServlet {
         }
     }
 
-    @Override
+    @RequestMapping(value = "worker.do", method = RequestMethod.POST)
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
@@ -77,7 +79,7 @@ public class WorkerController extends HttpServlet {
         sendAnswer(answerStr, resp);
     }
 
-    @Override
+    @RequestMapping(value = "worker.do", method = RequestMethod.PUT)
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;
@@ -93,7 +95,7 @@ public class WorkerController extends HttpServlet {
     }
 
 
-    @Override
+    @RequestMapping(value = "worker.do", method = RequestMethod.DELETE)
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String exceptionFromFilter = (String) req.getAttribute("Exception");
         String answerStr = null;

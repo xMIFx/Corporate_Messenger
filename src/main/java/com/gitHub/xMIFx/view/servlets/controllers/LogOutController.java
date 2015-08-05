@@ -3,6 +3,8 @@ package com.gitHub.xMIFx.view.servlets.controllers;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
 import com.gitHub.xMIFx.view.servlets.DeterminantOfThePageTo;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,12 +17,12 @@ import java.io.IOException;
 /**
  * Created by Vlad on 20.07.2015.
  */
-@WebServlet("/exit.do")
+/*@WebServlet("/exit.do")*/
+@Controller
 public class LogOutController extends HttpServlet {
     private static final String COOKIE_USER = "worker";
 
-    @Override
-
+    @RequestMapping(value = "exit.do")
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Cookie userCookie = null;
         Cookie[] cookies = req.getCookies();

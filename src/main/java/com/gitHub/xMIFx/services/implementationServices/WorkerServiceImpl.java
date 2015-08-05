@@ -22,15 +22,15 @@ import java.util.List;
 @Service
 public class WorkerServiceImpl implements WorkerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
-    /*private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
-    private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();*/
- @Autowired
+    private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
+    private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();
+ /*@Autowired
     private WorkerDAO workerDAO;
 
     public void setWorkerDAO(WorkerDAO workerDAO) {
         this.workerDAO = workerDAO;
     }
-
+*/
     @Override
     public List<Worker> find(FinderType finderType, String searchValue) {
         List<Worker> workerList = null;

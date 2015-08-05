@@ -28,7 +28,7 @@ public class SpringWebAppInitializer extends AbstractAnnotationConfigDispatcherS
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/department.do"};
+        return new String[]{"/"};
     }
    /* @Override
     public void onStartup(final ServletContext servletContext) throws ServletException {

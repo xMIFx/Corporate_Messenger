@@ -21,9 +21,9 @@ import java.util.List;
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
-   /* private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
-    private static DepartmentDAO departmentDAO = abstractFactoryForDAOf.getDepartmentDAOImpl();*/
-   @Resource
+    private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
+    private static DepartmentDAO departmentDAO = abstractFactoryForDAOf.getDepartmentDAOImpl();
+   /*@Resource
     private DepartmentDAO departmentDAO;
 
     public DepartmentDAO getDepartmentDAO() {
@@ -32,7 +32,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     public void setDepartmentDAO(DepartmentDAO departmentDAO) {
         this.departmentDAO = departmentDAO;
-    }
+    }*/
 
     @Override
     public List<Department> find(FinderType finderType, String searchValue) {

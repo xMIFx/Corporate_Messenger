@@ -22,10 +22,10 @@ import java.util.List;
 @Component
 public class RecipientOfResponseForWorker {
     static final Logger LOGGER = LoggerFactory.getLogger(RecipientOfResponseForWorker.class.getName());
-    /*private static final WorkerService workerService = new WorkerServiceImpl();*/
+    private static final WorkerService workerService = new WorkerServiceImpl();
     private static final ConverterObjectToString CONVERTER_OBJECT_TO_STRING = new ConverterObjectToStringXML();
 
-    @Autowired
+    /*@Autowired
     private WorkerService workerService;
 
     public WorkerService getWorkerService() {
@@ -34,7 +34,7 @@ public class RecipientOfResponseForWorker {
 
     public void setWorkerService(WorkerService workerService) {
         this.workerService = workerService;
-    }
+    }*/
 
     String find(FinderType finderType, String searchValue) {
         String answer = null;

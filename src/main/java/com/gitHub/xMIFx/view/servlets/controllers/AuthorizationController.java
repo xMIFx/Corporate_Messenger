@@ -5,6 +5,9 @@ import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
 import com.gitHub.xMIFx.view.servlets.DeterminantOfThePageTo;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,8 +20,9 @@ import java.io.IOException;
 /**
  * Created by Vlad on 19.07.2015.
  */
-@WebServlet("/authorization.do")
-public class AuthorizationController extends HttpServlet {
+/*@WebServlet("/authorization.do")*/
+@Controller
+public class AuthorizationController /*extends HttpServlet*/ {
     private static final String COOKIE_NAME = "worker";
     private static final String WRONG_PARAMETERS = "wrong";
     private static final String LOGIN = "login";
@@ -26,7 +30,7 @@ public class AuthorizationController extends HttpServlet {
     private static final WorkerService workerService = new WorkerServiceImpl();
 
 
-    @Override
+    @RequestMapping(value = "authorization.do")
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String enteredUserName = req.getParameter(LOGIN);
         String enteredPassword = req.getParameter(PASSWORD);
@@ -45,7 +49,6 @@ public class AuthorizationController extends HttpServlet {
             req.getSession().setAttribute(COOKIE_NAME, worker);
             resp.sendRedirect(pageTo);
         }
-
     }
 
 

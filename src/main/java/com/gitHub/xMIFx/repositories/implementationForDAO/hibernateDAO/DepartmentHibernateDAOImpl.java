@@ -30,12 +30,12 @@ import java.util.stream.Collectors;
 @Repository
 public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentHibernateDAOImpl.class.getName());
-    @Resource
-    private SessionFactory sessionFact;
+   /* @Resource*/
+    private SessionFactory sessionFact = HibernateUtil.getSessionFactory();
 
-    public void setSessionFact(SessionFactory sessionFact) {
+   /* public void setSessionFact(SessionFactory sessionFact) {
                this.sessionFact = sessionFact;
-    }
+    }*/
 
     @Override
     public Long save(Department department) {
