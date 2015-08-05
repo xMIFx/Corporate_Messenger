@@ -52,4 +52,9 @@ public class ChatServiceImpl implements ChatService {
     public List<Worker> getWorkersFromChat(Long id) {
         return chatDAO.getWorkersFromChat(id);
     }
+
+    @Override
+    public List<Worker> getAll() {
+        return chatDAO.getAll();
+    }
 }

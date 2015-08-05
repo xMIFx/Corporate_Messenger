@@ -8,6 +8,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.BooleanType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;
@@ -65,6 +67,43 @@ public class ChatHibernateDAOImpl implements ChatDAO {
             workerList = new ArrayList<>(chat.getWorkers());
         }
         if (workerList==null){
+            workerList = new ArrayList<>();
+        }
+        return workerList;
+    }
+
+    @Override
+    public List<Worker> getAll() {
+        String getAllSql = "SELECT \n" +
+                "w.id\n" +
+                ", w.name\n" +
+                ", w.login\n" +
+                ", w.password\n" +
+                ", w.objectVersion\n" +
+                ", w.admin\n" +
+                ",IFNULL(dep.name, \"Without department\") departmentName\n" +
+                "FROM corporate_messenger.workers w\n" +
+                "left join corporate_messenger.departmentworkers depwork\n" +
+                "\tleft join corporate_messenger.departments dep\n" +
+                "\t on depwork.iddepartment = dep.id\n" +
+                "on w.id = depwork.idworker";
+
+        List<Worker> workerList = null;
+        try (Session session = sessionFact.openSession()) {
+            Query query = session.createSQLQuery(getAllSql)
+                    .addScalar("id", new LongType())
+                    .addScalar("name", new StringType())
+                    .addScalar("login", new StringType())
+                    .addScalar("password", new StringType())
+                    .addScalar("objectVersion", new IntegerType())
+                    .addScalar("admin", new BooleanType())
+                    .addScalar("departmentName", new StringType());
+            query.setResultTransformer(Transformers.aliasToBean(Worker.class));
+            workerList = (List<Worker>) query.list();
+        } catch (Throwable e) {
+            LOGGER.error("Some SQL exception", e);
+        }
+        if (workerList == null) {
             workerList = new ArrayList<>();
         }
         return workerList;

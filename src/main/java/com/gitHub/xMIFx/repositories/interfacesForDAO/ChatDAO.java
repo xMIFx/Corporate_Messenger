@@ -16,6 +16,7 @@ public interface ChatDAO {
     Long saveNewChat(Chat chat);
     Chat getChatById(Long chatID);
     List<Worker> getWorkersFromChat(Long chatID);
+    List<Worker> getAll();
     Chat getChatBetweenWorkers(Worker workerFrom, Worker workerTo);
     List<Chat> getLastChatsByWorkerID(Long id);
     List<Chat> getAllBigChatsByWorker(Worker worker);
