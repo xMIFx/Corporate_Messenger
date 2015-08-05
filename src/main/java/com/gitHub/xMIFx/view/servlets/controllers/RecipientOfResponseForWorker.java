@@ -11,6 +11,7 @@ import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -22,19 +23,11 @@ import java.util.List;
 @Component
 public class RecipientOfResponseForWorker {
     static final Logger LOGGER = LoggerFactory.getLogger(RecipientOfResponseForWorker.class.getName());
-    private static final WorkerService workerService = new WorkerServiceImpl();
     private static final ConverterObjectToString CONVERTER_OBJECT_TO_STRING = new ConverterObjectToStringXML();
 
-    /*@Autowired
+    @Autowired
+    @Qualifier("workerService")
     private WorkerService workerService;
-
-    public WorkerService getWorkerService() {
-        return workerService;
-    }
-
-    public void setWorkerService(WorkerService workerService) {
-        this.workerService = workerService;
-    }*/
 
     String find(FinderType finderType, String searchValue) {
         String answer = null;

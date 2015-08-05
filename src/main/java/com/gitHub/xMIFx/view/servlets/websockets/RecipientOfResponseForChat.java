@@ -4,31 +4,29 @@ import com.gitHub.xMIFx.domain.Chat;
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Message;
 import com.gitHub.xMIFx.domain.Worker;
-import com.gitHub.xMIFx.repositories.realisationForDTO.DepartmentsHolder;
+import com.gitHub.xMIFx.repositories.implementationForDAO.hibernateDAO.WorkerHibernateDAOImpl;
+import com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO;
 import com.gitHub.xMIFx.services.implementationServices.ChatServiceImpl;
 import com.gitHub.xMIFx.services.implementationServices.ConverterObjectToStringJSON;
-import com.gitHub.xMIFx.services.implementationServices.DepartmentServiceImpl;
-import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.ChatService;
 import com.gitHub.xMIFx.services.interfaces.ConverterObjectToString;
-import com.gitHub.xMIFx.services.interfaces.DepartmentService;
-import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import com.gitHub.xMIFx.view.DTOForView.OnlineWorker;
 import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
 import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 /**
  * Created by Vlad on 24.07.2015.
  */
-class RecipientOfResponseForChat {
+@Component
+public class RecipientOfResponseForChat {
     private static final Logger LOGGER = LoggerFactory.getLogger(RecipientOfResponseForChat.class.getName());
     private static final ChatService chatService = new ChatServiceImpl();
-    private static final WorkerService workerService = new WorkerServiceImpl();
+    /*private static final WorkerService workerService = new WorkerServiceImpl();*/
     private static final ConverterObjectToString CONVERTER_OBJECT_TO_STRING = new ConverterObjectToStringJSON();
 
     String getAnswerAboutOnlineUser(Worker worker, boolean online) {
@@ -43,7 +41,7 @@ class RecipientOfResponseForChat {
     String getFirstMessage(Long currentWorkerID) {
         String answer = null;
 
-        List<Worker> workerList = workerService.getAll();
+        List<Worker> workerList = chatService.getAll();
         List<Worker> onlineWorkerList = OnlineWorkerHolder.getOnlineWorkerHolder().getOnlineWorkers();
       /* need List with new Messages*/
         Map<String, DepartmentForView> departmentForViewMap = new HashMap<>();

@@ -1,10 +1,15 @@
 package com.gitHub.xMIFx.view.servlets.filters;
 
 import com.gitHub.xMIFx.domain.Worker;
+import com.gitHub.xMIFx.repositories.implementationForDAO.hibernateDAO.WorkerHibernateDAOImpl;
+import com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO;
 import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
 import com.gitHub.xMIFx.view.servlets.DeterminantOfThePageTo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -17,12 +22,15 @@ import java.sql.SQLException;
 /**
  * Created by Vlad on 20.07.2015.
  */
-@WebFilter("/*")
+/*@WebFilter("*//*")*/
+@Component(value = "authorizationFilter")
 public class AuthorizationFilter implements Filter {
     private FilterConfig filterConfig;
     private static final String COOKIE_NAME = "worker";
-    private static final WorkerService workerService = new WorkerServiceImpl();
 
+    @Autowired
+    @Qualifier("workerService")
+    private WorkerService workerService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -59,22 +67,22 @@ public class AuthorizationFilter implements Filter {
             req.getSession().setAttribute(COOKIE_NAME, worker);
         }
 
-        if (cookieFromClient!=null)
+        if (cookieFromClient != null)
 
-        // Session destroyed with attributes, so we need to refresh it
-        if (worker == null && cookieFromClient!= null  ) {
+            // Session destroyed with attributes, so we need to refresh it
+            if (worker == null && cookieFromClient != null) {
 
-            worker = workerService.getByID(Long.valueOf(cookieFromClient.getValue()));
-            if (worker == null) {
-                //Clear cookie
-                cookieFromClient.setMaxAge(0);
-                cookieFromClient.setValue(null);
-                resp.addCookie(cookieFromClient);
-            } else {
-                OnlineWorkerHolder.getOnlineWorkerHolder().add(worker);
-                req.getSession().setAttribute(COOKIE_NAME, worker);
+                worker = workerService.getByID(Long.valueOf(cookieFromClient.getValue()));
+                if (worker == null) {
+                    //Clear cookie
+                    cookieFromClient.setMaxAge(0);
+                    cookieFromClient.setValue(null);
+                    resp.addCookie(cookieFromClient);
+                } else {
+                    OnlineWorkerHolder.getOnlineWorkerHolder().add(worker);
+                    req.getSession().setAttribute(COOKIE_NAME, worker);
+                }
             }
-        }
         if (worker == null) {
             if (!checkNoAdminWorkersForRights(req.getMethod(), req.getQueryString())) {
                 req.setAttribute("Exception", "Access denied!");

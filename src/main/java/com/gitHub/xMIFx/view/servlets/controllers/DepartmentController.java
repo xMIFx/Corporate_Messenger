@@ -1,6 +1,8 @@
 package com.gitHub.xMIFx.view.servlets.controllers;
 
 import com.gitHub.xMIFx.services.FinderType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,8 +21,13 @@ import java.io.IOException;
 /*@WebServlet("/department.do")*/
 public class DepartmentController /*extends HttpServlet*/ {
     private static final String PAGE_OK = "pages/departments.jsp";
-    private RecipientOfResponseForDepartment recipientOfResponseForDepartment = new RecipientOfResponseForDepartment();
-    private RecipientOfResponseForWorker recipientOfResponseForWorker = new RecipientOfResponseForWorker();
+    @Autowired
+    @Qualifier("recipientOfResponseForDepartment")
+    private RecipientOfResponseForDepartment recipientOfResponseForDepartment;
+
+    @Autowired
+    @Qualifier("recipientOfResponseForWorker")
+    private RecipientOfResponseForWorker recipientOfResponseForWorker;
 
     @RequestMapping(value = "department.do", method = RequestMethod.GET)
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

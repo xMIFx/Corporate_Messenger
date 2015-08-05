@@ -13,6 +13,9 @@ import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,12 +23,14 @@ import java.util.List;
 /**
  * Created by Vlad on 21.07.2015.
  */
-class RecipientOfResponseForDepartment {
+@Component
+public class RecipientOfResponseForDepartment {
     private static final Logger LOGGER = LoggerFactory.getLogger(RecipientOfResponseForDepartment.class.getName());
-    private static final DepartmentService departmentService = new DepartmentServiceImpl();
-    private static final WorkerService workerService = new WorkerServiceImpl();
     private static final ConverterObjectToString CONVERTER_OBJECT_TO_STRING = new ConverterObjectToStringXML();
 
+    @Autowired
+    @Qualifier("departmentService")
+    private DepartmentService departmentService;
 
     String find(FinderType finderType, String searchValue) {
         String answer = null;

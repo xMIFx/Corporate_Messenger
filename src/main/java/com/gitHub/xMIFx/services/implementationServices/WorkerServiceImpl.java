@@ -9,6 +9,7 @@ import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,15 +23,11 @@ import java.util.List;
 @Service
 public class WorkerServiceImpl implements WorkerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
-    private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
-    private static WorkerDAO workerDAO = abstractFactoryForDAOf.getWorkersDAOImpl();
- /*@Autowired
+
+    @Autowired
+    @Qualifier("workerDAO")
     private WorkerDAO workerDAO;
 
-    public void setWorkerDAO(WorkerDAO workerDAO) {
-        this.workerDAO = workerDAO;
-    }
-*/
     @Override
     public List<Worker> find(FinderType finderType, String searchValue) {
         List<Worker> workerList = null;

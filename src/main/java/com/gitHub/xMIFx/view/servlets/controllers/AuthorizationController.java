@@ -5,6 +5,8 @@ import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
 import com.gitHub.xMIFx.view.servlets.DeterminantOfThePageTo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,8 +29,10 @@ public class AuthorizationController /*extends HttpServlet*/ {
     private static final String WRONG_PARAMETERS = "wrong";
     private static final String LOGIN = "login";
     private static final String PASSWORD = "password";
-    private static final WorkerService workerService = new WorkerServiceImpl();
 
+    @Autowired
+    @Qualifier("workerService")
+    private WorkerService workerService;
 
     @RequestMapping(value = "authorization.do")
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

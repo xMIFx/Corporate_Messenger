@@ -22,4 +22,6 @@ public interface ChatService {
     Chat getChatById(Long id);
 
     List<Worker> getWorkersFromChat(Long id);
+
+    List<Worker> getAll();
 }

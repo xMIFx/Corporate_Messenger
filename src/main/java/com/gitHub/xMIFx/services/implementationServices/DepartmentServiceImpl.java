@@ -9,6 +9,7 @@ import com.gitHub.xMIFx.services.interfaces.DepartmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,18 +22,10 @@ import java.util.List;
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
-    private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();
-    private static DepartmentDAO departmentDAO = abstractFactoryForDAOf.getDepartmentDAOImpl();
-   /*@Resource
+
+   @Autowired
+   @Qualifier("departmentDAO")
     private DepartmentDAO departmentDAO;
-
-    public DepartmentDAO getDepartmentDAO() {
-        return departmentDAO;
-    }
-
-    public void setDepartmentDAO(DepartmentDAO departmentDAO) {
-        this.departmentDAO = departmentDAO;
-    }*/
 
     @Override
     public List<Department> find(FinderType finderType, String searchValue) {
