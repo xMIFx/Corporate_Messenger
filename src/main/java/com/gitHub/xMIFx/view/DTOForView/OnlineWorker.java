@@ -2,9 +2,6 @@ package com.gitHub.xMIFx.view.DTOForView;
 
 import com.gitHub.xMIFx.domain.Worker;
 
-/**
- * Created by Vlad on 25.07.2015.
- */
 public class OnlineWorker {
 
     private boolean online;

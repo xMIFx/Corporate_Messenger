@@ -13,9 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Vlad on 28.06.2015.
- */
 public class WorkerSerialDAOImpl implements WorkerDAO {
     private static String filePath = PropertiesForWork.getPropertiesForWork().getPathToWorkers();
     private static final Logger logger = LoggerFactory.getLogger(WorkerSerialDAOImpl.class.getName());

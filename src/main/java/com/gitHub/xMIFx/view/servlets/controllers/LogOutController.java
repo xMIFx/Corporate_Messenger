@@ -14,16 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by Vlad on 20.07.2015.
- */
-
 @Controller
 public class LogOutController {
     private static final String COOKIE_USER = "worker";
 
     @RequestMapping(value = "exit.do")
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Cookie userCookie = null;
         Cookie[] cookies = req.getCookies();
         for (Cookie cookie : cookies) {
@@ -44,7 +40,7 @@ public class LogOutController {
         }
         String pageFrom = req.getHeader("referer");
         String pageTo = DeterminantOfThePageTo.getPageTo(pageFrom);
-        resp.sendRedirect(pageTo);
+        return "redirect:"+pageTo;
 
     }
 }

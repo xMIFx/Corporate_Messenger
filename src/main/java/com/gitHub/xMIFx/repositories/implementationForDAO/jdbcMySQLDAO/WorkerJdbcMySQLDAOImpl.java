@@ -12,10 +12,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * Created by Vlad on 29.06.2015.
- */
 public class WorkerJdbcMySQLDAOImpl implements WorkerDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerJdbcMySQLDAOImpl.class.getName());
     private static DataSource datasource;

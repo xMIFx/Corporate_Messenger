@@ -3,11 +3,11 @@ package com.gitHub.xMIFx.repositories.implementationForDAO.hibernateDAO;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Component;
 
 
-/**
- * Created by Vlad on 27.07.2015.
- */
+
+@Component
 public class HibernateUtil {
     private static final SessionFactory sf = configureSF();
 

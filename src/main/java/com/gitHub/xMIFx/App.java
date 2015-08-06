@@ -1,9 +1,5 @@
 package com.gitHub.xMIFx;
 
-/**
- * Created by Vlad on 23.06.2015.
- */
-
 import com.gitHub.xMIFx.domain.Department;
 import com.gitHub.xMIFx.domain.Worker;
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.AbstractFactoryForDAO;

@@ -6,9 +6,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by Vlad on 26.07.2015.
- */
 @Entity
 @Table(name = "chat")
 public class Chat implements Serializable {

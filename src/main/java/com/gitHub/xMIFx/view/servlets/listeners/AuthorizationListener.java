@@ -9,9 +9,6 @@ import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-/**
- * Created by Vlad on 25.07.2015.
- */
 @WebListener
 public class AuthorizationListener implements HttpSessionListener {
     private static final String COOKIE_NAME = "worker";

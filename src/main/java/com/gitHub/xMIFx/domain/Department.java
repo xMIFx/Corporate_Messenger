@@ -3,7 +3,6 @@ package com.gitHub.xMIFx.domain;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.*;
-import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -14,9 +13,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Vlad on 23.06.2015.
- */
+
 @XmlRootElement
 @Entity
 @Table(name = "departments")

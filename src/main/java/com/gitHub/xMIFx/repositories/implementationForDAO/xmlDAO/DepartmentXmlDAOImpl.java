@@ -15,9 +15,6 @@ import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.*;
 
-/**
- * Created by Vlad on 29.06.2015.
- */
 public class DepartmentXmlDAOImpl implements DepartmentDAO {
     private static String filePath = PropertiesForWork.getPropertiesForWork().getPathToDepartments();
     private static final Logger logger = LoggerFactory.getLogger(DepartmentXmlDAOImpl.class.getName());

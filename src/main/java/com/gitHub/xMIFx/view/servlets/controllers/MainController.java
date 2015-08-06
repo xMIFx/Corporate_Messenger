@@ -10,11 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by Vlad on 01.07.2015.
- */
 @Controller
-
 public class MainController {
 
   @RequestMapping(value = "main.do")

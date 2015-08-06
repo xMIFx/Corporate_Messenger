@@ -15,14 +15,9 @@ import com.gitHub.xMIFx.view.domainForView.ExceptionForView;
 import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-/**
- * Created by Vlad on 24.07.2015.
- */
-@Component
 public class RecipientOfResponseForChat {
     private static final Logger LOGGER = LoggerFactory.getLogger(RecipientOfResponseForChat.class.getName());
     private static final ChatService chatService = new ChatServiceImpl();

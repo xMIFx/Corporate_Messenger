@@ -17,9 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Vlad on 29.06.2015.
- */
 public class WorkerJsonDAOImpl implements WorkerDAO {
     private static String filePath = PropertiesForWork.getPropertiesForWork().getPathToWorkers();
     private static final Logger logger = LoggerFactory.getLogger(WorkerJsonDAOImpl.class.getName());

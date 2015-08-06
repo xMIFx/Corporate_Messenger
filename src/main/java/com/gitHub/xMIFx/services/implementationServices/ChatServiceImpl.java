@@ -15,9 +15,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Vlad on 31.07.2015.
- */
 public class ChatServiceImpl implements ChatService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());
     private static AbstractFactoryForDAO abstractFactoryForDAOf = CreatorDAOFactory.getAbstractFactoryForDAO();

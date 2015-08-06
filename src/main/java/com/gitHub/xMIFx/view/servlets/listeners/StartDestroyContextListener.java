@@ -12,9 +12,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
-/**
- * Created by Vlad on 28.07.2015.
- */
 @WebListener
 public class StartDestroyContextListener implements ServletContextListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(StartDestroyContextListener.class.getName());

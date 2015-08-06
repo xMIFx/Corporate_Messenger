@@ -9,9 +9,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
 
-/**
- * Created by Vlad on 17.07.2015.
- */
 public final class ConverterObjectToStringXML implements ConverterObjectToString {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConverterObjectToStringXML.class.getName());
 

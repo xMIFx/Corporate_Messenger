@@ -8,9 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Vlad on 31.07.2015.
- */
 public interface ChatDAO {
 
     Long saveNewChat(Chat chat);

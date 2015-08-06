@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * Created by Vlad on 24.06.2015.
- */
 public class WorkerCollectionDAOImpl implements WorkerDAO {
     private static Map<Long, Worker> workerMap = new HashMap<Long, Worker>();
     private static Long index = 0L;

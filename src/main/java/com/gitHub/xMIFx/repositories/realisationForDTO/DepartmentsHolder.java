@@ -5,9 +5,6 @@ import com.gitHub.xMIFx.domain.Department;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-/**
- * Created by Vlad on 30.06.2015.
- */
 @XmlRootElement
 public class DepartmentsHolder {
     private List<Department> departments;

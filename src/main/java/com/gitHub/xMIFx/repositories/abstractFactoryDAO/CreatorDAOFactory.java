@@ -3,9 +3,6 @@ package com.gitHub.xMIFx.repositories.abstractFactoryDAO;
 import com.gitHub.xMIFx.projectConfig.PropertiesForWork;
 import com.gitHub.xMIFx.repositories.abstractFactoryDAO.implementationAbstractFactory.*;
 
-/**
- * Created by Vlad on 29.06.2015.
- */
 public abstract class CreatorDAOFactory {
     private static PropertiesForWork propertiesForWork = PropertiesForWork.getPropertiesForWork();
 

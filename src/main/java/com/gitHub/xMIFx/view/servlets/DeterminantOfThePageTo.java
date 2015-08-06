@@ -1,8 +1,5 @@
 package com.gitHub.xMIFx.view.servlets;
 
-/**
- * Created by Vlad on 20.07.2015.
- */
 public final class DeterminantOfThePageTo {
     private static final String PAGE_MAIN = "/main.do";
     private static final String PAGE_DEPARTMENT = "/department.do";

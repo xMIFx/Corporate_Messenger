@@ -17,9 +17,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * Created by Vlad on 21.07.2015.
- */
 @Component
 public class RecipientOfResponseForWorker {
     static final Logger LOGGER = LoggerFactory.getLogger(RecipientOfResponseForWorker.class.getName());
@@ -116,7 +113,7 @@ public class RecipientOfResponseForWorker {
         return answer;
     }
 
-     String getAnswerAboutException(String exceptionMessage) {
+     public String getAnswerAboutException(String exceptionMessage) {
         String answer = null;
         ExceptionForView exceptionForView = new ExceptionForView();
         exceptionForView.setExceptionMessage(exceptionMessage);

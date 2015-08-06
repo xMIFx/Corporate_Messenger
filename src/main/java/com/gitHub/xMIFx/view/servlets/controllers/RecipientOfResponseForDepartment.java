@@ -20,9 +20,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by Vlad on 21.07.2015.
- */
 @Component
 public class RecipientOfResponseForDepartment {
     private static final Logger LOGGER = LoggerFactory.getLogger(RecipientOfResponseForDepartment.class.getName());

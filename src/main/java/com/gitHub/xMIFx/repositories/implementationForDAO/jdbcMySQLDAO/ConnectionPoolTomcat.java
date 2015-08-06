@@ -4,9 +4,6 @@ import com.gitHub.xMIFx.projectConfig.PropertiesForWork;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 
-/**
- * Created by Vlad on 12.07.2015.
- */
 public final class ConnectionPoolTomcat {
     private static ConnectionPoolTomcat conPool = new ConnectionPoolTomcat();
 

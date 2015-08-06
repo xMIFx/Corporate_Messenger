@@ -5,9 +5,6 @@ import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpointConfig;
 import java.util.List;
 
-/**
- * Created by Vlad on 24.07.2015.
- */
 public class EndpointConfiguratorChat extends ServerEndpointConfig.Configurator {
 
     private static final String COOKIE_NAME = "worker";

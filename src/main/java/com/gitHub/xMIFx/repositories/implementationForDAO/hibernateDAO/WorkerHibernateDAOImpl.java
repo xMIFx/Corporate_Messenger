@@ -13,17 +13,18 @@ import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Vlad on 27.07.2015.
- */
 public class WorkerHibernateDAOImpl implements WorkerDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerHibernateDAOImpl.class.getName());
-    private static SessionFactory sessionFact = HibernateUtil.getSessionFactory();
+    @Autowired
+    @Qualifier("sessionFact")
+    private SessionFactory sessionFact;
 
     @Override
     public Long save(Worker worker) {

@@ -17,9 +17,6 @@ import javax.annotation.Resources;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Vlad on 11.07.2015.
- */
 @Service
 public class WorkerServiceImpl implements WorkerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class.getName());

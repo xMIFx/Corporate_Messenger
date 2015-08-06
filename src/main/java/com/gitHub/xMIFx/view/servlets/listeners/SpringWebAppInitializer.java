@@ -2,19 +2,12 @@ package com.gitHub.xMIFx.view.servlets.listeners;
 
 import com.gitHub.xMIFx.projectConfig.springConfigs.MainSpringConfig;
 import com.gitHub.xMIFx.projectConfig.springConfigs.MvcConfig;
-import com.gitHub.xMIFx.view.servlets.filters.AuthorizationFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 
-/**
- * Created by Vlad on 04.08.2015.
- */
-public class SpringWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer
-/*implements WebApplicationInitializer*/  {
+public class SpringWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer  {
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class<?>[]{MainSpringConfig.class};

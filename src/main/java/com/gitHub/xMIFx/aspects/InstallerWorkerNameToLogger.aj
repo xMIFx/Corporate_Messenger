@@ -9,9 +9,6 @@ import org.slf4j.MDC;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Created by Vlad on 25.07.2015.
- */
 public aspect InstallerWorkerNameToLogger {
     private static final Logger LOGGER = LoggerFactory.getLogger(InstallerWorkerNameToLogger.class.getName());
     private static final String COOKIE_NAME = "worker";

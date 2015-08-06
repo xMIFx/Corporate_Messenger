@@ -1,7 +1,6 @@
 package com.gitHub.xMIFx.domain;
 
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -9,9 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.*;
 
-/**
- * Created by Vlad on 23.06.2015.
- */
+
 @XmlRootElement
 @Entity
 @Table(name = "workers")

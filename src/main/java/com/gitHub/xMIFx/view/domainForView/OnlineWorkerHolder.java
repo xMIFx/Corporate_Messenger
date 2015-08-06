@@ -4,9 +4,6 @@ import com.gitHub.xMIFx.domain.Worker;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Created by Vlad on 25.07.2015.
- */
 public class OnlineWorkerHolder {
     private static OnlineWorkerHolder onlineWorkerHolder = new OnlineWorkerHolder();
     private List<Worker> onlineWorkers;

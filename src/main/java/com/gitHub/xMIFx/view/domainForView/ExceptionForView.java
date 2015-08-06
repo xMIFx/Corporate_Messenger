@@ -4,9 +4,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
-/**
- * Created by bukatinvv on 09.07.2015.
- */
 @XmlRootElement
 public class ExceptionForView implements Serializable {
     String exceptionMessage;

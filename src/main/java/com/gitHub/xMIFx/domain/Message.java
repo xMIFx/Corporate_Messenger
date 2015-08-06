@@ -10,9 +10,6 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.*;
 
-/**
- * Created by Vlad on 26.07.2015.
- */
 @Entity
 @Table(name = "message")
 public class Message  implements Serializable{

@@ -5,9 +5,6 @@ import com.gitHub.xMIFx.domain.Worker;
 import java.io.*;
 import java.util.Map;
 
-/**
- * Created by Vlad on 28.06.2015.
- */
 public class Test {
     private static String filePathW = "D:\\files\\repo\\workers.out";
     private static String filePathD = "D:\\files\\repo\\departments.out";

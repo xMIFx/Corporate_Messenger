@@ -8,9 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * Created by Vlad on 29.06.2015.
- */
 public class PropertiesForWork {
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesForWork.class.getName());
     private static final PropertiesForWork propertiesForWork = new PropertiesForWork();
@@ -27,7 +24,6 @@ public class PropertiesForWork {
         Properties prop = new Properties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try (InputStream in = loader.getResourceAsStream("config.properties")) {
-            // try (InputStream in = new FileInputStream("src/main/resources/config.properties")) {
             prop.load(in);
             this.pathToRepo = prop.getProperty("pathToRepositories");
             String DAOType = prop.getProperty("typeOfDAO");

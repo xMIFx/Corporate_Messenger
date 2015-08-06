@@ -10,11 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by Vlad on 23.07.2015.
- */
-@Controller
 
+@Controller
 public class MessengerController {
     private static final String PAGE_OK = "WEB-INF/messenger.jsp";
 

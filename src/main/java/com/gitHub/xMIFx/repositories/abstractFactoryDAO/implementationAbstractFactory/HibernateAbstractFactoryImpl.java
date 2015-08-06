@@ -8,9 +8,6 @@ import com.gitHub.xMIFx.repositories.interfacesForDAO.ChatDAO;
 import com.gitHub.xMIFx.repositories.interfacesForDAO.DepartmentDAO;
 import com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO;
 
-/**
- * Created by Vlad on 27.07.2015.
- */
 public class HibernateAbstractFactoryImpl  implements AbstractFactoryForDAO{
     @Override
     public WorkerDAO getWorkersDAOImpl() {

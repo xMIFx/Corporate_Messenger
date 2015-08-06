@@ -1,32 +1,28 @@
 package com.gitHub.xMIFx.view.servlets.filters;
 
 import com.gitHub.xMIFx.domain.Worker;
-import com.gitHub.xMIFx.repositories.implementationForDAO.hibernateDAO.WorkerHibernateDAOImpl;
-import com.gitHub.xMIFx.repositories.interfacesForDAO.WorkerDAO;
-import com.gitHub.xMIFx.services.implementationServices.WorkerServiceImpl;
 import com.gitHub.xMIFx.services.interfaces.WorkerService;
 import com.gitHub.xMIFx.view.domainForView.OnlineWorkerHolder;
+import com.gitHub.xMIFx.view.servlets.AjaxWriter;
 import com.gitHub.xMIFx.view.servlets.DeterminantOfThePageTo;
+import com.gitHub.xMIFx.view.servlets.controllers.RecipientOfResponseForWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
-
-/**
- * Created by Vlad on 20.07.2015.
- */
 
 @Component(value = "authorizationFilter")
-public class AuthorizationFilter implements Filter {
+public class AuthorizationFilter extends AjaxWriter implements Filter {
     private FilterConfig filterConfig;
     private static final String COOKIE_NAME = "worker";
+    @Autowired
+    @Qualifier("recipientOfResponseForWorker")
+    private RecipientOfResponseForWorker recipientOfResponseForWorker;
 
     @Autowired
     @Qualifier("workerService")
@@ -83,22 +79,19 @@ public class AuthorizationFilter implements Filter {
                     req.getSession().setAttribute(COOKIE_NAME, worker);
                 }
             }
-        if (worker == null) {
-            if (!checkNoAdminWorkersForRights(req.getMethod(), req.getQueryString())) {
-                req.setAttribute("Exception", "Access denied!");
-            } else if (req.getServletPath().contains("messenger.do")) {
-                needToRedirect = true;
-
-            } else {/*NOP*/}
-        } else if (!worker.isAdmin()) {
-            if (!checkNoAdminWorkersForRights(req.getMethod(), req.getQueryString())) {
-                req.setAttribute("Exception", "Access denied!");
-            } else {/*NOP*/}
-
+        String answerStr = null;
+        if (worker == null && req.getServletPath().contains("messenger.do")) {
+            needToRedirect = true;
+        } else if (worker == null || (worker != null && !worker.isAdmin())) {
+            if (!req.getServletPath().contains("authorization.do") && !checkNoAdminWorkersForRights(req.getMethod(), req.getQueryString())) {
+                answerStr = recipientOfResponseForWorker.getAnswerAboutException("Access denied!");
+            }
         }
 
         if (needToRedirect) {
             resp.sendRedirect(DeterminantOfThePageTo.getPageTo(req.getHeader("referer")));
+        } else if (answerStr != null) {
+            sendAnswer(answerStr, resp);
         } else {
             filterChain.doFilter(req, resp);
         }
@@ -106,11 +99,12 @@ public class AuthorizationFilter implements Filter {
 
     private boolean checkNoAdminWorkersForRights(String method, String queryString) {
         boolean rightsIsOK = true;
-        if (!"GET".equalsIgnoreCase(method)) {
+        if (!"GET".equalsIgnoreCase(method) ||
+                (queryString != null
+                        && !"action=getAll".equalsIgnoreCase(queryString)
+                        && !queryString.contains("action=findByPartOf")
+                        && !queryString.contains("action=findByPartOf"))) {
             rightsIsOK = false;
-        } else if (queryString != null && !"action=getAll".equalsIgnoreCase(queryString) && !queryString.contains("action=findByPartOf")) {
-            rightsIsOK = false;
-
         } else {
             rightsIsOK = true;
         }

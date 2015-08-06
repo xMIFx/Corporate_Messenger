@@ -7,9 +7,6 @@ import com.gitHub.xMIFx.domain.Worker;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Vlad on 31.07.2015.
- */
 public interface ChatService {
     Chat getChatBetweenWorkers(Worker workerFrom, Worker workerTo);
 

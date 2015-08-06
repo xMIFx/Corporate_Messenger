@@ -5,9 +5,6 @@ import com.gitHub.xMIFx.domain.Worker;
 
 import java.util.List;
 
-/**
- * Created by Vlad on 24.06.2015.
- */
 public interface WorkerDAO {
 
     Long save(Worker worker);

@@ -9,33 +9,24 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
-import org.hibernate.transform.Transformers;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.IntegerType;
-import org.hibernate.type.LongType;
-import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by Vlad on 27.07.2015.
- */
+
 @Repository
 public class DepartmentHibernateDAOImpl implements DepartmentDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentHibernateDAOImpl.class.getName());
-   /* @Resource*/
-    private SessionFactory sessionFact = HibernateUtil.getSessionFactory();
 
-   /* public void setSessionFact(SessionFactory sessionFact) {
-               this.sessionFact = sessionFact;
-    }*/
+    @Autowired
+    @Qualifier("sessionFact")
+    private SessionFactory sessionFact;
 
     @Override
     public Long save(Department department) {

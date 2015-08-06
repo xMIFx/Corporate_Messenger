@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Vlad on 24.06.2015.
- */
 public class DepartmentCollectionDAOImpl implements DepartmentDAO {
     private static Map<Long, Department> departmentMap = new HashMap<Long, Department>();
     private static Long index = 0L;

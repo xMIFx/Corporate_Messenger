@@ -5,9 +5,6 @@ import com.gitHub.xMIFx.services.FinderType;
 
 import java.util.List;
 
-/**
- * Created by Vlad on 10.07.2015.
- */
 public interface WorkerService {
 
     List<Worker> find(FinderType finderType, String searchValue);

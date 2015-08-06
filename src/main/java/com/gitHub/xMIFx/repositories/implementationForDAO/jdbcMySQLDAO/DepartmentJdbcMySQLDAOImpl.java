@@ -9,9 +9,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.*;
 
-/**
- * Created by Vlad on 29.06.2015.
- */
 public class DepartmentJdbcMySQLDAOImpl implements DepartmentDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentJdbcMySQLDAOImpl.class.getName());
     private static javax.sql.DataSource datasource;

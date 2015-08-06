@@ -19,10 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by Vlad on 19.07.2015.
- */
-
 @Controller
 public class AuthorizationController {
     private static final String COOKIE_NAME = "worker";
