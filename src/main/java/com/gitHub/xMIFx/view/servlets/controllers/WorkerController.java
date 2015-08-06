@@ -19,8 +19,7 @@ import java.io.IOException;
  * Created by Vlad on 04.07.2015.
  */
 @Controller
-/*@WebServlet("/worker.do")*/
-public class WorkerController /*extends HttpServlet*/ {
+public class WorkerController {
 
     private static final String PAGE_OK = "pages/workers.jsp";
 

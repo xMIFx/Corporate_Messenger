@@ -14,17 +14,12 @@ import java.io.IOException;
  * Created by Vlad on 23.07.2015.
  */
 @Controller
-/*@WebServlet("/messenger.do")*/
-public class MessengerController  /*extends HttpServlet*/ {
+
+public class MessengerController {
     private static final String PAGE_OK = "WEB-INF/messenger.jsp";
 
     @RequestMapping(value = "messenger.do")
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher(PAGE_OK).forward(req, resp);
     }
-
-  /*  @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(PAGE_OK).forward(req, resp);
-    }*/
 }

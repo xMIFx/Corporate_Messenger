@@ -22,9 +22,9 @@ import java.io.IOException;
 /**
  * Created by Vlad on 19.07.2015.
  */
-/*@WebServlet("/authorization.do")*/
+
 @Controller
-public class AuthorizationController /*extends HttpServlet*/ {
+public class AuthorizationController {
     private static final String COOKIE_NAME = "worker";
     private static final String WRONG_PARAMETERS = "wrong";
     private static final String LOGIN = "login";

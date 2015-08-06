@@ -18,8 +18,7 @@ import java.io.IOException;
  * Created by Vlad on 11.07.2015.
  */
 @Controller
-/*@WebServlet("/department.do")*/
-public class DepartmentController /*extends HttpServlet*/ {
+public class DepartmentController {
     private static final String PAGE_OK = "pages/departments.jsp";
     @Autowired
     @Qualifier("recipientOfResponseForDepartment")

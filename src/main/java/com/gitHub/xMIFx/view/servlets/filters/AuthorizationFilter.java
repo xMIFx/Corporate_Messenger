@@ -22,7 +22,7 @@ import java.sql.SQLException;
 /**
  * Created by Vlad on 20.07.2015.
  */
-/*@WebFilter("*//*")*/
+
 @Component(value = "authorizationFilter")
 public class AuthorizationFilter implements Filter {
     private FilterConfig filterConfig;

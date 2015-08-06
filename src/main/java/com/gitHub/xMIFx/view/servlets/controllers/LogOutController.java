@@ -17,9 +17,9 @@ import java.io.IOException;
 /**
  * Created by Vlad on 20.07.2015.
  */
-/*@WebServlet("/exit.do")*/
+
 @Controller
-public class LogOutController extends HttpServlet {
+public class LogOutController {
     private static final String COOKIE_USER = "worker";
 
     @RequestMapping(value = "exit.do")
