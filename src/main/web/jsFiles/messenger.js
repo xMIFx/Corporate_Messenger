@@ -340,7 +340,8 @@ function parseJsonStr(str) {
             addNewMessage(message);
         }
         if (currentChat != null && currentChat.getID() == message.getChatID()) {
-            writeMessageToScreen(message);
+            writeMessageToScreen(message, false, true);
+            console.log(message);
         }
 
     }
@@ -410,6 +411,7 @@ function writeToScreenAboutCountNewMess(idForWrite, countNewMes) {
             }
             if (el.classList.contains("MessageCount")) {
                 el.innerHTML = (el.innerHTML === undefined || el.innerHTML == null || el.innerHTML == '') ? countNewMes : parseInt(el.innerHTML, 10) + countNewMes;
+                el.innerHTML = (el.innerHTML == '0') ? '' : el.innerHTML;
                 break;
             }
         }
@@ -420,6 +422,7 @@ function writeToScreenAboutCountNewMess(idForWrite, countNewMes) {
             }
             if (element.classList.contains("MessageCount")) {
                 element.innerHTML = (element.innerHTML === undefined || element.innerHTML == null || element.innerHTML == '') ? countNewMes : parseInt(element.innerHTML, 10) + countNewMes;
+                element.innerHTML = (element.innerHTML == '0') ? '' : element.innerHTML;
                 break;
             }
 
@@ -531,11 +534,14 @@ function writeMessageToScreen(message, beggining, fromServer) {
     if (messageToScreen == null) {
         messageToScreen = document.getElementById("message_" + message.getUuidFromBrowser() + "_" + message.getID());
     }
+    else{
+        messageToScreen.id = "message_" + message.getUuidFromBrowser() + "_" + message.getID();
+    }
     if (messageToScreen == null) {
         messageToScreen = cloneMassage.cloneNode(true);
         itsNewMessage = true;
     }
-    //Something can change (newMessge and worker which don't read
+    //Something can change (newMessage and worker which don't read
     if (message.isItNewMessage()) {
         messageToScreen.classList.add('NewMessage');
     }
@@ -606,7 +612,7 @@ function writeMessageToScreen(message, beggining, fromServer) {
         informationAboutMessagesInChat.numbersMessagesInChat++;
 
     }
-    else if (messageToScreen != null && fromServer) {
+    else if (messageToScreen != null && fromServer && message.getWorkerFrom().getID()==cookieValueWorker) {
         if (messageToScreen.classList.contains("SendingMessage")) {
             messageToScreen.classList.remove("SendingMessage");
         }
@@ -614,7 +620,7 @@ function writeMessageToScreen(message, beggining, fromServer) {
          messageToScreen.classList.add("ExceptionMessage");
          }
          else {*/
-        messageToScreen.id = messageToScreen.id + "_" + message.getID();
+        /*messageToScreen.id = messageToScreen.id + "_" + message.getID();*/
         if (messageToScreen.classList.contains("ExceptionMessage")) {
             messageToScreen.classList.remove("ExceptionMessage");
         }
@@ -631,9 +637,7 @@ function send_message() {
     if (output.id != 'usersChat_0') {
         var currentWorker;
         var mes = new createMessageObject();
-        console.log(currentChat);
         for (var i = 0; i < currentChat.getWorkers().length; i++) {
-            console.log(currentChat.getWorkers()[i]);
             if (currentChat.getWorkers()[i].getID() == cookieValueWorker) {
                 currentWorker = currentChat.getWorkers()[i];
             }
@@ -649,7 +653,7 @@ function send_message() {
         console.log(mes);
         var jsonStr = JSON.stringify(mes);
         /* mes.addToLocalStorage();*/
-        writeMessageToScreen(mes);
+        writeMessageToScreen(mes, false, false);
         doSend(jsonStr);
     }
 }
@@ -695,12 +699,13 @@ function addNewMessage(message) {
     var howMuchNewMessage = 0;
     var elementForCheck = document.getElementById("message_" + message.getUuidFromBrowser() + "_" + message.getID());
     if (elementForCheck !== undefined
+        && elementForCheck != null
         && message.getWorkerFrom().getID() != cookieValueWorker
         && !message.isItNewMessage()
         && elementForCheck.classList.contains("NewMessage")) {
         howMuchNewMessage = -1;
     }
-    else if (elementForCheck === undefined) {
+    else if (elementForCheck === undefined || elementForCheck == null) {
         howMuchNewMessage = 1;
     }
     writeToScreenAboutCountNewMess(idForChangeCountNewMEssage, howMuchNewMessage);

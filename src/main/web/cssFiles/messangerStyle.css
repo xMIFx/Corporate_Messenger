@@ -60,7 +60,7 @@ div.information_about_chat {
     text-align: right;
     float: right;
     border-left: 1px solid #808080;
-    height: 500px;
+    height: 450px;
     overflow-y: scroll;
 }
 
@@ -227,7 +227,7 @@ li.user_ch.active {
 }
 
 div.chat_box {
-    height: 500px;
+    height: 450px;
     overflow-y: scroll;
 }
 input.sendButton{
@@ -247,6 +247,7 @@ textarea#textID{
     padding: 7px;
     display: inline-block;
     resize: none;
+    height: 60px;
     border: 1px solid #808080;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;

@@ -42,7 +42,7 @@
         <div class="groups" id="groups">
 
         </div>
-        <div class="lastChats">
+        <%--<div class="lastChats">
             <p>Last chats</p>
 
             <div class="" id="lastChats">
@@ -57,7 +57,7 @@
                     <span></span>name1</a>
                 </li>
             </div>
-        </div>
+        </div>--%>
     </div>
     <div class="information_about_chat" id="information_about_chat">
         <p>information about current chat</p>

@@ -40,9 +40,11 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
         try (Session session = sessionFact.openSession()) {
             try {
                 tx = session.beginTransaction();
-                Query query = session.createSQLQuery(sqlDeleteBindingWorker);
-                query.setParameterList("workersIDParameter", workersID);
-                query.executeUpdate();
+                if (workersID.size() > 0) {
+                    Query query = session.createSQLQuery(sqlDeleteBindingWorker);
+                    query.setParameterList("workersIDParameter", workersID);
+                    query.executeUpdate();
+                }
                 idForReturn = (Long) session.save(department);
                 department.setId(idForReturn);
                 tx.commit();
@@ -171,9 +173,11 @@ public class DepartmentHibernateDAOImpl implements DepartmentDAO {
                     return false;
                 } else {
                     department.setObjectVersion(department.getObjectVersion() + 1);
-                    Query query = session.createSQLQuery(sqlDeleteBindingWorker);
-                    query.setParameterList("workersIDParameter", workersID);
-                    query.executeUpdate();
+                    if (workersID.size() > 0) {
+                        Query query = session.createSQLQuery(sqlDeleteBindingWorker);
+                        query.setParameterList("workersIDParameter", workersID);
+                        query.executeUpdate();
+                    }
                     session.merge(department);
                 }
                 tx.commit();
